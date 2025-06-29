@@ -1,0 +1,58 @@
+# Testing Configuration
+# Overrides base.yaml settings for testing environment
+
+app:
+  debug: true
+
+database:
+  host: "localhost"
+  name: "learnify_test_db"
+  echo: false  # Disable SQL logging during tests
+  pool_size: 5
+  max_overflow: 0
+
+redis:
+  host: "localhost"
+  db: 1  # Use different Redis DB for tests
+
+jwt:
+  access_token_expire_minutes: 5  # Shorter expiration for tests
+
+email:
+  from_email: "test@learnify.com"
+  # Disable actual email sending in tests
+  backend: "console"
+
+security:
+  otp_expire_minutes: 1  # Shorter for faster tests
+  password_reset_expire_minutes: 5
+
+pagination:
+  default_page_size: 5
+  max_page_size: 20
+
+cors:
+  origins:
+    - "http://localhost:3000"
+    - "http://testserver"
+
+logging:
+  level: "WARNING"  # Reduce noise during tests
+
+rate_limiting:
+  enabled: false
+
+monitoring:
+  metrics_enabled: false
+  enable_detailed_health: false
+
+file_upload:
+  max_size_mb: 1
+  upload_path: "test_uploads"
+  allowed_types: ["jpg", "png", "txt"]
+
+# Test-specific settings
+testing:
+  use_in_memory_db: false
+  cleanup_after_test: true
+  mock_external_services: true 
