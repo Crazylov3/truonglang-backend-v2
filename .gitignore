@@ -1,0 +1,399 @@
+# ===========================================
+# Python .gitignore for FastAPI LMS Project
+# ===========================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff (if needed):
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff (if needed):
+instance/
+.webassets-cache
+
+# Scrapy stuff (if needed):
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# ===========================================
+# Environment Variables & Secrets
+# ===========================================
+
+# Environment variables (NEVER commit these!)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# Environment variable templates are OK to commit
+# env.template - Keep this file
+
+# ===========================================
+# Virtual Environments
+# ===========================================
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+.ENV/
+.env/
+pipenv/
+.pipenv/
+
+# UV cache and virtual environments
+.uv-cache/
+.uv/
+
+# ===========================================
+# FastAPI / Web Development
+# ===========================================
+
+# FastAPI/Uvicorn logs
+*.log
+logs/
+log/
+
+# Static files (if using)
+staticfiles/
+static/
+media/
+
+# ===========================================
+# Database Files
+# ===========================================
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL dumps
+*.sql
+*.dump
+
+# Database migration files (keep structure, ignore data)
+# migrations/versions/*.py - Keep these
+# But ignore any backup/dump files
+migrations/backup/
+migrations/dumps/
+
+# ===========================================
+# IDE & Editor Files
+# ===========================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===========================================
+# Operating System Files
+# ===========================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================================
+# Docker & Containerization
+# ===========================================
+
+# Docker volumes and data
+docker-volumes/
+postgres_data/
+redis_data/
+
+# Docker override files (keep docker-compose.yml)
+docker-compose.override.yml
+docker-compose.local.yml
+
+# ===========================================
+# Testing & Coverage
+# ===========================================
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Test databases
+test.db
+test.sqlite3
+
+# ===========================================
+# Temporary & Cache Files
+# ===========================================
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Cache directories
+.cache/
+*.cache/
+
+# UV cache
+.uv-cache/
+
+# pip cache
+.pip-cache/
+
+# ===========================================
+# Security & Secrets
+# ===========================================
+
+# SSL certificates (if storing locally)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Private keys
+private_key*
+id_rsa*
+id_dsa*
+
+# ===========================================
+# Application Specific
+# ===========================================
+
+# Application logs
+app.log
+error.log
+access.log
+celery.log
+
+# Uploaded files (if any)
+uploads/
+user_uploads/
+
+# Email templates compiled
+email_templates_compiled/
+
+# ===========================================
+# Development Tools
+# ===========================================
+
+# Profiling output
+*.prof
+
+# Memory profiling
+mprofile_*.dat
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# ===========================================
+# Documentation
+# ===========================================
+
+# Sphinx
+docs/_build/
+docs/build/
+
+# mkdocs
+site/
+
+# ===========================================
+# Backup Files
+# ===========================================
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# ===========================================
+# Node.js (if using for frontend tools)
+# ===========================================
+
+# Node modules (if using npm/yarn for frontend tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===========================================
+# Miscellaneous
+# ===========================================
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Large media files (unless needed)
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Compiled translation files
+*.mo
+
+# ===========================================
+# Keep These Files (Examples)
+# ===========================================
+
+# Keep these important files:
+# README.md
+# requirements.txt
+# pyproject.toml
+# Dockerfile
+# docker-compose.yml
+# env.template
+# cfg/ (configuration directory)
+# migrations/ (database migrations)
+
+# ===========================================
+# Project Structure to Keep
+# ===========================================
+
+# Keep the main application structure:
+# app/
+# cfg/
+# scripts/
+# docker/
+# tests/ (if you add them)
+
+# End of .gitignore 
