@@ -22,10 +22,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 # Set work directory
 WORKDIR /app
 
-# Copy UV configuration files
-COPY pyproject.toml uv.lock* ./
+# Copy UV configuration files and README (required by pyproject.toml)
+COPY pyproject.toml uv.lock* README.md ./
 
-# Install dependencies
+# Install dependencies only (skip local package build)
 RUN uv sync --frozen --no-dev
 
 # Production stage
@@ -35,7 +35,7 @@ FROM python:3.11-slim as production
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app \
-    UV_CACHE_DIR=/tmp/uv-cache
+    UV_CACHE_DIR=/app/.uv-cache
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
@@ -57,15 +57,20 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 # Set work directory
 WORKDIR /app
 
-# Copy UV configuration and install dependencies
-COPY pyproject.toml uv.lock* ./
+# Copy UV configuration files and README (required by pyproject.toml)
+COPY pyproject.toml uv.lock* README.md ./
+
+# Copy configuration files early (needed by the application)
+COPY cfg/ ./cfg/
+
+# Install dependencies only (skip local package build)
 RUN uv sync --frozen --no-dev
 
 # Copy application code
 COPY --chown=appuser:appuser . .
 
-# Create directories for logs and uploads (if needed)
-RUN mkdir -p /app/logs /app/uploads && \
+# Create directories for logs, uploads, and UV cache with proper permissions
+RUN mkdir -p /app/logs /app/uploads /app/.uv-cache && \
     chown -R appuser:appuser /app
 
 # Switch to non-root user

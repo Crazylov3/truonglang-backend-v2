@@ -122,4 +122,68 @@ static/user_uploads/
 
 # Cache directories
 .cache/
-.uv/ 
+.uv/
+
+# Ignore version control
+.git
+.gitignore
+
+# Ignore virtual environments
+.venv/
+venv/
+env/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Ignore development/testing files
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+logs/
+*.log
+tmp/
+temp/
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info/
+
+# Ignore Docker files (don't need them in the build context)
+docker-compose*.yml
+Dockerfile*
+
+# Ignore documentation (except README.md which is needed by pyproject.toml)
+docs/
+*.md
+!README.md
+
+# Ignore environment files (they contain secrets)
+.env*
+!env.template
+!env.prod.template
+
+# Ignore UV cache
+.uv-cache/
+
+# Ignore testing/demo files
+demo_*.py
+test_*.py 
