@@ -1,4 +1,4 @@
-# Learnify LMS FastAPI Dockerfile
+# Giao Duc Thang Long FastAPI Dockerfile
 # Multi-stage build for optimized production image
 
 # Build stage

@@ -3,6 +3,7 @@ from typing import AsyncGenerator, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 import redis.asyncio as redis
 import logging
+from sqlalchemy import text
 
 from app.database import AsyncSessionLocal, redis_client
 from app.db.repositories import UserRepository, CourseRepository, EnrollmentRepository
@@ -119,19 +120,17 @@ async def check_database_health() -> dict:
     """Check database connectivity and health."""
     try:
         async with DatabaseManager.get_session() as session:
-            # Try a simple query
-            result = await session.execute("SELECT 1")
+            # Try a simple query with proper text() wrapper
+            result = await session.execute(text("SELECT 1"))
             result.scalar()
             
         return {
-            "database": "healthy",
-            "status": "connected"
+            "status": "healthy"
         }
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
         return {
-            "database": "unhealthy",
-            "status": "disconnected",
+            "status": "unhealthy",
             "error": str(e)
         }
 
@@ -144,14 +143,12 @@ async def check_redis_health() -> dict:
         await client.ping()
         
         return {
-            "redis": "healthy",
-            "status": "connected"
+            "status": "healthy"
         }
     except Exception as e:
         logger.error(f"Redis health check failed: {e}")
         return {
-            "redis": "unhealthy", 
-            "status": "disconnected",
+            "status": "unhealthy",
             "error": str(e)
         }
 
@@ -162,15 +159,15 @@ async def check_system_health() -> dict:
     redis_health = await check_redis_health()
     
     overall_status = "healthy" if (
-        db_health.get("database") == "healthy" and 
-        redis_health.get("redis") == "healthy"
+        db_health.get("status") == "healthy" and 
+        redis_health.get("status") == "healthy"
     ) else "unhealthy"
     
     return {
         "status": overall_status,
         "components": {
-            **db_health,
-            **redis_health
+            "database": db_health,
+            "redis": redis_health
         }
     }
 

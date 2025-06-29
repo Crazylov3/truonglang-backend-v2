@@ -1,14 +1,14 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum, func
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum, func, ForeignKey
 from sqlalchemy.orm import relationship
-from enum import Enum as PyEnum
+from enum import IntEnum
 from app.database import Base
 
 
-class UserRole(PyEnum):
-    STUDENT = "student"
-    INSTRUCTOR = "instructor"
-    STAFF = "staff"
-    ADMIN = "admin"
+class UserRole(IntEnum):
+    STUDENT = 1
+    INSTRUCTOR = 2
+    STAFF = 3
+    ADMIN = 4
 
 
 class User(Base):
@@ -37,3 +37,12 @@ class User(Base):
 
     def __repr__(self):
         return f"<User(id={self.id}, email='{self.email}', role='{self.role.value}')>" 
+
+
+class UserAvatar(Base):
+    __tablename__ = "user_avatars"
+
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    avatar_url = Column(String(255), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

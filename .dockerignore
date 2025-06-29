@@ -1,12 +1,19 @@
-# Learnify LMS .dockerignore
+# Giao Duc Thang Long .dockerignore
 
-# Git
+# Version control
 .git
 .gitignore
-*.md
-!README.md
 
-# Python cache
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# Python cache and build files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -29,24 +36,14 @@ wheels/
 *.egg
 MANIFEST
 
-# Virtual environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-.python-version
-
-# IDE
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# OS files
 .DS_Store
 .DS_Store?
 ._*
@@ -55,17 +52,24 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Logs
+# Logs and temporary files
 *.log
 logs/
 log/
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
 
-# Database
+# Database files
 *.db
 *.sqlite3
 *.sqlite
 
-# Testing
+# Testing and coverage
 .pytest_cache/
 .coverage
 htmlcov/
@@ -77,34 +81,28 @@ coverage.xml
 
 # Documentation
 docs/_build/
+docs/
+*.md
+!README.md
 .readthedocs.yml
 
 # Jupyter
 .ipynb_checkpoints
 
-# Docker
+# Docker files (don't need them in build context)
 Dockerfile*
 docker-compose*.yml
 .dockerignore
 
-# Development files
-.env.example
-.env.local
-.env.development
-.env.test
+# Environment files (contain secrets)
+.env*
+!env.template
+!env.prod.template
 
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.temp
-
-# Backup files
-*.bak
-*.backup
-
-# Editor files
-*.orig
+# Cache directories
+.cache/
+.uv/
+.uv-cache/
 
 # CI/CD
 .github/
@@ -112,7 +110,7 @@ temp/
 .travis.yml
 Jenkinsfile
 
-# Dependencies (will be installed in container)
+# Dependencies (installed in container)
 node_modules/
 
 # Local uploads and user data
@@ -120,70 +118,6 @@ uploads/
 media/
 static/user_uploads/
 
-# Cache directories
-.cache/
-.uv/
-
-# Ignore version control
-.git
-.gitignore
-
-# Ignore virtual environments
-.venv/
-venv/
-env/
-
-# Ignore Python cache files
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# Ignore development/testing files
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.cache
-
-# Ignore IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Ignore OS files
-.DS_Store
-Thumbs.db
-
-# Ignore logs and temporary files
-logs/
-*.log
-tmp/
-temp/
-
-# Ignore build artifacts
-build/
-dist/
-*.egg-info/
-
-# Ignore Docker files (don't need them in the build context)
-docker-compose*.yml
-Dockerfile*
-
-# Ignore documentation (except README.md which is needed by pyproject.toml)
-docs/
-*.md
-!README.md
-
-# Ignore environment files (they contain secrets)
-.env*
-!env.template
-!env.prod.template
-
-# Ignore UV cache
-.uv-cache/
-
-# Ignore testing/demo files
+# Testing/demo files
 demo_*.py
 test_*.py 

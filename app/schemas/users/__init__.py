@@ -61,17 +61,6 @@ class UserProfile(UserResponse):
     """Extended user profile with additional computed fields."""
     enrolled_courses_count: int = 0
     created_courses_count: int = 0
-    full_name: str
-
-    @validator('full_name', pre=True, always=True)
-    def set_full_name(cls, v, values):
-        first_name = values.get('first_name')
-        last_name = values.get('last_name')
-        email = values.get('email')
-        
-        if first_name and last_name:
-            return f"{first_name} {last_name}"
-        return email.split("@")[0] if email else ""
 
 
 __all__ = [

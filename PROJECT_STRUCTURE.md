@@ -1,8 +1,8 @@
-# Learnify LMS - Organized Project Structure
+# Giao Duc Thang Long - Organized Project Structure
 
 ## 📁 Project Overview
 
-The Learnify LMS API has been reorganized into a scalable, domain-driven architecture with proper separation of concerns. This structure follows modern Python/FastAPI best practices and is designed for maintainability and scalability.
+The Giao Duc Thang Long API has been reorganized into a scalable, domain-driven architecture with proper separation of concerns. This structure follows modern Python/FastAPI best practices and is designed for maintainability and scalability.
 
 ## 🏗️ Architecture Pattern
 
@@ -385,4 +385,4 @@ Schema Layer:
 app/schemas/ ↔ app/routers/ ↔ app/db/services/
 ```
 
-This organized structure provides a solid foundation for scaling the Learnify LMS platform while maintaining code quality, security, and developer productivity. The new configuration management system ensures secure, maintainable, and environment-specific configuration handling. 
+This organized structure provides a solid foundation for scaling the Giao Duc Thang Long platform while maintaining code quality, security, and developer productivity. The new configuration management system ensures secure, maintainable, and environment-specific configuration handling. 

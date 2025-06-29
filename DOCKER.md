@@ -1,6 +1,6 @@
-# 🐳 Learnify LMS Docker Setup
+# 🐳 Giao Duc Thang Long Docker Setup
 
-This document explains how to run the Learnify LMS application using Docker for both development and production environments.
+This document explains how to run the Giao Duc Thang Long application using Docker for both development and production environments.
 
 ## 📋 Prerequisites
 

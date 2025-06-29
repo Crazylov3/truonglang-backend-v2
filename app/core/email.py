@@ -1,6 +1,6 @@
 import secrets
 import string
-from typing import Optional
+import traceback
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import settings
@@ -46,15 +46,16 @@ class EmailService:
                 
         except Exception as e:
             logger.error(f"Error sending email: {str(e)}")
+            logger.error(traceback.format_exc())
             return False
 
     async def send_verification_email(self, to_email: str, otp: str) -> bool:
         """Send email verification OTP."""
-        subject = "Verify your email - Learnify LMS"
+        subject = "Verify your email - Giao Duc Thang Long"
         html_content = f"""
         <html>
         <body>
-        <h2>Welcome to Learnify LMS!</h2>
+        <h2>Welcome to Giao Duc Thang Long!</h2>
         <p>Thank you for registering with us. Please use the following OTP to verify your email address:</p>
         <h3 style="color: #4CAF50; font-size: 24px; text-align: center; padding: 20px; background-color: #f5f5f5; border-radius: 5px;">
         {otp}
@@ -69,15 +70,15 @@ class EmailService:
         return await self.send_email(to_email, subject, html_content)
 
     async def send_password_reset_email(self, to_email: str, reset_token: str) -> bool:
-        """Send password reset email."""
+        """Send password reset email with complex token (legacy method)."""
         # In a real application, you would include a link to your frontend
         # For now, we'll just send the token
-        subject = "Password Reset - Learnify LMS"
+        subject = "Password Reset - Giao Duc Thang Long"
         html_content = f"""
         <html>
         <body>
         <h2>Password Reset Request</h2>
-        <p>You have requested to reset your password for your Learnify LMS account.</p>
+        <p>You have requested to reset your password for your Giao Duc Thang Long account.</p>
         <p>Please use the following token to reset your password:</p>
         <p style="color: #4CAF50; font-size: 18px; font-weight: bold; padding: 10px; background-color: #f5f5f5; border-radius: 5px;">
         {reset_token}
@@ -91,13 +92,37 @@ class EmailService:
         """
         return await self.send_email(to_email, subject, html_content)
 
-    async def send_welcome_email(self, to_email: str, full_name: str) -> bool:
-        """Send welcome email after successful verification."""
-        subject = "Welcome to Learnify LMS!"
+    async def send_password_reset_otp_email(self, to_email: str, otp: str) -> bool:
+        """Send password reset email with simple OTP."""
+        subject = "Password Reset OTP - Giao Duc Thang Long"
         html_content = f"""
         <html>
         <body>
-        <h2>Welcome to Learnify LMS, {full_name}!</h2>
+        <h2>Password Reset Request</h2>
+        <p>You have requested to reset your password for your Giao Duc Thang Long account.</p>
+        <p>Please use the following OTP to reset your password:</p>
+        <h3 style="color: #4CAF50; font-size: 32px; text-align: center; padding: 20px; background-color: #f5f5f5; border-radius: 5px; letter-spacing: 8px;">
+        {otp}
+        </h3>
+        <p><strong>This OTP is valid for {settings.otp_expire_minutes} minutes.</strong></p>
+        <p style="color: #666; font-size: 14px;">
+        Simply enter this 6-digit code in the password reset form. Much easier than copying long tokens!
+        </p>
+        <p>If you didn't request this password reset, please ignore this email and your password will remain unchanged.</p>
+        <br>
+        <p>Best regards,<br>The Learnify Team</p>
+        </body>
+        </html>
+        """
+        return await self.send_email(to_email, subject, html_content)
+
+    async def send_welcome_email(self, to_email: str, full_name: str) -> bool:
+        """Send welcome email after successful verification."""
+        subject = "Welcome to Giao Duc Thang Long!"
+        html_content = f"""
+        <html>
+        <body>
+        <h2>Welcome to Giao Duc Thang Long, {full_name}!</h2>
         <p>Your email has been successfully verified and your account is now active.</p>
         <p>You can now:</p>
         <ul>

@@ -6,53 +6,12 @@ app:
 
 database:
   host: "db"  # Docker service name or production DB host
-  pool_size: 50
-  max_overflow: 20
-  echo: false
 
 redis:
   host: "redis"  # Docker service name or production Redis host
-  max_connections: 100
 
 cors:
   origins: []  # Will be populated from environment variables
 
-logging:
-  level: "INFO"
-  enable_file_logging: true
-  log_file: "/app/logs/app.log"
-
-rate_limiting:
-  enabled: true
-  requests_per_minute: 30  # More restrictive in production
-  burst_size: 50
-
-monitoring:
-  metrics_enabled: true
-  enable_detailed_health: true
-  health_check_interval: 60
-
-security:
-  max_login_attempts: 3  # More restrictive
-  lockout_duration_minutes: 30
-
-file_upload:
-  max_size_mb: 5  # Smaller limit in production
-  upload_path: "/app/uploads"
-
 email:
-  from_email: "noreply@yourdomain.com"
-
-# Production-specific features
-backup:
-  enabled: true
-  schedule: "0 2 * * *"  # Daily at 2 AM
-  retention_days: 30
-
-ssl:
-  enabled: true
-  redirect_http: true
-
-performance:
-  enable_gzip: true
-  cache_control_max_age: 3600 
+  from_email: "noreply@yourdomain.com" 

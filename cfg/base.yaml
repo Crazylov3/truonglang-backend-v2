@@ -1,8 +1,8 @@
-# Base Configuration for Learnify LMS
+# Base Configuration for Giao Duc Thang Long
 # This file contains non-sensitive configuration that can be version controlled
 
 app:
-  name: "Learnify LMS"
+  name: "Giao Duc Thang Long"
   version: "1.0.0"
   description: "A modern Learning Management System API built with FastAPI"
   
@@ -10,64 +10,22 @@ database:
   driver: "postgresql+asyncpg"
   port: 5432
   name: "learnify_db"
-  pool_size: 20
-  max_overflow: 0
-  pool_pre_ping: true
-  echo: false
 
 redis:
   port: 6379
   db: 0
-  socket_timeout: 30
-  socket_connect_timeout: 30
-  decode_responses: true
-  max_connections: 50
 
 jwt:
   algorithm: "HS256"
   access_token_expire_minutes: 30
-  refresh_token_expire_days: 7
 
 email:
-  from_name: "Learnify LMS"
-  templates:
-    welcome: "welcome.html"
-    verification: "verification.html"
-    password_reset: "password_reset.html"
+  from_name: "Giao Duc Thang Long"
 
 security:
-  otp_expire_minutes: 10
-  password_reset_expire_minutes: 30
-  max_login_attempts: 5
-  lockout_duration_minutes: 15
-  min_password_length: 8
-
-pagination:
-  default_page_size: 20
-  max_page_size: 100
+  otp_expire_minutes: 15
+  password_reset_expire_minutes: 5
+  csrf_token_expire_minutes: 60
 
 cors:
-  allow_credentials: true
-  allow_methods: ["*"]
-  allow_headers: ["*"]
-
-rate_limiting:
-  enabled: true
-  requests_per_minute: 60
-  burst_size: 100
-
-logging:
-  level: "INFO"
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  file_rotation: "midnight"
-  backup_count: 7
-
-file_upload:
-  max_size_mb: 10
-  allowed_types: ["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt"]
-  upload_path: "uploads"
-
-monitoring:
-  health_check_interval: 30
-  metrics_enabled: true
-  enable_detailed_health: true 
+  origins: [] 

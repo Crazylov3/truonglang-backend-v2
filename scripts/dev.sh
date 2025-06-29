@@ -1,5 +1,5 @@
 #!/bin/bash
-# Learnify LMS Development Script
+# Giao Duc Thang Long Development Script
 
 set -e
 
@@ -52,7 +52,7 @@ check_docker_compose() {
 
 # Function to start services
 start() {
-    print_status "Starting Learnify LMS development environment..."
+    print_status "Starting Giao Duc Thang Long development environment..."
     
     check_docker
     check_docker_compose
@@ -78,7 +78,7 @@ start() {
 
 # Function to start with dev tools
 start_dev() {
-    print_status "Starting Learnify LMS with development tools..."
+    print_status "Starting Giao Duc Thang Long with development tools..."
     
     check_docker
     check_docker_compose
@@ -98,7 +98,7 @@ start_dev() {
 
 # Function to stop services
 stop() {
-    print_status "Stopping Learnify LMS services..."
+    print_status "Stopping Giao Duc Thang Long services..."
     
     check_docker_compose
     
@@ -109,7 +109,7 @@ stop() {
 
 # Function to restart services
 restart() {
-    print_status "Restarting Learnify LMS services..."
+    print_status "Restarting Giao Duc Thang Long services..."
     stop
     start
 }
@@ -198,7 +198,7 @@ cleanup() {
 
 # Function to show help
 help() {
-    echo "Learnify LMS Development Script"
+    echo "Giao Duc Thang Long Development Script"
     echo ""
     echo "Usage: $0 [COMMAND]"
     echo ""

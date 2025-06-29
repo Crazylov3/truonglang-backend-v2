@@ -1,11 +1,15 @@
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, status, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import IntegrityError
 import logging
 import time
+import uuid
 from contextlib import asynccontextmanager
+from fastapi.security.api_key import APIKeyHeader
+from fastapi.openapi.utils import get_openapi
+from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.config import settings
 from app.database import async_engine, Base
@@ -17,12 +21,14 @@ from app.routers import auth, users, courses, enrollments
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+csrf_token_header = APIKeyHeader(name="X-Csrftoken", auto_error=False)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Async context manager for FastAPI lifespan events."""
     # Startup
-    logger.info("Starting up Learnify LMS...")
+    logger.info("Starting up Giao Duc Thang Long...")
     
     # Create database tables
     async with async_engine.begin() as conn:
@@ -40,7 +46,7 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    logger.info("Shutting down Learnify LMS...")
+    logger.info("Shutting down Giao Duc Thang Long...")
 
 
 # Create FastAPI app
@@ -182,6 +188,77 @@ async def log_requests(request: Request, call_next):
     response.headers["X-API-Version"] = settings.version
     
     return response
+
+
+# CSRF Token Endpoint
+@app.get("/csrf-token")
+async def get_csrf_token(response: Response):
+    """Get CSRF token - call this first before using other protected endpoints."""
+    csrf_token = str(uuid.uuid4())
+    response.set_cookie(
+        key="csrftoken", 
+        value=csrf_token, 
+        httponly=False,  # Must be False so JavaScript can read it
+        secure=False,    # Set to True in production with HTTPS
+        samesite="lax"
+    )
+    return {
+        "message": "CSRF token set in cookie", 
+        "csrf_token": csrf_token,
+        "instructions": "This token is now available in your browser cookies and will be automatically included in Swagger UI requests."
+    }
+
+
+# Custom Swagger UI
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui_html():
+    swagger_html = get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title="LMS API - Swagger UI",
+        swagger_favicon_url=None,
+        swagger_ui_parameters={
+            "requestInterceptor": """
+                function(request) {
+                    // Get CSRF token from cookie
+                    var csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+                    if (csrfCookie) {
+                        var csrfToken = csrfCookie.split('=')[1];
+                        request.headers['X-Csrftoken'] = csrfToken;
+                        console.log('✅ Added CSRF token to request:', csrfToken.substring(0, 8) + '...');
+                    } else {
+                        console.log('⚠️ No CSRF token found in cookies. Call /csrf-token first.');
+                    }
+                    return request;
+                }
+            """
+        },
+    )
+    return HTMLResponse(swagger_html.body)
+
+
+# Custom OpenAPI Schema
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="LMS API",
+        version="1.0.0",
+        description="Learning Management System API with CSRF Protection",
+        routes=app.routes,
+    )
+    # Add CSRF Token Security
+    openapi_schema["components"]["securitySchemes"] = {
+        "csrf-token": {
+            "type": "apiKey",
+            "name": "X-Csrftoken",
+            "in": "header"
+        }
+    }
+    openapi_schema["security"] = [{"csrf-token": []}]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 
 if __name__ == "__main__":

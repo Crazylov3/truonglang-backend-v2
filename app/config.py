@@ -1,5 +1,5 @@
 """
-Configuration module for Learnify LMS
+Configuration module for Giao Duc Thang Long
 
 This module provides a configuration system that:
 1. Loads non-sensitive configs from YAML files (cfg/ directory)
@@ -126,7 +126,7 @@ class Settings:
     
     @property
     def from_name(self) -> str:
-        return self._cfg.email.from_name or "Learnify LMS"
+        return self._cfg.email.from_name or "Giao Duc Thang Long"
     
     # Application Configuration
     @property
@@ -135,7 +135,7 @@ class Settings:
     
     @property
     def app_name(self) -> str:
-        return self._cfg.app.name or "Learnify LMS"
+        return self._cfg.app.name or "Giao Duc Thang Long"
     
     @property
     def version(self) -> str:
@@ -159,6 +159,10 @@ class Settings:
     @property
     def password_reset_expire_minutes(self) -> int:
         return self._cfg.security.password_reset_expire_minutes or 30
+    
+    @property
+    def csrf_token_expire_minutes(self) -> int:
+        return self._cfg.security.csrf_token_expire_minutes or 60
     
     def __getattr__(self, name: str) -> Any:
         try:

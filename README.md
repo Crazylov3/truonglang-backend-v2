@@ -1,4 +1,4 @@
-# Learnify LMS API
+# Giao Duc Thang Long API
 
 A modern, secure, and scalable Learning Management System (LMS) built with FastAPI, implementing role-based access control, course management, and student enrollment features.
 

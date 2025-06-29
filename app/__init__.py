@@ -1,1 +1,1 @@
-# Learnify LMS Application Package 
+# Giao Duc Thang Long Application Package 

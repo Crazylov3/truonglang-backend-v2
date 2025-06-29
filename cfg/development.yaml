@@ -6,7 +6,6 @@ app:
 
 database:
   host: "localhost"
-  echo: true  # Enable SQL logging in development
 
 redis:
   host: "localhost"
@@ -18,17 +17,5 @@ cors:
     - "http://127.0.0.1:3000"
     - "http://127.0.0.1:8080"
 
-logging:
-  level: "DEBUG"
-
-rate_limiting:
-  enabled: false  # Disable rate limiting in development
-
-monitoring:
-  metrics_enabled: false  # Simplified monitoring for dev
-
 email:
-  from_email: "dev@learnify.com"
-
-file_upload:
-  upload_path: "dev_uploads" 
+  from_email: "dev@learnify.com" 

@@ -20,15 +20,13 @@ class UserLogin(BaseModel):
     password: str
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
+class LoginResponse(BaseModel):
+    message: str
+    user: dict
 
 
-class TokenData(BaseModel):
-    email: Optional[str] = None
-    user_id: Optional[int] = None
-    role: Optional[str] = None
+class LogoutResponse(BaseModel):
+    message: str
 
 
 class VerifyEmail(BaseModel):
@@ -41,8 +39,17 @@ class ForgotPassword(BaseModel):
 
 
 class ResetPassword(BaseModel):
-    token: str
+    email: EmailStr
+    otp: str
     new_password: str
+
+    @validator('otp')
+    def validate_otp(cls, v):
+        if not v.isdigit():
+            raise ValueError('OTP must contain only digits')
+        if len(v) != 6:
+            raise ValueError('OTP must be exactly 6 digits')
+        return v
 
     @validator('new_password')
     def validate_password(cls, v):
@@ -65,8 +72,8 @@ class ChangePassword(BaseModel):
 __all__ = [
     "UserRegister",
     "UserLogin",
-    "Token",
-    "TokenData",
+    "LoginResponse",
+    "LogoutResponse",
     "VerifyEmail", 
     "ForgotPassword",
     "ResetPassword",

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 import redis.asyncio as redis
 
-from app.core.security import get_password_hash, verify_password, create_access_token
+from app.core.security import get_password_hash, verify_password
 from app.core.email import email_service
 from app.db.repositories import UserRepository, CourseRepository, EnrollmentRepository
 from app.models.user import User, UserRole
@@ -100,7 +100,7 @@ class AuthService(BaseService):
         }
     
     async def authenticate_user(self, email: str, password: str) -> Dict[str, Any]:
-        """Authenticate user and return token."""
+        """Authenticate user and return user data (for session-based auth)."""
         user = await self.user_repo.get_by_email(email)
         
         if not user or not verify_password(password, user.hashed_password):
@@ -109,16 +109,9 @@ class AuthService(BaseService):
         # Update last login time
         await self.user_repo.update(user.id, last_login_at=datetime.utcnow())
         
-        # Create access token
-        token = create_access_token({
-            "user_id": user.id,
-            "email": user.email,
-            "role": user.role.value
-        })
-        
+        # Return user data (session management handled at router level)
         return {
-            "access_token": token,
-            "token_type": "bearer",
+            "message": "Authentication successful",
             "user": user
         }
 
