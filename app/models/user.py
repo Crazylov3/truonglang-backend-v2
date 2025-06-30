@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum, func, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Enum, func, ForeignKey
 from sqlalchemy.orm import relationship
 from enum import IntEnum
 from app.database import Base
@@ -20,7 +20,7 @@ class User(Base):
     first_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=True)
     bio = Column(String(1000), nullable=True)
-    role = Column(Enum(UserRole), default=UserRole.STUDENT, nullable=False)
+    role = Column(Enum(UserRole, values_callable=lambda obj: [str(e.value) for e in obj]), default=UserRole.STUDENT, nullable=False)
     last_login_at = Column(DateTime(timezone=True), nullable=True)  # Track last login
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

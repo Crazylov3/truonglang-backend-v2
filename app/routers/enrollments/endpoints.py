@@ -1,19 +1,16 @@
 from fastapi import Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from typing import List
 from app.database import get_db
-from app.schemas.enrollments import EnrollmentDetailResponse
-from app.schemas.courses import CourseResponse
 from app.models.user import User, UserRole
-from app.models.course import Course, CourseStatus
+from app.models.course import Course
 from app.models.enrollment import Enrollment
-from app.core.deps import get_current_user, require_student
+from app.core.deps import get_current_user
 
 
 async def get_my_enrolled_courses(
-    current_user: User = Depends(require_student),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Get all courses the current student is enrolled in."""

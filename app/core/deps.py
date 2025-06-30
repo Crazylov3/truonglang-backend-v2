@@ -64,28 +64,3 @@ def require_role(required_role: UserRole):
             )
         return current_user
     return role_checker
-
-
-# Role-based dependencies for convenience
-def require_student():
-    """Require STUDENT role or higher."""
-    return require_role(UserRole.STUDENT)
-
-
-def require_instructor():
-    """Require INSTRUCTOR role or higher."""
-    return require_role(UserRole.INSTRUCTOR)
-
-
-def require_staff():
-    """Require STAFF role or higher."""
-    return require_role(UserRole.STAFF)
-
-
-def require_admin():
-    """Require ADMIN role."""
-    return require_role(UserRole.ADMIN)
-
-
-# Backward compatibility alias
-get_current_active_user = get_current_user 

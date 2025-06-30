@@ -10,7 +10,7 @@ from app.models.user import UserRole
 from app.core.deps import get_current_user
 
 
-def authentication_required(*allowed_roles: UserRole):
+def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
     """
     Decorator to require authentication and optionally specific roles.
     
@@ -34,43 +34,38 @@ def authentication_required(*allowed_roles: UserRole):
         async def wrapper(
             request: Request,
             db: AsyncSession = Depends(get_db),
-            redis_client: redis.Redis = Depends(get_redis),
             *args,
             **kwargs
         ):
             try:
                 # Get current user
-                current_user = await get_current_user(request, db, redis_client)
+                current_user = await get_current_user(request, db)
                 
                 # Check role requirements if specified
-                if allowed_roles:
-                    # Find the minimum required role level (lowest number in the hierarchy)
-                    min_required_role = min(allowed_roles)
-                    
-                    # Check if user's role is at or above the minimum required level
-                    if current_user.role < min_required_role:
-                        # Get role names for error message
-                        required_roles = [role.name.lower() for role in allowed_roles if role <= current_user.role]
-                        if not required_roles:
-                            required_roles = [role.name.lower() for role in allowed_roles]
-                        
-                        raise HTTPException(
-                            status_code=status.HTTP_403_FORBIDDEN,
-                            detail=f"Access denied. Minimum required role: {min_required_role.name.lower()} (level {min_required_role.value}). Your role: {current_user.role.name.lower()} (level {current_user.role.value})"
-                        )
+                if current_user.role < allowed_role:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail=f"Access denied. Minimum required role: {allowed_role.name.lower()} (level {allowed_role.value}). Your role: {current_user.role.name.lower()} (level {current_user.role.value})"
+                    )
                 
-                # Build kwargs for the original function
-                bound_args = sig.bind_partial(
-                    request=request,
-                    db=db,
-                    redis_client=redis_client,
-                    current_user=current_user,
-                    *args,
-                    **kwargs
-                )
-                bound_args.apply_defaults()
+                # Filter arguments to only include what the original function expects
+                filtered_kwargs = {}
+                param_names = list(sig.parameters.keys())
                 
-                return await func(**bound_args.arguments)
+                # Add parameters only if the original function expects them
+                if 'request' in param_names:
+                    filtered_kwargs['request'] = request
+                if 'db' in param_names:
+                    filtered_kwargs['db'] = db
+                if 'current_user' in param_names:
+                    filtered_kwargs['current_user'] = current_user
+                
+                # Add other parameters from kwargs
+                for key, value in kwargs.items():
+                    if key in param_names:
+                        filtered_kwargs[key] = value
+                
+                return await func(**filtered_kwargs)
                 
             except HTTPException:
                 raise
@@ -85,7 +80,7 @@ def authentication_required(*allowed_roles: UserRole):
         default_params = []
         
         for name, param in sig.parameters.items():
-            if name not in ['request', 'db', 'redis_client', 'current_user']:
+            if name not in ['request', 'db', 'current_user']:
                 if param.default == inspect.Parameter.empty:
                     non_default_params.append(param)
                 else:
@@ -103,8 +98,6 @@ def authentication_required(*allowed_roles: UserRole):
         new_params.extend([
             inspect.Parameter('db', inspect.Parameter.POSITIONAL_OR_KEYWORD, 
                             annotation=AsyncSession, default=Depends(get_db)),
-            inspect.Parameter('redis_client', inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                            annotation=redis.Redis, default=Depends(get_redis)),
         ])
         
         # Add default original parameters

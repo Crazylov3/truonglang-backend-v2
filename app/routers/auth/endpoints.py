@@ -5,13 +5,10 @@ from datetime import datetime
 import ast
 from app.database import get_db
 from app.schemas.auth import UserRegister, UserLogin, VerifyEmail, ForgotPassword, ResetPassword, ChangePassword
-from app.database import AsyncSessionLocal
 from app.models.user import User
 from app.core.security import (
     get_password_hash,
     verify_password,
-    create_password_reset_token,
-    verify_password_reset_token
 )
 from app.core.email import email_service
 from app.core.deps import get_current_user
@@ -21,9 +18,11 @@ from app.core.decorators import csrf_protect, ensure_csrf_token
 import json
 import redis.asyncio as redis
 from app.database import get_redis
+from app.database import AsyncSessionLocal
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 @csrf_protect
 async def register(
@@ -32,7 +31,6 @@ async def register(
 ):
     """Register a new user account."""
 
-    from app.database import AsyncSessionLocal
     async with AsyncSessionLocal() as db:
         # Check if user already exists
         result = await db.execute(select(User).where(User.email == user_data.email))
@@ -135,7 +133,6 @@ async def login(
     logger.info(f"Users: {users.scalars().all()}")
     logger.info(f"User: {login_data.email}")
 
-
     if not user or not verify_password(login_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -204,22 +201,22 @@ async def forgot_password(
     # Check if user exists
     result = await db.execute(select(User).where(User.email == forgot_data.email))
     user = result.scalar_one_or_none()
-    
+
     # Always return success to prevent email enumeration
     if user:
         # Generate OTP instead of complex token
         otp = email_service.generate_otp()
-        
+
         # Store OTP in Redis with email as key
         await redis_client.setex(
             f"password_reset:{forgot_data.email}",
             settings.otp_expire_minutes * 60,  # Convert to seconds
             otp
         )
-        
+
         # Send OTP email
         await email_service.send_password_reset_otp_email(user.email, otp)
-    
+
     return {"message": "If the email exists, a password reset OTP has been sent."}
 
 
@@ -230,16 +227,16 @@ async def reset_password(
     redis_client: redis.Redis = Depends(get_redis)
 ):
     """Reset password using OTP."""
-    
+
     # Get stored OTP from Redis
     stored_otp = await redis_client.get(f"password_reset:{reset_data.email}")
-    
+
     if not stored_otp or stored_otp != reset_data.otp:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or expired OTP"
         )
-    
+
     # Get user
     result = await db.execute(select(User).where(User.email == reset_data.email))
     user = result.scalar_one_or_none()
@@ -248,14 +245,14 @@ async def reset_password(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     # Update password
     user.hashed_password = get_password_hash(reset_data.new_password)
     await db.commit()
-    
+
     # Delete used OTP
     await redis_client.delete(f"password_reset:{reset_data.email}")
-    
+
     return {"message": "Password reset successfully"}
 
 
@@ -286,28 +283,3 @@ async def change_password(
 async def get_csrf_token():
     """Generate and return a CSRF token - decorator handles all the complexity."""
     return {"message": "CSRF token generated successfully"}
-
-async def verify_otp(
-    email: str,
-    otp: str,
-    redis_client: redis.Redis = Depends(get_redis)
-):
-    """Verify OTP without changing password - useful for testing."""
-    stored_otp = await redis_client.get(f"password_reset:{email}")
-    
-    if not stored_otp:
-        return {
-            "valid": False,
-            "message": "No OTP found for this email"
-        }
-    
-    if stored_otp.decode() == otp:
-        return {
-            "valid": True,
-            "message": "OTP is valid"
-        }
-    else:
-        return {
-            "valid": False,
-            "message": "Invalid OTP"
-        }

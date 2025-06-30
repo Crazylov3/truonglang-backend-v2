@@ -30,11 +30,9 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting up Giao Duc Thang Long...")
     
-    # Create database tables
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    
-    logger.info("Database tables created successfully")
+    # Note: Database tables should be created using Alembic migrations
+    # Run: alembic upgrade head
+    logger.info("Note: Ensure database migrations are up to date with: alembic upgrade head")
     
     # Check system health
     health_status = await check_system_health()

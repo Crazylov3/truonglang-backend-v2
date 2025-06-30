@@ -16,22 +16,11 @@ class UserBase(BaseModel):
             raise ValueError('Bio must be 1000 characters or less')
         return v
 
-
-class UserCreate(UserBase):
-    password: str
-    role: UserRole = UserRole.STUDENT
-
-    @validator('password')
-    def validate_password(cls, v):
-        if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters long')
-        return v
-
-
 class UserUpdate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     bio: Optional[str] = None
+    avatar: Optional[str] = None
 
     @validator('bio')
     def validate_bio(cls, v):
@@ -59,13 +48,11 @@ class UserResponse(UserBase):
 
 class UserProfile(UserResponse):
     """Extended user profile with additional computed fields."""
-    enrolled_courses_count: int = 0
-    created_courses_count: int = 0
+    avatar: Optional[str] = None
 
 
 __all__ = [
     "UserBase",
-    "UserCreate",
     "UserUpdate", 
     "UserResponse",
     "UserProfile"

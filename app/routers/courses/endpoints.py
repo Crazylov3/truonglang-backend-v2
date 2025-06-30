@@ -1,28 +1,23 @@
 from fastapi import Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, and_, or_
+from sqlalchemy import select, func, and_, or_, desc
 from sqlalchemy.orm import selectinload
-from typing import List, Optional
+from typing import Optional
 from math import ceil
 from app.database import get_db
 from app.schemas.courses import (
     CourseCreate, 
     CourseUpdate, 
-    CourseResponse, 
-    CourseDetailResponse,
     CourseListResponse
 )
-from app.schemas.enrollments import EnrollmentResponse
 from app.models.course import Course, CourseStatus
 from app.models.user import User, UserRole
 from app.models.enrollment import Enrollment
 from app.core.deps import (
     get_current_user,
     get_current_user_optional,
-    require_instructor,
-    require_staff,
-    require_student
 )
+from app.core.decorators import csrf_protect, authentication_required
 
 
 async def get_courses(
@@ -34,8 +29,11 @@ async def get_courses(
     db: AsyncSession = Depends(get_db)
 ):
     """Get paginated list of courses."""
-    # Build query
-    query = select(Course).options(selectinload(Course.instructor))
+    # Build query with preloaded relationships
+    query = select(Course).options(
+        selectinload(Course.instructor),
+        selectinload(Course.enrollments)
+    )
     
     # Apply filters based on user role
     if not current_user or current_user.role == UserRole.STUDENT:
@@ -80,14 +78,16 @@ async def get_courses(
         has_prev=page > 1
     )
 
-
 async def get_course(
     course_id: int,
     current_user: Optional[User] = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db)
 ):
     """Get a specific course by ID."""
-    query = select(Course).options(selectinload(Course.instructor)).where(Course.id == course_id)
+    query = select(Course).options(
+        selectinload(Course.instructor),
+        selectinload(Course.enrollments)
+    ).where(Course.id == course_id)
     result = await db.execute(query)
     course = result.scalar_one_or_none()
     
@@ -122,25 +122,19 @@ async def get_course(
     
     return course
 
-
+@authentication_required(allowed_role=UserRole.INSTRUCTOR)
+@csrf_protect
 async def create_course(
     course_data: CourseCreate,
-    current_user: User = Depends(require_instructor),
-    db: AsyncSession = Depends(get_db)
+    current_user: User,
+    db: AsyncSession
 ):
     """Create a new course."""
     # Set instructor_id based on user role
-    instructor_id = current_user.id
-    if current_user.role >= UserRole.STAFF:
-        # Staff and Admin can create courses for themselves or specify another instructor
-        # For simplicity, we'll use the current user as instructor
-        # In a real app, you might want to add instructor_id to the request body
-        instructor_id = current_user.id
-    
     new_course = Course(
         title=course_data.title,
         description=course_data.description,
-        instructor_id=instructor_id,
+        instructor_id=current_user.id,
         status=course_data.status
     )
     
@@ -148,14 +142,22 @@ async def create_course(
     await db.commit()
     await db.refresh(new_course)
     
-    return new_course
+    # Reload the course with enrollments for the response
+    result = await db.execute(
+        select(Course).options(selectinload(Course.enrollments)).where(Course.id == new_course.id)
+    )
+    course_with_enrollments = result.scalar_one()
+    
+    return course_with_enrollments
 
 
+@authentication_required(allowed_role=UserRole.INSTRUCTOR)
+@csrf_protect
 async def update_course(
     course_id: int,
     course_update: CourseUpdate,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User,
+    db: AsyncSession
 ):
     """Update a course."""
     result = await db.execute(select(Course).where(Course.id == course_id))
@@ -190,13 +192,20 @@ async def update_course(
     await db.commit()
     await db.refresh(course)
     
-    return course
+    # Reload the course with enrollments for the response
+    result = await db.execute(
+        select(Course).options(selectinload(Course.enrollments)).where(Course.id == course_id)
+    )
+    course_with_enrollments = result.scalar_one()
+    
+    return course_with_enrollments
 
 
+@authentication_required(allowed_role=UserRole.STAFF)
+@csrf_protect
 async def delete_course(
     course_id: int,
-    current_user: User = Depends(require_staff),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession
 ):
     """Delete a course (Staff and Admin only)."""
     result = await db.execute(select(Course).where(Course.id == course_id))
@@ -214,10 +223,12 @@ async def delete_course(
     return {"message": f"Course '{course.title}' deleted successfully"}
 
 
+@authentication_required(allowed_role=UserRole.STUDENT)
+@csrf_protect
 async def enroll_in_course(
     course_id: int,
-    current_user: User = Depends(require_student),
-    db: AsyncSession = Depends(get_db)
+    current_user: User,
+    db: AsyncSession
 ):
     """Enroll in a course (Students only)."""
     # Check if course exists and is published
@@ -263,10 +274,12 @@ async def enroll_in_course(
     return enrollment
 
 
+@authentication_required(allowed_role=UserRole.STUDENT)
+@csrf_protect
 async def unenroll_from_course(
     course_id: int,
-    current_user: User = Depends(require_student),
-    db: AsyncSession = Depends(get_db)
+    current_user: User,
+    db: AsyncSession
 ):
     """Unenroll from a course (Students only)."""
     # Find enrollment
@@ -292,10 +305,11 @@ async def unenroll_from_course(
     return {"message": "Successfully unenrolled from course"}
 
 
+@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_course_students(
     course_id: int,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User,
+    db: AsyncSession
 ):
     """Get students enrolled in a course."""
     # Check if course exists

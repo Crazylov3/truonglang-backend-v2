@@ -48,12 +48,12 @@ services:
       # Mount source code for development (excluding .venv to avoid permission issues)
       - ./app:/app/app:ro
       - ./cfg:/app/cfg:ro
+      - ./scripts:/app/scripts:ro
       - ./pyproject.toml:/app/pyproject.toml:ro
       - ./README.md:/app/README.md:ro
       # Mount logs directory (writable)
       - ./logs:/app/logs
-      # UV cache volume to avoid permission issues  
-      - uv_cache:/app/.uv-cache
+      # UV cache to custom directory
     networks:
       - learnify-network
     restart: unless-stopped
@@ -64,15 +64,15 @@ services:
   db:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=learnify_db
-      - POSTGRES_USER=learnify
-      - POSTGRES_PASSWORD=learnify_password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--encoding=UTF8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8
     ports:
       - "5432:5432"
     volumes:
-      # Persist database data
-      - postgres_data:/var/lib/postgresql/data
+      # Persist database data to custom directory
+      - ~/.truonglang_web_data/postgres:/var/lib/postgresql/data
       # Custom PostgreSQL configuration
       - ./docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./docker/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
@@ -86,8 +86,8 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      # Persist Redis data
-      - redis_data:/data
+      # Persist Redis data to custom directory
+      - ~/.truonglang_web_data/redis:/data
       # Custom Redis configuration
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
@@ -130,15 +130,6 @@ services:
       - learnify-network
     profiles:
       - dev  # Only start with --profile dev
-
-# Volumes for data persistence
-volumes:
-  postgres_data:
-    driver: local
-  redis_data:
-    driver: local
-  uv_cache:
-    driver: local
 
 # Networks
 networks:

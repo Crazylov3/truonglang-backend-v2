@@ -10,7 +10,6 @@ from .endpoints import (
     reset_password,
     change_password,
     get_csrf_token,
-    verify_otp
 )
 
 # Import schemas for response models
@@ -27,4 +26,3 @@ router.post("/forgot-password", response_model=dict)(forgot_password)
 router.post("/reset-password", response_model=dict)(reset_password)
 router.post("/change-password", response_model=dict)(change_password)
 router.get("/csrf-token", response_model=dict)(get_csrf_token)
-router.get("/verify-otp", response_model=dict)(verify_otp)  # For testing OTP 

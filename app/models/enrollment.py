@@ -23,3 +23,4 @@ class Enrollment(Base):
 
     def __repr__(self):
         return f"<Enrollment(student_id={self.student_id}, course_id={self.course_id})>" 
+  
