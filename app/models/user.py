@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, Enum, func, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import relationship
 from enum import IntEnum
-from app.database import Base
-
+from .base import BaseModel
 
 class UserRole(IntEnum):
     STUDENT = 1
@@ -11,38 +10,30 @@ class UserRole(IntEnum):
     ADMIN = 4
 
 
-class User(Base):
+class User(BaseModel):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    first_name = Column(String(100), nullable=True)
-    last_name = Column(String(100), nullable=True)
-    bio = Column(String(1000), nullable=True)
-    role = Column(Enum(UserRole, values_callable=lambda obj: [str(e.value) for e in obj]), default=UserRole.STUDENT, nullable=False)
-    last_login_at = Column(DateTime(timezone=True), nullable=True)  # Track last login
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    role = Column(Integer, nullable=False, default=UserRole.STUDENT)
+    last_login_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationships
-    created_courses = relationship("Course", back_populates="instructor", foreign_keys="Course.instructor_id")
+    profile = relationship("UserProfile", back_populates="user", uselist=False)
+    created_courses = relationship("Course", back_populates="creator", foreign_keys="Course.creator_id")
     enrollments = relationship("Enrollment", back_populates="student")
+    payments = relationship("Payment", back_populates="user")
+    activity_logs = relationship("StudentActivityLog", back_populates="student")
 
     @property
     def full_name(self):
-        if self.first_name and self.last_name:
-            return f"{self.first_name} {self.last_name}"
+        if self.profile and self.profile.first_name and self.profile.last_name:
+            return f"{self.profile.first_name} {self.profile.last_name}"
+        elif self.profile and self.profile.display_name:
+            return self.profile.display_name
         return self.email.split("@")[0]  # Fallback to email username
 
     def __repr__(self):
-        return f"<User(id={self.id}, email='{self.email}', role='{self.role.value}')>" 
-
-
-class UserAvatar(Base):
-    __tablename__ = "user_avatars"
-
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    avatar_url = Column(String(255), nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+        return f"<User(id={self.id}, email='{self.email}', role={self.role})>"

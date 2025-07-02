@@ -51,9 +51,9 @@ services:
       - ./scripts:/app/scripts:ro
       - ./pyproject.toml:/app/pyproject.toml:ro
       - ./README.md:/app/README.md:ro
-      # Mount logs directory (writable)
       - ./logs:/app/logs
-      # UV cache to custom directory
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini:ro
     networks:
       - learnify-network
     restart: unless-stopped

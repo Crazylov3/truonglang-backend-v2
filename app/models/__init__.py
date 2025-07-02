@@ -1,11 +1,17 @@
-from .user import User, UserRole, UserAvatar
-from .course import Course, CourseStatus  
+from .user import User, UserRole
+from .user_profile import UserProfile
+from .course import Course, CoursePaymentType, BillingInterval
 from .enrollment import Enrollment
-from .payment import Payment, Transaction, PaymentStatus
+from .payment import Payment, PaymentStatus
+from .subscription import Subscription, SubscriptionStatus
+from .student_activity_log import StudentActivityLog
 
 __all__ = [
-    "User", "UserRole", "UserAvatar",
-    "Course", "CourseStatus", 
+    "User", "UserRole",
+    "UserProfile",
+    "Course", "CoursePaymentType", "BillingInterval",
     "Enrollment",
-    "Payment", "Transaction", "PaymentStatus"
+    "Payment", "PaymentStatus",
+    "Subscription", "SubscriptionStatus",
+    "StudentActivityLog"
 ] 

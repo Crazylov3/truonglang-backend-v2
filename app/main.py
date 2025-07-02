@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, status, Response
+from fastapi import FastAPI, Request, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
@@ -12,10 +12,8 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.config import settings
-from app.database import async_engine, Base
-from app.db.utils import check_system_health
-from app.schemas.common import HealthResponse
-from app.routers import auth, users, courses, enrollments
+from app.routers.auth import auth
+from app.routers.users import users
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -33,14 +31,7 @@ async def lifespan(app: FastAPI):
     # Note: Database tables should be created using Alembic migrations
     # Run: alembic upgrade head
     logger.info("Note: Ensure database migrations are up to date with: alembic upgrade head")
-    
-    # Check system health
-    health_status = await check_system_health()
-    if health_status["status"] == "healthy":
-        logger.info("All system components are healthy")
-    else:
-        logger.warning(f"System health issues detected: {health_status}")
-    
+  
     yield
     
     # Shutdown
@@ -111,27 +102,6 @@ async def general_exception_handler(request: Request, exc: Exception):
             }
         )
 
-
-# Health check endpoint with comprehensive system health
-@app.get("/health", response_model=HealthResponse, tags=["health"])
-async def health_check():
-    """Comprehensive health check endpoint."""
-    system_health = await check_system_health()
-    
-    return HealthResponse(
-        status=system_health["status"],
-        app_name=settings.app_name,
-        version=settings.version
-    )
-
-
-# Detailed health check for monitoring
-@app.get("/health/detailed", tags=["health"])
-async def detailed_health_check():
-    """Detailed health check with component status."""
-    return await check_system_health()
-
-
 # API Info endpoint
 @app.get("/", tags=["info"])
 async def root():
@@ -141,8 +111,6 @@ async def root():
         "version": settings.version,
         "docs": "/docs",
         "redoc": "/redoc",
-        "health": "/health",
-        "detailed_health": "/health/detailed",
         "architecture": {
             "database": "PostgreSQL with async SQLAlchemy",
             "cache": "Redis",
@@ -156,8 +124,8 @@ async def root():
 # Include routers with consistent API versioning
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
-app.include_router(courses.router, prefix="/api/v1")
-app.include_router(enrollments.router, prefix="/api/v1")
+# app.include_router(courses.router, prefix="/api/v1")
+# app.include_router(enrollments.router, prefix="/api/v1")
 
 
 # Middleware for request logging and monitoring
@@ -186,26 +154,6 @@ async def log_requests(request: Request, call_next):
     response.headers["X-API-Version"] = settings.version
     
     return response
-
-
-# CSRF Token Endpoint
-@app.get("/csrf-token")
-async def get_csrf_token(response: Response):
-    """Get CSRF token - call this first before using other protected endpoints."""
-    csrf_token = str(uuid.uuid4())
-    response.set_cookie(
-        key="csrftoken", 
-        value=csrf_token, 
-        httponly=False,  # Must be False so JavaScript can read it
-        secure=False,    # Set to True in production with HTTPS
-        samesite="lax"
-    )
-    return {
-        "message": "CSRF token set in cookie", 
-        "csrf_token": csrf_token,
-        "instructions": "This token is now available in your browser cookies and will be automatically included in Swagger UI requests."
-    }
-
 
 # Custom Swagger UI
 @app.get("/docs", include_in_schema=False)
@@ -245,12 +193,16 @@ def custom_openapi():
         routes=app.routes,
     )
     # Add CSRF Token Security
-    openapi_schema["components"]["securitySchemes"] = {
-        "csrf-token": {
-            "type": "apiKey",
-            "name": "X-Csrftoken",
-            "in": "header"
-        }
+    # Ensure components exists
+    if "components" not in openapi_schema:
+        openapi_schema["components"] = {}
+    if "securitySchemes" not in openapi_schema["components"]:
+        openapi_schema["components"]["securitySchemes"] = {}
+    
+    openapi_schema["components"]["securitySchemes"]["csrf-token"] = {
+        "type": "apiKey",
+        "name": "X-Csrftoken",
+        "in": "header"
     }
     openapi_schema["security"] = [{"csrf-token": []}]
     app.openapi_schema = openapi_schema

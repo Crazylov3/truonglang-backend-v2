@@ -1,6 +1,5 @@
 from fastapi import Response
-from app.models.user import User, UserAvatar
-from app.config import settings
+from app.schemas.users.user_schemas import UserInfo
 
 
 def set_cookie(
@@ -40,10 +39,8 @@ def clear_cookie(
     )
 
 
-def get_user_cookie_from_template(user: User, user_avatar: UserAvatar = None) -> dict:
-    return {
+def get_user_cookie_from_template(user: UserInfo) -> dict:
+    return {  
         "user_id": user.id,
         "user_email": user.email,
-        "user_last_name": user.last_name,
-        "user_avatar_url": user_avatar.avatar_url if user_avatar else None,
     }

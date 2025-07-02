@@ -65,7 +65,6 @@ class CSRFManager:
         
         # Get token from header (preferred)
         header_token = request.headers.get("X-Csrftoken") or request.headers.get("X-CSRF-Token")
-        
         if not header_token:
             # Try to get from form data
             try:

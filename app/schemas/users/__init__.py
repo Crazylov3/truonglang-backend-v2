@@ -1,3 +1,15 @@
+# Import from the new modular user schemas
+from .user_schemas import (
+    UserProfileUpdate,
+    UserInfo,
+    UsersListResponse,
+    UserRoleUpdateRequest,
+    UserRoleUpdateResponse,
+    DeleteUserResponse,
+    AvatarResponse
+)
+
+# Keep the existing schemas for backward compatibility
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
 from datetime import datetime
@@ -34,7 +46,6 @@ class UserResponse(UserBase):
     role: UserRole
     last_login_at: Optional[datetime] = None
     created_at: datetime
-    updated_at: datetime
 
     class Config:
         from_attributes = True
@@ -52,6 +63,16 @@ class UserProfile(UserResponse):
 
 
 __all__ = [
+    # New modular schemas
+    "UserProfileUpdate",
+    "UserInfo",
+    "UsersListResponse",
+    "UserRoleUpdateRequest",
+    "UserRoleUpdateResponse",
+    "DeleteUserResponse",
+    "AvatarResponse",
+    
+    # Legacy schemas for backward compatibility
     "UserBase",
     "UserUpdate", 
     "UserResponse",

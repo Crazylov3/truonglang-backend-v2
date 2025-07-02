@@ -1,37 +1,36 @@
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, Float, String, PrimaryKeyConstraint, Enum
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, DECIMAL, String
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from app.database import Base
 from enum import IntEnum
+from .base import BaseModel
 
 
 class PaymentStatus(IntEnum):
     PENDING = 1
     PAID = 2
     FAILED = 3
-
-class Transaction(Base):
-    __tablename__ = "transactions"
-    id = Column(Integer, primary_key=True, index=True)
-    amount = Column(Float, nullable=False)
-    transaction_reference = Column(String(64), nullable=False, unique=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    REFUNDED = 4
 
 
-class Payment(Base):
+class Payment(BaseModel):
     __tablename__ = "payments"
-    transaction_id = Column(Integer, ForeignKey("transactions.id"), nullable=False)
-    enrollment_id = Column(Integer, ForeignKey("enrollments.id"), nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    status = Column(Enum(PaymentStatus, values_callable=lambda obj: [str(e.value) for e in obj]), nullable=False)
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    subscription_id = Column(Integer, ForeignKey("subscriptions.id"), nullable=True, comment="NULL for one-time payments")
+    course_id = Column(Integer, ForeignKey("courses.id"), nullable=False, comment="Denormalized for easy lookup")
+    
+    amount = Column(DECIMAL(10, 2), nullable=False)
+    status = Column(Integer, nullable=False, default=PaymentStatus.PENDING)
+    provider_reference = Column(String(255), unique=True, nullable=True, comment="ID from Stripe, PayPal, etc.")
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-    # primary key is the enrollment_id and created_at
-    __table_args__ = (
-        PrimaryKeyConstraint('enrollment_id', 'created_at', name='pk_payment'),
-    )
+    # Relationships
+    user = relationship("User", back_populates="payments")
+    subscription = relationship("Subscription", back_populates="payments")
+    course = relationship("Course", back_populates="payments")
 
     def __repr__(self):
-        return f"<Payment(enrollment_id={self.enrollment_id}, created_at={self.created_at})>" 
+        return f"<Payment(id={self.id}, user_id={self.user_id}, amount={self.amount}, status={self.status})>" 
   
   
