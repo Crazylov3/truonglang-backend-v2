@@ -26,7 +26,7 @@ class UserInfo(BaseModel):
     email: EmailStr
     role: UserRole
     last_login_at: Optional[datetime] = None
-    created_at: datetime
+    created_at: Optional[datetime] = None
     profile: Optional[UserProfile] = None
 
     @property

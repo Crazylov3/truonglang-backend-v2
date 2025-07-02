@@ -1,8 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import date
-from app.schemas.users.user_info import UserInfo
-
 
 class LogActivityRequest(BaseModel):
     course_id: int = Field(..., description="ID of the course to log activity for")

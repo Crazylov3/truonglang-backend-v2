@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 import inspect
 from app.core.cookies import set_cookie
 from app.config import settings
+from pydantic import BaseModel
 
 
 def ensure_csrf_token(func: Callable) -> Callable:
@@ -73,7 +74,12 @@ def ensure_csrf_token(func: Callable) -> Callable:
             if isinstance(result, dict):
                 response = JSONResponse(content=result)
             else:
-                response = JSONResponse(content={"result": result, "csrf_token": csrf_token})
+                # Handle Pydantic models by converting to dict
+                if isinstance(result, BaseModel):
+                    result_dict = result.dict()
+                    response = JSONResponse(content={"result": result_dict, "csrf_token": csrf_token})
+                else:
+                    response = JSONResponse(content={"result": result, "csrf_token": csrf_token})
 
         # Set CSRF token in cookie and header
         if not existing_token:

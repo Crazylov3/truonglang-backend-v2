@@ -22,7 +22,6 @@ from .users import router, logger
 
 
 @router.get("/me", response_model=UserInfo)
-@ensure_csrf_token
 async def get_current_user_profile(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
@@ -42,16 +41,29 @@ async def get_current_user_profile(
             detail="User not found"
         )
     
-    user_info = UserInfo(
+    return UserInfo(
         id=user.id,
         email=user.email,
         role=user.role,
         last_login_at=user.last_login_at,
         created_at=user.created_at,
-        profile= user.profile if user.profile else None
+        profile= UserProfile(
+            first_name=user.profile.first_name,
+            last_name=user.profile.last_name,
+            display_name=user.profile.display_name,
+            date_of_birth=user.profile.date_of_birth,
+            headline=user.profile.headline,
+            bio=user.profile.bio,
+            location=user.profile.location,
+            language=user.profile.language,
+            timezone=user.profile.timezone,
+            website_url=user.profile.website_url,
+            linkedin_url=user.profile.linkedin_url,
+            twitter_handle=user.profile.twitter_handle,
+            github_url=user.profile.github_url,
+            avatar=user.profile.avatar_url
+        ) if user.profile else None
     )
-    
-    return user_info
 
 
 @router.put("/me", response_model=UserProfile)
@@ -103,11 +115,21 @@ async def update_current_user_profile(
     await db.refresh(profile)
     
     return UserProfile(
-        id=profile.id,
-        user_id=profile.user_id,
+        id=current_user.id,
         first_name=profile.first_name,
         last_name=profile.last_name,
-        avatar_url=profile.avatar_url
+        display_name=profile.display_name,
+        date_of_birth=profile.date_of_birth,
+        headline=profile.headline,
+        bio=profile.bio,
+        location=profile.location,
+        language=profile.language,
+        timezone=profile.timezone,
+        website_url=profile.website_url,
+        linkedin_url=profile.linkedin_url,
+        twitter_handle=profile.twitter_handle,
+        github_url=profile.github_url,
+        avatar=profile.avatar_url
     )
 
 @router.get("/{user_id}/avatar", response_model=AvatarResponse)

@@ -7,7 +7,7 @@ from app.database import get_db
 from app.schemas.auth.login import UserLogin, UserLoginResponse, UserLogoutResponse
 from datetime import datetime
 from app.models.user import User
-from app.schemas.users.user_info import UserInfo
+from app.schemas.users.user_schemas import UserInfo
 import json
 from app.core.security import verify_password
 from app.config import settings
@@ -51,8 +51,7 @@ async def login(
     user_info = UserInfo(
         id=user.id,
         email=user.email,
-        first_name=user.profile.first_name,
-        last_name=user.profile.last_name,
+        role=user.role,
     )
 
     # Get user cookie data
