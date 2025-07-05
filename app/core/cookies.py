@@ -43,4 +43,5 @@ def get_user_cookie_from_template(user: UserInfo) -> dict:
     return {  
         "user_id": user.id,
         "user_email": user.email,
+        "user_role": user.role,
     }

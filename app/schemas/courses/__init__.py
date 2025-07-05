@@ -9,21 +9,24 @@ from .course_schemas import (
     EnrollmentResponse,
     UnenrollmentResponse,
     DeleteCourseResponse,
-    CourseStudent,
-    CourseStudentsResponse
+    CourseStudent
 )
 
 # Keep the old imports for backward compatibility
 __all__ = [
+    # Course schemas
     "CourseBase",
     "CourseCreate", 
     "CourseUpdate",
     "CourseResponse",
     "CourseDetailResponse",
     "CourseListResponse",
+    
+    # Enrollment schemas
     "EnrollmentResponse",
     "UnenrollmentResponse",
     "DeleteCourseResponse",
-    "CourseStudent",
-    "CourseStudentsResponse"
+    
+    # Student schemas
+    "CourseStudent"
 ] 

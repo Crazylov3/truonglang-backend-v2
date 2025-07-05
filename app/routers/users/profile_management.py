@@ -39,7 +39,7 @@ async def get_current_user_profile(
             detail="User not found"
         )
     
-    avatar_base64 = from_image_to_base64(load_image_from_disk(user.profile.avatar)) if user.profile.avatar else None
+    avatar_base64 = from_image_to_base64(load_image_from_disk(user.profile.avatar)) if user.profile and user.profile.avatar else None
     
     return UserInfo(
         id=user.id,

@@ -60,19 +60,6 @@ class CourseUpdate(BaseModel):
 
 class CourseResponse(CourseBase):
     id: int
-    creator_id: int
-    payment_type: CoursePaymentType
-    price: Optional[Decimal] = None
-    subscription_price: Optional[Decimal] = None
-    billing_interval: Optional[BillingInterval] = None
-    billing_interval_count: Optional[int] = None
-    is_usage_based: bool
-    created_at: datetime
-    enrolled_students_count: int
-
-    class Config:
-        from_attributes = True
-
 
 class CourseDetailResponse(CourseResponse):
     creator: UserResponse
@@ -109,5 +96,4 @@ class CourseStudent(BaseModel):
     is_active: bool
 
 
-class CourseStudentsResponse(BaseModel):
-    students: List[CourseStudent] 
+# Removed CourseStudentsResponse class as it's replaced by PaginatedResponse[CourseStudent] 

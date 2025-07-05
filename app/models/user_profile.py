@@ -26,7 +26,7 @@ class UserProfile(BaseModel):
 
     @property
     def public_name(self):
-        return self.display_name if self.display_name else self.full_name
+        return self.full_name
 
     def __repr__(self):
         return f"<UserProfile(user_id={self.user_id}, name='{self.full_name}')>" 

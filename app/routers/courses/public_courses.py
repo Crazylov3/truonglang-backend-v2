@@ -10,7 +10,8 @@ from app.models.user import User
 from app.core.deps import get_current_user_optional
 from app.schemas.courses.course_schemas import (
     CourseListResponse,
-    CourseDetailResponse
+    CourseDetailResponse,
+    CourseResponse
 )
 from .courses import router, logger
 
@@ -49,9 +50,16 @@ async def get_courses(
     
     result = await db.execute(query)
     courses = result.scalars().all()
+    courses_data = []
+    for course in courses:
+        courses_data.append(CourseResponse(
+            id=course.id,
+            title=course.title,
+            description=course.description
+        ))
     
     return CourseListResponse(
-        items=courses,
+        items=courses_data,
         total=total,
         page=page,
         per_page=per_page,

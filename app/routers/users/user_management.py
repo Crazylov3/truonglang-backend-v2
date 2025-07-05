@@ -53,7 +53,7 @@ async def get_all_users(
     users_data = []
     for user in users:
         avatar_base64 = from_image_to_base64(load_image_from_disk(
-            user.profile.avatar)) if user.profile.avatar else None
+            user.profile.avatar)) if user.profile and user.profile.avatar else None
 
         user_data = UserInfo(
             id=user.id,
@@ -99,7 +99,7 @@ async def get_user_by_id(
         )
 
     avatar_base64 = from_image_to_base64(load_image_from_disk(
-        user.profile.avatar)) if user.profile.avatar else None
+        user.profile.avatar)) if user.profile and user.profile.avatar else None
 
     return UserInfo(
         id=user.id,

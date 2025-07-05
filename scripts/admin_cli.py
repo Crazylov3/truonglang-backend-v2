@@ -37,10 +37,11 @@ sys.path.append(str(Path(__file__).parent.parent))
 import click
 from sqlalchemy import text, select, delete
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 from passlib.context import CryptContext
 
 from app.database import AsyncSessionLocal
-from app.models import User, UserRole
+from app.models import User, UserRole, UserProfile
 from app.config import settings
 
 # Password hashing
@@ -62,7 +63,7 @@ async def get_user_by_email(email: str) -> Optional[User]:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(
-                select(User).where(User.email == email)
+                select(User).options(selectinload(User.profile)).where(User.email == email)
             )
             return result.scalar_one_or_none()
         except SQLAlchemyError:
@@ -75,9 +76,9 @@ async def create_user_in_db(
     first_name: str = None, 
     last_name: str = None,
     role: UserRole = UserRole.STUDENT,
-    bio: str = None
+    date_of_birth=None
 ) -> User:
-    """Create a new user in the database."""
+    """Create a new user in the database with profile."""
     async with AsyncSessionLocal() as session:
         try:
             # Hash the password
@@ -87,17 +88,32 @@ async def create_user_in_db(
             user = User(
                 email=email,
                 hashed_password=hashed_password,
-                first_name=first_name,
-                last_name=last_name,
-                role=role,
-                bio=bio
+                role=role
             )
             
             session.add(user)
+            await session.flush()  # Get the user ID
+            
+            # Create user profile if names are provided
+            if first_name and last_name:
+                profile = UserProfile(
+                    user_id=user.id,
+                    first_name=first_name,
+                    last_name=last_name,
+                    date_of_birth=date_of_birth
+                )
+                session.add(profile)
+            
             await session.commit()
             await session.refresh(user)
             
-            return user
+            # Load the profile relationship
+            result = await session.execute(
+                select(User).options(selectinload(User.profile)).where(User.id == user.id)
+            )
+            user_with_profile = result.scalar_one()
+            
+            return user_with_profile
             
         except SQLAlchemyError as e:
             await session.rollback()
@@ -130,13 +146,17 @@ async def delete_user_from_db(email: str) -> bool:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(
-                select(User).where(User.email == email)
+                select(User).options(selectinload(User.profile)).where(User.email == email)
             )
             user = result.scalar_one_or_none()
             
             if not user:
                 return False
-                
+            
+            # Delete profile first if it exists (due to foreign key constraints)
+            if user.profile:
+                await session.delete(user.profile)
+            
             await session.delete(user)
             await session.commit()
             return True
@@ -151,7 +171,7 @@ async def list_all_users():
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(
-                select(User).order_by(User.created_at.desc())
+                select(User).options(selectinload(User.profile)).order_by(User.created_at.desc())
             )
             users = result.scalars().all()
             return users
@@ -186,6 +206,13 @@ def role_to_string(role: UserRole) -> str:
     return role_map.get(role, 'Unknown')
 
 
+def get_user_display_name(user: User) -> str:
+    """Get the display name for a user."""
+    if user.profile and user.profile.first_name and user.profile.last_name:
+        return f"{user.profile.first_name} {user.profile.last_name}"
+    return user.email.split("@")[0]  # Fallback to email username
+
+
 @click.group()
 @click.version_option(version="1.0.0", prog_name="Learnify Admin CLI")
 def cli():
@@ -203,9 +230,8 @@ def cli():
 @click.option('--password', help='Password for the admin user (will prompt if not provided)')
 @click.option('--first-name', help='First name of the admin user')
 @click.option('--last-name', help='Last name of the admin user')
-@click.option('--bio', help='Bio/description for the admin user')
 @click.option('--force', is_flag=True, help='Skip confirmation prompts')
-def create_admin(email: str, password: str, first_name: str, last_name: str, bio: str, force: bool):
+def create_admin(email: str, password: str, first_name: str, last_name: str, force: bool):
     """Create a new admin user."""
     
     async def _create_admin():
@@ -242,7 +268,6 @@ def create_admin(email: str, password: str, first_name: str, last_name: str, bio
         click.echo(f"   Email: {email}")
         click.echo(f"   First Name: {first_name or 'Not provided'}")
         click.echo(f"   Last Name: {last_name or 'Not provided'}")
-        click.echo(f"   Bio: {bio or 'Not provided'}")
         click.echo(f"   Role: Admin")
         
         if not force and not click.confirm("\n✅ Create this admin user?"):
@@ -256,13 +281,13 @@ def create_admin(email: str, password: str, first_name: str, last_name: str, bio
                 password=password,
                 first_name=first_name,
                 last_name=last_name,
-                role=UserRole.ADMIN,
-                bio=bio
+                role=UserRole.ADMIN
             )
             
             click.echo(f"\n🎉 Admin user created successfully!")
             click.echo(f"   ID: {user.id}")
             click.echo(f"   Email: {user.email}")
+            click.echo(f"   Name: {get_user_display_name(user)}")
             click.echo(f"   Role: {role_to_string(user.role)}")
             click.echo(f"   Created: {user.created_at}")
             
@@ -300,13 +325,11 @@ def list_users(role: str, limit: int):
         for user in users:
             click.echo(f"🆔 ID: {user.id}")
             click.echo(f"📧 Email: {user.email}")
-            click.echo(f"👤 Name: {user.first_name or ''} {user.last_name or ''}".strip() or "Not provided")
+            click.echo(f"👤 Name: {get_user_display_name(user)}")
             click.echo(f"🎭 Role: {role_to_string(user.role)}")
             click.echo(f"📅 Created: {user.created_at}")
             if user.last_login_at:
                 click.echo(f"🕐 Last Login: {user.last_login_at}")
-            if user.bio:
-                click.echo(f"📝 Bio: {user.bio}")
             click.echo("-" * 40)
     
     asyncio.run(_list_users())
@@ -329,7 +352,7 @@ def delete_user(email: str, force: bool):
         click.echo(f"\n⚠️  User to delete:")
         click.echo(f"   ID: {user.id}")
         click.echo(f"   Email: {user.email}")
-        click.echo(f"   Name: {user.first_name or ''} {user.last_name or ''}".strip() or "Not provided")
+        click.echo(f"   Name: {get_user_display_name(user)}")
         click.echo(f"   Role: {role_to_string(user.role)}")
         click.echo(f"   Created: {user.created_at}")
         
@@ -439,15 +462,15 @@ def database_info():
                 click.echo(f"   Total: {total_users}")
                 
                 # Table row counts
-                tables = ['courses', 'enrollments', 'transactions', 'payments', 'user_avatars']
+                tables = ['users', 'user_profiles', 'courses', 'enrollments', 'payments', 'subscriptions', 'student_activity_logs']
                 click.echo("\n📊 Table Statistics:")
                 for table in tables:
                     try:
                         result = await session.execute(text(f"SELECT COUNT(*) FROM {table};"))
                         count = result.scalar()
                         click.echo(f"   {table}: {count} rows")
-                    except:
-                        click.echo(f"   {table}: Error reading")
+                    except Exception as e:
+                        click.echo(f"   {table}: Error reading ({str(e)[:50]}...)")
                         
             except SQLAlchemyError as e:
                 click.echo(f"❌ Database error: {e}")
@@ -466,18 +489,19 @@ def search_users(email: str, name: str, role: str):
     async def _search_users():
         async with AsyncSessionLocal() as session:
             try:
-                query = select(User)
+                query = select(User).options(selectinload(User.profile))
                 conditions = []
                 
                 if email:
                     conditions.append(User.email.ilike(f"%{email}%"))
                 
                 if name:
-                    name_condition = (
-                        User.first_name.ilike(f"%{name}%") |
-                        User.last_name.ilike(f"%{name}%")
+                    # Search in profile names
+                    profile_condition = (
+                        User.profile.has(UserProfile.first_name.ilike(f"%{name}%")) |
+                        User.profile.has(UserProfile.last_name.ilike(f"%{name}%"))
                     )
-                    conditions.append(name_condition)
+                    conditions.append(profile_condition)
                 
                 if role:
                     role_enum = role_from_string(role)
@@ -499,7 +523,7 @@ def search_users(email: str, name: str, role: str):
                 for user in users:
                     click.echo(f"🆔 ID: {user.id}")
                     click.echo(f"📧 Email: {user.email}")
-                    click.echo(f"👤 Name: {user.first_name or ''} {user.last_name or ''}".strip() or "Not provided")
+                    click.echo(f"👤 Name: {get_user_display_name(user)}")
                     click.echo(f"🎭 Role: {role_to_string(user.role)}")
                     click.echo(f"📅 Created: {user.created_at}")
                     click.echo("-" * 40)
@@ -508,6 +532,145 @@ def search_users(email: str, name: str, role: str):
                 click.echo(f"❌ Search error: {e}")
     
     asyncio.run(_search_users())
+
+
+@cli.command()
+@click.option('--email', prompt='User email', help='Email address for the user')
+@click.option('--password', help='Password for the user (will prompt if not provided)')
+@click.option('--first-name', help='First name of the user')
+@click.option('--last-name', help='Last name of the user')
+@click.option('--role', type=click.Choice(['student', 'instructor', 'staff', 'admin'], case_sensitive=False),
+              default='student', help='Role for the user')
+@click.option('--force', is_flag=True, help='Skip confirmation prompts')
+def create_user(email: str, password: str, first_name: str, last_name: str, role: str, force: bool):
+    """Create a new user with specified role."""
+    
+    async def _create_user():
+        nonlocal password
+        
+        # Check if user already exists
+        existing_user = await get_user_by_email(email)
+        if existing_user:
+            click.echo(f"❌ User with email '{email}' already exists!")
+            return
+        
+        # Get password if not provided
+        if password is None:
+            password = getpass.getpass("User password: ")
+            password_confirm = getpass.getpass("Confirm password: ")
+            if password != password_confirm:
+                click.echo("❌ Passwords don't match!")
+                return
+        
+        if not password or len(password) < 6:
+            click.echo("❌ Password must be at least 6 characters long!")
+            return
+        
+        user_role = role_from_string(role)
+        
+        # Show summary
+        click.echo("\n📋 User Summary:")
+        click.echo(f"   Email: {email}")
+        click.echo(f"   First Name: {first_name or 'Not provided'}")
+        click.echo(f"   Last Name: {last_name or 'Not provided'}")
+        click.echo(f"   Role: {role_to_string(user_role)}")
+        
+        if not force and not click.confirm("\n✅ Create this user?"):
+            click.echo("❌ Operation cancelled.")
+            return
+        
+        try:
+            # Create the user
+            user = await create_user_in_db(
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name,
+                role=user_role
+            )
+            
+            click.echo(f"\n🎉 User created successfully!")
+            click.echo(f"   ID: {user.id}")
+            click.echo(f"   Email: {user.email}")
+            click.echo(f"   Name: {get_user_display_name(user)}")
+            click.echo(f"   Role: {role_to_string(user.role)}")
+            click.echo(f"   Created: {user.created_at}")
+            
+        except SQLAlchemyError as e:
+            click.echo(f"❌ Failed to create user: {e}")
+    
+    asyncio.run(_create_user())
+
+
+@cli.command()
+@click.option('--email', prompt='User email', help='Email of the user to update')
+@click.option('--first-name', help='New first name')
+@click.option('--last-name', help='New last name')
+@click.option('--force', is_flag=True, help='Skip confirmation prompts')
+def update_profile(email: str, first_name: str, last_name: str, force: bool):
+    """Update a user's profile information."""
+    
+    async def _update_profile():
+        # Check if user exists
+        user = await get_user_by_email(email)
+        if not user:
+            click.echo(f"❌ User with email '{email}' not found!")
+            return
+        
+        # Check what's being updated
+        updates = {}
+        if first_name:
+            updates['first_name'] = first_name
+        if last_name:
+            updates['last_name'] = last_name
+        
+        if not updates:
+            click.echo("❌ No updates specified!")
+            return
+        
+        # Show current info and proposed changes
+        click.echo(f"\n👤 Current User Info:")
+        click.echo(f"   Email: {user.email}")
+        click.echo(f"   Current Name: {get_user_display_name(user)}")
+        
+        click.echo(f"\n🔄 Proposed Changes:")
+        for field, value in updates.items():
+            current_value = getattr(user.profile, field, 'Not set') if user.profile else 'Not set'
+            click.echo(f"   {field.replace('_', ' ').title()}: {current_value} → {value}")
+        
+        if not force and not click.confirm("\n✅ Apply these changes?"):
+            click.echo("❌ Operation cancelled.")
+            return
+        
+        async with AsyncSessionLocal() as session:
+            try:
+                # Get user again in this session
+                result = await session.execute(
+                    select(User).options(selectinload(User.profile)).where(User.email == email)
+                )
+                user = result.scalar_one()
+                
+                # Create profile if it doesn't exist
+                if not user.profile:
+                    profile = UserProfile(
+                        user_id=user.id,
+                        first_name=first_name or '',
+                        last_name=last_name or ''
+                    )
+                    session.add(profile)
+                else:
+                    # Update existing profile
+                    for field, value in updates.items():
+                        setattr(user.profile, field, value)
+                
+                await session.commit()
+                click.echo(f"✅ Profile updated successfully!")
+                
+            except SQLAlchemyError as e:
+                await session.rollback()
+                click.echo(f"❌ Failed to update profile: {e}")
+    
+    asyncio.run(_update_profile())
 
 
 if __name__ == "__main__":

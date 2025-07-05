@@ -6,7 +6,7 @@ from app.models.course import Course
 from app.models.user import UserRole
 from app.core.decorators import csrf_protect, authentication_required
 from app.schemas.courses.course_schemas import DeleteCourseResponse
-from .courses import router, logger
+from .courses import router
 
 
 @router.delete("/{course_id}", response_model=DeleteCourseResponse)

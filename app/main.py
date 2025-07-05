@@ -14,7 +14,7 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from app.config import settings
 from app.routers.auth import auth
 from app.routers.users import users
-
+from app.routers.courses import courses
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,17 +58,17 @@ app.add_middleware(
 )
 
 
-# Global exception handlers
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    """Handle validation errors."""
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={
-            "detail": "Validation error",
-            "errors": exc.errors()
-        }
-    )
+# # Global exception handlers
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request: Request, exc: RequestValidationError):
+#     """Handle validation errors."""
+#     return JSONResponse(
+#         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+#         content={
+#             "detail": "Validation error",
+#             "errors": exc.errors()
+#         }
+#     )
 
 
 @app.exception_handler(IntegrityError)
@@ -124,7 +124,7 @@ async def root():
 # Include routers with consistent API versioning
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
-# app.include_router(courses.router, prefix="/api/v1")
+app.include_router(courses.router, prefix="/api/v1")
 # app.include_router(enrollments.router, prefix="/api/v1")
 
 
