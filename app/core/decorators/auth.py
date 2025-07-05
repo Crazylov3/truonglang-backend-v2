@@ -41,11 +41,22 @@ def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
                 # Get current user
                 current_user = await get_current_user(request, db)
                 
+                # Ensure role is UserRole enum for comparison
+                user_role = current_user.role
+                if isinstance(user_role, int):
+                    try:
+                        user_role = UserRole(user_role)
+                    except ValueError:
+                        raise HTTPException(
+                            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f"Invalid user role: {user_role}"
+                        )
+                
                 # Check role requirements if specified
-                if current_user.role < allowed_role:
+                if user_role.value < allowed_role.value:
                     raise HTTPException(
                         status_code=status.HTTP_403_FORBIDDEN,
-                        detail=f"Access denied. Minimum required role: {allowed_role.name.lower()} (level {allowed_role.value}). Your role: {current_user.role.name.lower()} (level {current_user.role.value})"
+                        detail=f"Access denied. Minimum required role: {allowed_role.name.lower()} (level {allowed_role.value}). Your role: {user_role.name.lower()} (level {user_role.value})"
                     )
                 
                 # Filter arguments to only include what the original function expects

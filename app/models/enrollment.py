@@ -13,10 +13,9 @@ class Enrollment(BaseModel):
     enrolled_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     is_active = Column(Boolean, default=True)
 
-    # Relationships
+    # Relationships - only essential ones from DBMS
     student = relationship("User", back_populates="enrollments")
     course = relationship("Course", back_populates="enrollments")
-    subscription = relationship("Subscription", back_populates="enrollment", uselist=False)
 
     # Ensure a student can only enroll once per course
     __table_args__ = (

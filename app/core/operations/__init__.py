@@ -1,0 +1,21 @@
+"""Core database operations.
+
+This module provides centralized database operations that can be used
+by both FastAPI endpoints and CLI tools. Each operation function handles
+a single database task and accepts a database session as a parameter.
+"""
+
+# Import all operations
+from . import user
+from . import user_profile
+from . import course
+from . import enrollment
+from . import payment
+
+__all__ = [
+    "user",
+    "user_profile", 
+    "course",
+    "enrollment",
+    "payment"
+]

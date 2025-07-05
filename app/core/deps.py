@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException, status, Request, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from typing import Optional
 import json
 
 from app.database import get_db
 from app.models.user import User, UserRole
+from app.core.operations import user as user_operations
 
 
 async def get_current_user(
@@ -34,11 +34,20 @@ async def get_current_user(
     except (json.JSONDecodeError, ValueError, TypeError):
         raise credentials_exception
     
-    # Get fresh user data from database
-    result = await db.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    # Get fresh user data from database using operations
+    user = await user_operations.get_user_by_id(db, user_id)
     if user is None:
         raise credentials_exception
+    
+    # Ensure role is properly converted to UserRole enum
+    if isinstance(user.role, int):
+        try:
+            user.role = UserRole(user.role)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Invalid user role in database: {user.role}"
+            )
     
     return user
 
@@ -57,7 +66,12 @@ async def get_current_user_optional(
 def require_role(required_role: UserRole):
     """Dependency factory for role-based authorization."""
     async def role_checker(current_user: User = Depends(get_current_user)) -> User:
-        if current_user.role < required_role:
+        # Ensure role is UserRole enum for comparison
+        user_role = current_user.role
+        if isinstance(user_role, int):
+            user_role = UserRole(user_role)
+        
+        if user_role.value < required_role.value:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Access denied. Required role: {required_role.name} or higher."

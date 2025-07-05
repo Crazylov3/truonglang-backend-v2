@@ -11,7 +11,7 @@ async_database_url = settings.database_url
 # Async SQLAlchemy setup
 async_engine = create_async_engine(
     async_database_url,
-    echo=settings.debug,
+    echo=settings.sql_debug,
     future=True
 )
 
@@ -25,7 +25,7 @@ AsyncSessionLocal = async_sessionmaker(
 sync_database_url = settings.database_url.replace("postgresql+asyncpg", "postgresql+psycopg2")
 sync_engine = create_engine(
     sync_database_url,
-    echo=settings.debug
+    echo=settings.sql_debug
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=sync_engine)

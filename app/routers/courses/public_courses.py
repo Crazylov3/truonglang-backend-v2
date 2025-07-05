@@ -1,18 +1,15 @@
 from fastapi import Depends, HTTPException, status, Query, Path
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
-from sqlalchemy.orm import selectinload
 from typing import Optional
 from math import ceil
 from app.database import get_db
-from app.models.course import Course, CoursePaymentType
 from app.models.user import User
 from app.core.deps import get_current_user_optional
 from app.schemas.courses.course_schemas import (
     CourseListResponse,
-    CourseDetailResponse,
-    CourseResponse
+    CourseDetailResponse
 )
+from app.core.operations import course as course_ops
 from .courses import router, logger
 
 
@@ -20,46 +17,20 @@ from .courses import router, logger
 async def get_courses(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
-    payment_type: Optional[CoursePaymentType] = Query(None, description="Filter by payment type"),
     creator_id: Optional[int] = Query(None, description="Filter by creator ID"),
     current_user: Optional[User] = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db)
 ):
     """Get paginated list of courses."""
-    # Build query with preloaded relationships
-    query = select(Course).options(
-        selectinload(Course.creator),
-        selectinload(Course.enrollments)
+    courses, total = await course_ops.list_courses(
+        db=db,
+        page=page,
+        per_page=per_page,
+        creator_id=creator_id
     )
     
-    # Apply filters
-    if payment_type:
-        query = query.where(Course.payment_type == payment_type)
-    
-    if creator_id:
-        query = query.where(Course.creator_id == creator_id)
-    
-    # Get total count
-    count_query = select(func.count()).select_from(query.subquery())
-    total_result = await db.execute(count_query)
-    total = total_result.scalar()
-    
-    # Apply pagination
-    offset = (page - 1) * per_page
-    query = query.offset(offset).limit(per_page)
-    
-    result = await db.execute(query)
-    courses = result.scalars().all()
-    courses_data = []
-    for course in courses:
-        courses_data.append(CourseResponse(
-            id=course.id,
-            title=course.title,
-            description=course.description
-        ))
-    
     return CourseListResponse(
-        items=courses_data,
+        items=courses,
         total=total,
         page=page,
         per_page=per_page,
@@ -76,12 +47,7 @@ async def get_course(
     db: AsyncSession = Depends(get_db)
 ):
     """Get a specific course by ID."""
-    query = select(Course).options(
-        selectinload(Course.creator),
-        selectinload(Course.enrollments)
-    ).where(Course.id == course_id)
-    result = await db.execute(query)
-    course = result.scalar_one_or_none()
+    course = await course_ops.get_course_by_id(db, course_id)
     
     if not course:
         raise HTTPException(

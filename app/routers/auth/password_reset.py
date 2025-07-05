@@ -1,11 +1,9 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from app.database import get_db
 from app.schemas.auth.password_reset import UserPasswordReset, UserPasswordResetResponse, UserPasswordResetVerifyEmail, UserPasswordResetVerifyEmailResponse
-from app.models.user import User
-from app.core.security import get_password_hash
+from app.core.operations import user as user_operations
 from .auth import router
 from app.core.decorators import csrf_protect
 import redis.asyncio as redis
@@ -22,14 +20,14 @@ async def reset_password(
     redis_client: redis.Redis = Depends(get_redis)
 ):
     """Reset password using OTP."""
-    # Check if user exists
-    result = await db.execute(select(User).where(User.email == user_data.email))
-    user = result.scalar_one_or_none()
+    # Check if user exists using operations
+    user = await user_operations.get_user_by_email(db, user_data.email)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
+    
     otp = email_service.generate_otp()
     # Store OTP in Redis
     await redis_client.setex(f"password_reset:{user_data.email}", settings.otp_expire_minutes * 60, otp)
@@ -60,18 +58,21 @@ async def verify_email_and_reset_password(
             detail="Invalid or expired OTP"
         )
 
-    # Get user
-    result = await db.execute(select(User).where(User.email == user_data.email))
-    user = result.scalar_one_or_none()
+    # Check if user exists using operations
+    user = await user_operations.get_user_by_email(db, user_data.email)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
 
-    # Update password
-    user.hashed_password = get_password_hash(user_data.new_password)
-    await db.commit()
+    # Update password using operations
+    success = await user_operations.update_user_password(db, user_data.email, user_data.new_password)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update password"
+        )
 
     # Delete used OTP
     await redis_client.delete(f"password_reset:{user_data.email}")

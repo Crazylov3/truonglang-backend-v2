@@ -1,14 +1,12 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 import ast
 import json
 import redis.asyncio as redis
 from app.database import get_db, get_redis, AsyncSessionLocal
 from app.schemas.auth.register import UserRegister, UserRegisterResponse, UserRegisterVerifyEmail, UserRegisterVerifyEmailResponse
 from app.models.user import User, UserRole
-from app.models.user_profile import UserProfile
-from app.core.security import get_password_hash
+from app.core.operations import user as user_operations
 from app.core.email import email_service
 from app.config import settings
 from .auth import router
@@ -25,9 +23,9 @@ async def register(
     """Register a new user account."""
 
     async with AsyncSessionLocal() as db:
-        # Check if user already exists
-        result = await db.execute(select(User).where(User.email == user_data.email))
-        if result.scalar_one_or_none():
+        # Check if user already exists using operations
+        user = await user_operations.get_user_by_email(db, user_data.email)
+        if user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email already registered"
@@ -88,30 +86,22 @@ async def verify_email_and_create_account(
             detail="Invalid OTP"
         )
 
-    # Create user account and profile
-    async with AsyncSessionLocal() as db:
-        hashed_password = get_password_hash(registration_data["password"])
-        
-        # Create user with core authentication data only
-        new_user = User(
+    # Create user account and profile using operations
+    try:
+        await user_operations.create_user(
+            db=db,
             email=registration_data["email"],
-            hashed_password=hashed_password,
-            role=UserRole.STUDENT  # Default role
+            password=registration_data["password"],
+            first_name=registration_data.get("first_name"),
+            last_name=registration_data.get("last_name"),
+            role=UserRole.STUDENT
         )
-
-        db.add(new_user)
-        await db.flush()  # Flush to get the user ID
-        
-        # Create user profile with personal information
-        user_profile = UserProfile(
-            user_id=new_user.id,
-            first_name=registration_data.get("first_name", ""),
-            last_name=registration_data.get("last_name", "")
+    except Exception as e:
+        logger.error(f"Failed to create user: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create user account"
         )
-        
-        db.add(user_profile)
-        await db.commit()
-        await db.refresh(new_user)
 
     # Remove registration data from Redis
     await redis_client.delete(registration_key)

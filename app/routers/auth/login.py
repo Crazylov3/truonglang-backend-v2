@@ -1,15 +1,11 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 from app.database import get_db
 from app.schemas.auth.login import UserLogin, UserLoginResponse, UserLogoutResponse
-from datetime import datetime
-from app.models.user import User
 from app.schemas.users.user_schemas import UserInfo
+from app.core.operations import user as user_operations
 import json
-from app.core.security import verify_password
 from app.config import settings
 from .auth import router
 from .auth import logger
@@ -25,28 +21,22 @@ async def login(
     db: AsyncSession = Depends(get_db)
 ):
     """Authenticate user and create secure cookies."""
-    # Get user with profile data
-    result = await db.execute(
-        select(User)
-        .options(selectinload(User.profile))
-        .where(User.email == user_data.email)
-    )
-    user = result.scalar_one_or_none()
+    # Get user with profile data using operations
+    user = await user_operations.get_user_by_email(db, user_data.email)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
 
-    if not verify_password(user_data.password, user.hashed_password):
+    if not user_operations.verify_password(user_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
 
-    # Update last login time
-    user.last_login_at = datetime.utcnow()
-    await db.commit()
+    # Update last login time using operations
+    await user_operations.update_user_last_login(db, user.id)
 
     user_info = UserInfo(
         id=user.id,

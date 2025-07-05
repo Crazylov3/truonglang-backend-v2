@@ -1,11 +1,7 @@
 from fastapi import Depends, HTTPException, status, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 from app.database import get_db
-from app.models.course import Course
 from app.models.user import User, UserRole
-from app.models.enrollment import Enrollment
 from app.core.deps import get_current_user
 from app.core.decorators import csrf_protect, authentication_required
 from app.schemas.courses.course_schemas import (
@@ -15,6 +11,7 @@ from app.schemas.courses.course_schemas import (
     CourseStudent
 )
 from app.schemas.common import PaginatedResponse
+from app.core.operations import course as course_ops
 from .courses import router, logger
 
 
@@ -27,35 +24,21 @@ async def create_course(
     db: AsyncSession = Depends(get_db)
 ):
     """Create a new course."""
-    # Set creator_id based on current user
-    new_course = Course(
-        title=course_data.title,
-        description=course_data.description,
-        creator_id=current_user.id,
-        payment_type=course_data.payment_type,
-        price=course_data.price,
-        subscription_price=course_data.subscription_price,
-        billing_interval=course_data.billing_interval,
-        billing_interval_count=course_data.billing_interval_count,
-        is_usage_based=course_data.is_usage_based
-    )
-
-    db.add(new_course)
-    await db.commit()
-    await db.refresh(new_course)
-
-    # Reload the course with enrollments for the response
-    result = await db.execute(
-        select(Course).options(selectinload(Course.enrollments)).where(
-            Course.id == new_course.id)
-    )
-    course_with_enrollments = result.scalar_one()
-
-    return CourseResponse(
-        id=course_with_enrollments.id,
-        title=course_with_enrollments.title,
-        description=course_with_enrollments.description
-    )
+    try:
+        course = await course_ops.create_course(
+            db=db,
+            title=course_data.title,
+            description=course_data.description,
+            creator_id=current_user.id,
+            price=course_data.price
+        )
+        return course
+    except Exception as e:
+        logger.error(f"Error creating course: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create course"
+        )
 
 
 @router.put("/{course_id}", response_model=CourseResponse)
@@ -68,46 +51,44 @@ async def update_course(
     db: AsyncSession = Depends(get_db)
 ):
     """Update a course."""
-    result = await db.execute(select(Course).where(Course.id == course_id))
-    course = result.scalar_one_or_none()
-
+    # Check if course exists
+    course = await course_ops.get_course_by_id(db, course_id)
     if not course:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Course not found"
         )
-
+    
     # Check permissions
     can_edit = False
     if current_user.role == UserRole.INSTRUCTOR:
         # Instructors can only edit their own courses
-        can_edit = course.creator_id == current_user.id
+        can_edit = await course_ops.check_course_ownership(db, course_id, current_user.id)
     elif current_user.role >= UserRole.STAFF:
         # Staff and Admin can edit any course
         can_edit = True
-
+    
     if not can_edit:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions to edit this course"
         )
-
+    
     # Update course
     update_data = course_update.dict(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(course, field, value)
-
-    await db.commit()
-    await db.refresh(course)
-
-    # Reload the course with enrollments for the response
-    result = await db.execute(
-        select(Course).options(selectinload(Course.enrollments)).where(
-            Course.id == course_id)
+    updated_course = await course_ops.update_course(
+        db=db,
+        course_id=course_id,
+        **update_data
     )
-    course_with_enrollments = result.scalar_one()
-
-    return course_with_enrollments
+    
+    if not updated_course:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update course"
+        )
+    
+    return updated_course
 
 
 @router.get("/{course_id}/students", response_model=PaginatedResponse[CourseStudent])
@@ -121,65 +102,47 @@ async def get_course_students(
 ):
     """Get students enrolled in a course with pagination."""
     # Check if course exists
-    result = await db.execute(select(Course).where(Course.id == course_id))
-    course = result.scalar_one_or_none()
-
+    course = await course_ops.get_course_by_id(db, course_id)
     if not course:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Course not found"
         )
-
+    
     # Check permissions
     can_view = False
     if current_user.role == UserRole.INSTRUCTOR:
         # Instructors can only view students of their own courses
-        can_view = course.creator_id == current_user.id
+        can_view = await course_ops.check_course_ownership(db, course_id, current_user.id)
     elif current_user.role >= UserRole.STAFF:
         # Staff and Admin can view students of any course
         can_view = True
-
+    
     if not can_view:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions to view course students"
         )
-
-    # Count total students
-    count_query = (
-        select(Enrollment.id)
-        .where(Enrollment.course_id == course_id)
-        .where(Enrollment.is_active == True)
+    
+    # Get course students
+    students_data, total = await course_ops.get_course_students(
+        db=db,
+        course_id=course_id,
+        page=page,
+        per_page=per_page
     )
-    count_result = await db.execute(count_query)
-    total = len(count_result.all())
-
-    # Get enrolled students with profiles (paginated)
-    offset = (page - 1) * per_page
-    query = (
-        select(User, Enrollment.enrolled_at, Enrollment.is_active)
-        .join(Enrollment, User.id == Enrollment.student_id)
-        .options(selectinload(User.profile))
-        .where(Enrollment.course_id == course_id)
-        .where(Enrollment.is_active == True)
-        .offset(offset)
-        .limit(per_page)
-    )
-
-    result = await db.execute(query)
-    students_data = result.all()
-
+    
     students = [
         CourseStudent(
-            id=student.id,
-            email=student.email,
-            full_name=student.full_name,
-            enrolled_at=enrolled_at,
-            is_active=is_active
+            id=student_data['id'],
+            email=student_data['email'],
+            full_name=student_data['full_name'],
+            enrolled_at=student_data['enrolled_at'],
+            is_active=student_data['is_active']
         )
-        for student, enrolled_at, is_active in students_data
+        for student_data in students_data
     ]
-
+    
     return PaginatedResponse.create(
         items=students,
         total=total,

@@ -1,14 +1,11 @@
 import os
 from fastapi import Depends, HTTPException, status, Query, Path
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
-from sqlalchemy.orm import selectinload
 from typing import Optional
 
 from app.config import settings
 from app.database import get_db
 from app.models.user import User, UserRole
-from app.models.user_profile import UserProfile as UserProfileModel
 from app.schemas.users.user_schemas import (
     UsersListResponse,
     UserProfileUpdate,
@@ -20,6 +17,7 @@ from app.schemas.users.user_schemas import (
 )
 from app.core.decorators import authentication_required, csrf_protect
 from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, from_image_to_base64, load_image_from_disk
+from app.core.operations import user as user_ops
 from .users import router
 
 
@@ -34,21 +32,15 @@ async def get_all_users(
     db: AsyncSession = Depends(get_db)
 ):
     """Get all users (staff/admin only)."""
-    query = select(User).options(selectinload(User.profile))
+    users = await user_ops.list_users(
+        db=db,
+        role=role,
+        limit=limit,
+        offset=skip
+    )
 
-    if role:
-        query = query.where(User.role == role)
-
-    query = query.offset(skip).limit(limit)
-    result = await db.execute(query)
-    users = result.scalars().all()
-
-    count_query = select(func.count(User.id))
-    if role:
-        count_query = count_query.where(User.role == role)
-
-    total_result = await db.execute(count_query)
-    total = total_result.scalar()
+    # Get total count for pagination
+    total = await user_ops.count_users(db=db, role=role)
 
     users_data = []
     for user in users:
@@ -85,12 +77,7 @@ async def get_user_by_id(
     db: AsyncSession = Depends(get_db)
 ):
     """Get user by ID (staff/admin only)."""
-    result = await db.execute(
-        select(User)
-        .options(selectinload(User.profile))
-        .where(User.id == user_id)
-    )
-    user = result.scalar_one_or_none()
+    user = await user_ops.get_user_by_id(db, user_id)
 
     if not user:
         raise HTTPException(
@@ -126,8 +113,7 @@ async def update_user_profile_by_id(
 ):
     """Update user profile by ID (staff/admin only)."""
     # Check if user exists
-    result = await db.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await user_ops.get_user_by_id(db, user_id)
 
     if not user:
         raise HTTPException(
@@ -135,29 +121,8 @@ async def update_user_profile_by_id(
             detail="User not found"
         )
 
-    # Get or create user profile
-    result = await db.execute(
-        select(UserProfileModel).where(UserProfileModel.user_id == user_id)
-    )
-    profile = result.scalar_one_or_none()
-
-    if not profile:
-        # Create new profile if it doesn't exist
-        profile = UserProfileModel(
-            user_id=user_id,
-            first_name="",
-            last_name=""
-        )
-        db.add(profile)
-        await db.flush()
-
-    # Update profile fields
-    update_data = profile_update.dict(exclude_unset=True, exclude={"avatar"})
-    for field, value in update_data.items():
-        if hasattr(profile, field):
-            setattr(profile, field, value)
-
     # Handle avatar upload
+    avatar_path = None
     if profile_update.avatar:
         avatar_dir = os.path.join(settings.MEDIA_ROOT, "avatars")
         os.makedirs(avatar_dir, exist_ok=True)
@@ -166,20 +131,34 @@ async def update_user_profile_by_id(
         try:
             save_image_to_disk(from_base64_to_image(
                 profile_update.avatar), save_image_path)
-            profile.avatar = save_image_path
+            avatar_path = save_image_path
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid avatar image data"
             )
 
-    await db.commit()
-    await db.refresh(profile)
+    # Update profile using operations
+    update_data = profile_update.dict(exclude_unset=True, exclude={"avatar"})
+    if avatar_path:
+        update_data["avatar"] = avatar_path
+
+    success = await user_ops.update_user_profile(
+        db=db,
+        user_id=user_id,
+        **update_data
+    )
+
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update profile"
+        )
 
     return UserProfile(
-        first_name=profile.first_name,
-        last_name=profile.last_name,
-        date_of_birth=profile.date_of_birth,
+        first_name=update_data.get("first_name"),
+        last_name=update_data.get("last_name"),
+        date_of_birth=update_data.get("date_of_birth"),
         avatar=profile_update.avatar
     )
 
@@ -193,8 +172,7 @@ async def update_user_role(
     db: AsyncSession = Depends(get_db)
 ):
     """Update user role (admin only)."""
-    result = await db.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await user_ops.get_user_by_id(db, user_id)
 
     if not user:
         raise HTTPException(
@@ -202,15 +180,20 @@ async def update_user_role(
             detail="User not found"
         )
 
-    user.role = role_update.new_role
-    await db.commit()
-    await db.refresh(user)
+    # Use the new update_user_role_by_id function
+    success = await user_ops.update_user_role_by_id(db, user_id, role_update.new_role)
+
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user role"
+        )
 
     return UserRoleUpdateResponse(
-        id=user.id,
+        id=user_id,
         email=user.email,
-        role=user.role,
-        message=f"User role updated to {role_update.new_role.name}"
+        role=role_update.new_role,
+        message=f"User role updated successfully to {role_update.new_role}"
     )
 
 
@@ -222,8 +205,7 @@ async def delete_user(
     db: AsyncSession = Depends(get_db)
 ):
     """Delete user (admin only)."""
-    result = await db.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await user_ops.get_user_by_id(db, user_id)
 
     if not user:
         raise HTTPException(
@@ -231,7 +213,15 @@ async def delete_user(
             detail="User not found"
         )
 
-    await db.delete(user)
-    await db.commit()
+    # Use the new delete_user_by_id function
+    success = await user_ops.delete_user_by_id(db, user_id)
 
-    return DeleteUserResponse(message="User deleted successfully")
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete user"
+        )
+
+    return DeleteUserResponse(
+        message=f"User {user.email} deleted successfully"
+    )

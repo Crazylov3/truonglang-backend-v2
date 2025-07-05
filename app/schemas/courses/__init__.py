@@ -6,6 +6,7 @@ from .course_schemas import (
     CourseResponse,
     CourseDetailResponse,
     CourseListResponse,
+    StudentViewCourseResponse,
     EnrollmentResponse,
     UnenrollmentResponse,
     DeleteCourseResponse,
@@ -21,6 +22,7 @@ __all__ = [
     "CourseResponse",
     "CourseDetailResponse",
     "CourseListResponse",
+    "StudentViewCourseResponse",
     
     # Enrollment schemas
     "EnrollmentResponse",

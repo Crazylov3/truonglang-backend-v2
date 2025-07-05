@@ -15,9 +15,16 @@ from app.config import settings
 from app.routers.auth import auth
 from app.routers.users import users
 from app.routers.courses import courses
+from app.routers.enrollments import enrollments
+from app.routers.payments import payments
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Silence SQLAlchemy's noisy query logging
+logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
+logging.getLogger('sqlalchemy.pool').setLevel(logging.WARNING)
+logging.getLogger('sqlalchemy.dialects').setLevel(logging.WARNING)
 
 csrf_token_header = APIKeyHeader(name="X-Csrftoken", auto_error=False)
 
@@ -125,8 +132,8 @@ async def root():
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
 app.include_router(courses.router, prefix="/api/v1")
-# app.include_router(enrollments.router, prefix="/api/v1")
-
+app.include_router(enrollments.router, prefix="/api/v1")
+app.include_router(payments.router, prefix="/api/v1")
 
 # Middleware for request logging and monitoring
 @app.middleware("http")

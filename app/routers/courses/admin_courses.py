@@ -1,11 +1,10 @@
 from fastapi import Depends, HTTPException, status, Path
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from app.database import get_db
-from app.models.course import Course
 from app.models.user import UserRole
 from app.core.decorators import csrf_protect, authentication_required
 from app.schemas.courses.course_schemas import DeleteCourseResponse
+from app.core.operations import course as course_ops
 from .courses import router
 
 
@@ -17,17 +16,20 @@ async def delete_course(
     db: AsyncSession = Depends(get_db)
 ):
     """Delete a course (Staff and Admin only)."""
-    result = await db.execute(select(Course).where(Course.id == course_id))
-    course = result.scalar_one_or_none()
+    # Get course title before deletion
+    course_title = await course_ops.get_course_title(db, course_id)
     
-    if not course:
+    if not course_title:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Course not found"
         )
     
-    course_title = course.title
-    await db.delete(course)
-    await db.commit()
+    # Delete course
+    if not await course_ops.delete_course(db, course_id):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete course"
+        )
     
     return DeleteCourseResponse(message=f"Course '{course_title}' deleted successfully") 

@@ -131,7 +131,12 @@ class Settings:
     # Application Configuration
     @property
     def debug(self) -> bool:
-        return self._cfg.app.debug if self._cfg.app.debug is not None else True
+        return self._cfg.app.debug or False
+    
+    @property
+    def sql_debug(self) -> bool:
+        """Control SQL query logging separately from main debug setting."""
+        return self._cfg.database.get('sql_debug', False) if self._cfg.database else False
     
     @property
     def app_name(self) -> str:
