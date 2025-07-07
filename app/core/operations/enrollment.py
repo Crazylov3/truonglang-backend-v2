@@ -30,7 +30,10 @@ async def create_enrollment(
         )
         
         if existing_enrollment.scalar_one_or_none():
-            return None  # Already enrolled
+            existing_enrollment.is_active = True
+            await db.commit()
+            await db.refresh(existing_enrollment)
+            return existing_enrollment
         
         # Create enrollment
         enrollment = Enrollment(

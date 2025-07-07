@@ -8,6 +8,8 @@ from .course_schemas import (
     AdminViewCoursesDetail,
     CourseStudent,
     CourseStudents,
+    EnrollmentResponse,
+    UnenrollmentResponse,
 
     # manipulation schemas
     CourseCreate,
@@ -24,7 +26,9 @@ __all__ = [
     "AdminViewCoursesDetail",
     "CourseStudent",
     "CourseStudents",
-    
+    "EnrollmentResponse",
+    "UnenrollmentResponse",
+
     # manipulation schemas
     "CourseCreate",
     "CourseUpdate"
