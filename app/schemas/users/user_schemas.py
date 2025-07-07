@@ -28,11 +28,7 @@ class UserInfo(BaseModel):
 class UserProfileUpdate(UserProfile):
     pass
 
-class UsersListResponse(BaseModel):
-    users: List[UserInfo]
-    total: int
-    skip: int
-    limit: int
+UsersListResponse = PaginatedResponse[UserInfo]
 
 
 class UserRoleUpdateRequest(BaseModel):

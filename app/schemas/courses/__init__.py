@@ -1,34 +1,31 @@
 # Import from the new modular course schemas
 from .course_schemas import (
-    CourseBase,
+    PublicViewCourseDetail,
+    PublicViewCoursesDetail,
+    InstructorViewCourseDetail,
+    InstructorViewCoursesDetail,
+    AdminViewCourseDetail,
+    AdminViewCoursesDetail,
+    CourseStudent,
+    CourseStudents,
+
+    # manipulation schemas
     CourseCreate,
-    CourseUpdate,
-    CourseResponse,
-    CourseDetailResponse,
-    CourseListResponse,
-    StudentViewCourseResponse,
-    EnrollmentResponse,
-    UnenrollmentResponse,
-    DeleteCourseResponse,
-    CourseStudent
+    CourseUpdate
 )
 
 # Keep the old imports for backward compatibility
 __all__ = [
-    # Course schemas
-    "CourseBase",
-    "CourseCreate", 
-    "CourseUpdate",
-    "CourseResponse",
-    "CourseDetailResponse",
-    "CourseListResponse",
-    "StudentViewCourseResponse",
+    "PublicViewCourseDetail",
+    "PublicViewCoursesDetail",
+    "InstructorViewCourseDetail",
+    "InstructorViewCoursesDetail",
+    "AdminViewCourseDetail",
+    "AdminViewCoursesDetail",
+    "CourseStudent",
+    "CourseStudents",
     
-    # Enrollment schemas
-    "EnrollmentResponse",
-    "UnenrollmentResponse",
-    "DeleteCourseResponse",
-    
-    # Student schemas
-    "CourseStudent"
+    # manipulation schemas
+    "CourseCreate",
+    "CourseUpdate"
 ] 

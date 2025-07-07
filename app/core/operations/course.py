@@ -6,8 +6,8 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from decimal import Decimal
-
-from app.models.course import Course
+from datetime import datetime
+from app.models.course import Course, CourseEditPermission
 from app.models.user import User
 from app.models.enrollment import Enrollment
 
@@ -17,7 +17,10 @@ async def create_course(
     title: str,
     description: Optional[str],
     creator_id: int,
-    price: Optional[Decimal] = None
+    price: Optional[Decimal] = None,
+    location: Optional[str] = None,
+    start_date: Optional[datetime] = None,
+    teacher_name: Optional[str] = None
 ) -> Course:
     """Create a new course."""
     try:
@@ -25,7 +28,10 @@ async def create_course(
             title=title,
             description=description,
             creator_id=creator_id,
-            price=price
+            price=price,
+            location=location,
+            start_date=start_date,
+            teacher_name=teacher_name
         )
         
         db.add(new_course)
@@ -40,6 +46,31 @@ async def create_course(
         
         return course_with_enrollments
         
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise e
+    
+async def grant_edit_permission(db: AsyncSession, course_id: int, instructor_id: int) -> bool:
+    """Grant edit permission to an instructor for a course."""
+    try:
+        new_permission = CourseEditPermission(course_id=course_id, instructor_id=instructor_id)
+        db.add(new_permission)
+        await db.commit()
+        return True
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise e
+    
+async def revoke_edit_permission(db: AsyncSession, course_id: int, instructor_id: int) -> bool:
+    """Revoke edit permission from an instructor for a course."""
+    try:
+        result = await db.execute(select(CourseEditPermission).where(CourseEditPermission.course_id == course_id, CourseEditPermission.instructor_id == instructor_id))
+        permission = result.scalar_one_or_none()
+        if permission:
+            await db.delete(permission)
+            await db.commit()
+            return True
+        return False
     except SQLAlchemyError as e:
         await db.rollback()
         raise e
@@ -64,7 +95,10 @@ async def update_course(
     course_id: int,
     title: Optional[str] = None,
     description: Optional[str] = None,
-    price: Optional[Decimal] = None
+    price: Optional[Decimal] = None,
+    location: Optional[str] = None,
+    start_date: Optional[datetime] = None,
+    teacher_name: Optional[str] = None
 ) -> Optional[Course]:
     """Update a course."""
     try:
@@ -81,6 +115,12 @@ async def update_course(
             course.description = description
         if price is not None:
             course.price = price
+        if location is not None:
+            course.location = location
+        if start_date is not None:
+            course.start_date = start_date
+        if teacher_name is not None:
+            course.teacher_name = teacher_name
         
         await db.commit()
         await db.refresh(course)
@@ -115,12 +155,25 @@ async def delete_course(db: AsyncSession, course_id: int) -> bool:
         await db.rollback()
         return False
 
+async def filter_courses_by_edit_permission(db: AsyncSession, instructor_id: int) -> List[Course]:
+    """Filter courses by edit permission. Using CourseEditPermission"""
+    try:
+        result = await db.execute(select(CourseEditPermission).where(CourseEditPermission.instructor_id == instructor_id))
+        course_edit_permissions = result.scalars().all()
+        course_ids = [permission.course_id for permission in course_edit_permissions]
+        
+        return course_ids
+    except SQLAlchemyError:
+        return []
+    
 
 async def list_courses(
     db: AsyncSession,
     page: int = 1,
     per_page: int = 20,
-    creator_id: Optional[int] = None
+    creator_id: Optional[int] = None,
+    instructor_id: Optional[int] = None,
+    all_courses: bool = False
 ) -> Tuple[List[Course], int]:
     """List courses with pagination."""
     try:
@@ -130,10 +183,13 @@ async def list_courses(
             selectinload(Course.enrollments)
         )
         
-        # Apply filters
-        if creator_id:
-            query = query.where(Course.creator_id == creator_id)
-        
+        if not all_courses:
+          if creator_id:  
+              query = query.where(Course.creator_id == creator_id)
+          
+          if instructor_id:
+              query = query.where(Course.id.in_(await filter_courses_by_edit_permission(db, instructor_id)))
+          
         # Get total count
         count_query = select(func.count()).select_from(query.subquery())
         total_result = await db.execute(count_query)
@@ -150,7 +206,7 @@ async def list_courses(
         
     except SQLAlchemyError:
         return [], 0
-
+    
 
 async def get_course_students(
     db: AsyncSession,

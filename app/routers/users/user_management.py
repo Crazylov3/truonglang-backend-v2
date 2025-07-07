@@ -15,28 +15,29 @@ from app.schemas.users.user_schemas import (
     UserInfo,
     UserProfile
 )
+from app.schemas.common import PaginatedResponse
 from app.core.decorators import authentication_required, csrf_protect
-from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, from_image_to_base64, load_image_from_disk
+from app.core.media.io_helper import save_image_to_disk, from_base64_to_image
 from app.core.operations import user as user_ops
-from .users import router
-
+from .users import router, logger
 
 @router.get("/", response_model=UsersListResponse)
 @authentication_required(allowed_role=UserRole.STAFF)
 async def get_all_users(
-    skip: int = Query(
-        0, ge=0, description="Number of records to skip for pagination"),
-    limit: int = Query(100, ge=1, le=1000,
-                       description="Maximum number of records to return"),
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
     role: Optional[UserRole] = Query(None, description="Filter by user role"),
     db: AsyncSession = Depends(get_db)
 ):
     """Get all users (staff/admin only)."""
+    # Calculate offset from page/per_page
+    offset = (page - 1) * per_page
+    
     users = await user_ops.list_users(
         db=db,
         role=role,
-        limit=limit,
-        offset=skip
+        limit=per_page,
+        offset=offset
     )
 
     # Get total count for pagination
@@ -44,8 +45,8 @@ async def get_all_users(
 
     users_data = []
     for user in users:
-        avatar_base64 = from_image_to_base64(load_image_from_disk(
-            user.profile.avatar)) if user.profile and user.profile.avatar else None
+        # Generate avatar URL if user has an avatar
+        avatar_url = f"/users/avatar/{user.id}" if user.profile and user.profile.avatar else None
 
         user_data = UserInfo(
             id=user.id,
@@ -57,16 +58,16 @@ async def get_all_users(
                 first_name=user.profile.first_name,
                 last_name=user.profile.last_name,
                 date_of_birth=user.profile.date_of_birth,
-                avatar=avatar_base64
+                avatar=avatar_url  # Store URL instead of base64
             ) if user.profile else None,
         )
         users_data.append(user_data)
 
-    return UsersListResponse(
-        users=users_data,
+    return PaginatedResponse.create(
+        items=users_data,
         total=total,
-        skip=skip,
-        limit=limit
+        page=page,
+        per_page=per_page
     )
 
 
@@ -85,8 +86,8 @@ async def get_user_by_id(
             detail="User not found"
         )
 
-    avatar_base64 = from_image_to_base64(load_image_from_disk(
-        user.profile.avatar)) if user.profile and user.profile.avatar else None
+    # Generate avatar URL if user has an avatar
+    avatar_url = f"/users/avatar/{user.id}" if user.profile and user.profile.avatar else None
 
     return UserInfo(
         id=user.id,
@@ -98,7 +99,7 @@ async def get_user_by_id(
             first_name=user.profile.first_name,
             last_name=user.profile.last_name,
             date_of_birth=user.profile.date_of_birth,
-            avatar=avatar_base64
+            avatar=avatar_url  # Store URL instead of base64
         ) if user.profile else None
     )
 
@@ -124,7 +125,7 @@ async def update_user_profile_by_id(
     # Handle avatar upload
     avatar_path = None
     if profile_update.avatar:
-        avatar_dir = os.path.join(settings.MEDIA_ROOT, "avatars")
+        avatar_dir = os.path.join(settings.media_root, "avatars")
         os.makedirs(avatar_dir, exist_ok=True)
         save_image_path = os.path.join(avatar_dir, f"{user_id}.png")
 

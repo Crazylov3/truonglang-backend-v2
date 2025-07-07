@@ -6,40 +6,35 @@ import json
 from app.database import get_db
 from app.models.user import User, UserRole
 from app.core.operations import user as user_operations
+from app.core.security import verify_user_token
 
 
 async def get_current_user(
     request: Request,
     db: AsyncSession = Depends(get_db)
 ) -> User:
-    """Get current authenticated user from cookie data."""
+    """Get current authenticated user from secure JWT token."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials. Please log in.",
     )
     
-    # Get user data from cookie
-    user_data_cookie = request.cookies.get("user_data")
-    if not user_data_cookie:
+    access_token = request.cookies.get("access_token")
+    if not access_token:
         raise credentials_exception
     
-    try:
-        # Parse user data from JSON cookie
-        user_data = json.loads(user_data_cookie)
-        user_id = user_data.get("user_id")
-        
-        if not user_id:
-            raise credentials_exception
-            
-    except (json.JSONDecodeError, ValueError, TypeError):
+    token_data = verify_user_token(access_token)
+    if not token_data:
         raise credentials_exception
     
-    # Get fresh user data from database using operations
+    user_id = token_data.get("user_id")
+    if not user_id:
+        raise credentials_exception
+    
     user = await user_operations.get_user_by_id(db, user_id)
     if user is None:
         raise credentials_exception
     
-    # Ensure role is properly converted to UserRole enum
     if isinstance(user.role, int):
         try:
             user.role = UserRole(user.role)
@@ -48,6 +43,12 @@ async def get_current_user(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Invalid user role in database: {user.role}"
             )
+    
+    if user.role != token_data.get("user_role"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Role mismatch. Please log in again."
+        )
     
     return user
 

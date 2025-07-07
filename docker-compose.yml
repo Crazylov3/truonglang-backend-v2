@@ -54,6 +54,7 @@ services:
       - ./logs:/app/logs
       - ./alembic:/app/alembic
       - ./alembic.ini:/app/alembic.ini:ro
+      - ~/.truonglang_web_data/app:/app/media
     networks:
       - learnify-network
     restart: unless-stopped

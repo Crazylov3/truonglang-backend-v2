@@ -1,5 +1,6 @@
 import os
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Path, File, Response
+from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
@@ -14,7 +15,7 @@ from app.core.decorators import csrf_protect
 from app.core.deps import get_current_user
 from app.core.operations import user as user_ops
 from app.core.operations import user_profile as profile_ops
-from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, load_image_from_disk, from_image_to_base64
+from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, from_image_to_base64
 from .users import router, logger
 
 
@@ -33,7 +34,11 @@ async def get_current_user_profile(
             detail="User not found"
         )
     
-    avatar_base64 = from_image_to_base64(load_image_from_disk(user.profile.avatar)) if user.profile and user.profile.avatar else None
+    try:
+        avatar_base64 = from_image_to_base64(user.profile.avatar) if user.profile and user.profile.avatar else None
+    except Exception as e:
+        logger.error(f"Error loading avatar image: {e}")
+        avatar_base64 = None
     
     return UserInfo(
         id=user.id,
@@ -45,7 +50,7 @@ async def get_current_user_profile(
             first_name=user.profile.first_name,
             last_name=user.profile.last_name,
             date_of_birth=user.profile.date_of_birth,
-            avatar=avatar_base64 
+            avatar=avatar_base64  # Store URL instead of base64
         ) if user.profile else None
     )
 
@@ -81,7 +86,7 @@ async def update_current_user_profile(
     # Handle avatar upload
     avatar_path = None
     if profile_update.avatar:
-        avatar_dir = os.path.join(settings.MEDIA_ROOT, "avatars")
+        avatar_dir = os.path.join(settings.media_root, "avatars")
         os.makedirs(avatar_dir, exist_ok=True)
         save_image_path = os.path.join(avatar_dir, f"{current_user.id}.png")
         
@@ -113,10 +118,67 @@ async def update_current_user_profile(
     # Get updated profile
     updated_profile = await profile_ops.get_user_profile(db, current_user.id)
     
+    # Generate avatar URL if user has an avatar
+    avatar_url = f"/users/avatar/{current_user.id}" if updated_profile.avatar else None
+    
     return UserProfile(
         id=current_user.id,
         first_name=updated_profile.first_name,
         last_name=updated_profile.last_name,
         date_of_birth=updated_profile.date_of_birth,
-        avatar=from_image_to_base64(load_image_from_disk(updated_profile.avatar)) if updated_profile.avatar else None
+        avatar=avatar_url
+    )
+
+@router.get("/avatar/{user_id}")
+async def get_user_avatar(
+    user_id: int = Path(..., description="User ID"),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get user avatar image."""
+    user = await user_ops.get_user_by_id(db, user_id)
+    
+    if not user or not user.profile or not user.profile.avatar:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Avatar not found"
+        )
+    
+    # Check if avatar file exists
+    if not os.path.exists(user.profile.avatar):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Avatar file not found"
+        )
+    
+    return FileResponse(
+        path=user.profile.avatar,
+        media_type="image/png",
+        filename=f"avatar_{user_id}.png"
+    )
+
+@router.get("/avatar/me")
+async def get_current_user_avatar(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get current user's avatar image."""
+    user = await user_ops.get_user_by_id(db, current_user.id)
+    
+    if not user or not user.profile or not user.profile.avatar:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Avatar not found"
+        )
+    
+    # Check if avatar file exists
+    if not os.path.exists(user.profile.avatar):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Avatar file not found"
+        )
+    
+    return FileResponse(
+        path=user.profile.avatar,
+        media_type="image/png",
+        filename=f"avatar_{current_user.id}.png"
     )

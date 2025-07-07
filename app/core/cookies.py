@@ -1,5 +1,4 @@
 from fastapi import Response
-from app.schemas.users.user_schemas import UserInfo
 
 
 def set_cookie(
@@ -37,11 +36,3 @@ def clear_cookie(
         secure=secure,
         samesite=samesite
     )
-
-
-def get_user_cookie_from_template(user: UserInfo) -> dict:
-    return {  
-        "user_id": user.id,
-        "user_email": user.email,
-        "user_role": user.role,
-    }

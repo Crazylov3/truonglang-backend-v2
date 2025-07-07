@@ -3,22 +3,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from math import ceil
 from app.database import get_db
-from app.models.user import User
-from app.core.deps import get_current_user_optional
 from app.schemas.courses.course_schemas import (
     CourseListResponse,
-    CourseDetailResponse
+    PublicViewCourseDetail,
+    PublicViewCoursesDetail
 )
 from app.core.operations import course as course_ops
 from .courses import router, logger
 
 
-@router.get("/", response_model=CourseListResponse)
+@router.get("/", response_model=PublicViewCoursesDetail)
 async def get_courses(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
     creator_id: Optional[int] = Query(None, description="Filter by creator ID"),
-    current_user: Optional[User] = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db)
 ):
     """Get paginated list of courses."""
@@ -28,6 +26,16 @@ async def get_courses(
         per_page=per_page,
         creator_id=creator_id
     )
+
+    courses = [PublicViewCourseDetail(
+        id=course.id,
+        title=course.title,
+        description=course.description,
+        location=course.location,
+        start_date=course.start_date,
+        teacher_name=course.teacher_name,
+        price=course.price
+    ) for course in courses]
     
     return CourseListResponse(
         items=courses,
@@ -40,10 +48,9 @@ async def get_courses(
     )
 
 
-@router.get("/{course_id}", response_model=CourseDetailResponse)
+@router.get("/{course_id}", response_model=PublicViewCourseDetail)
 async def get_course(
     course_id: int = Path(..., description="Course ID"),
-    current_user: Optional[User] = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db)
 ):
     """Get a specific course by ID."""
@@ -55,4 +62,12 @@ async def get_course(
             detail="Course not found"
         )
     
-    return course 
+    return PublicViewCourseDetail(
+        id=course.id,
+        title=course.title,
+        description=course.description,
+        location=course.location,
+        start_date=course.start_date,
+        teacher_name=course.teacher_name,
+        price=course.price
+    ) 
