@@ -2,7 +2,7 @@
 
 from typing import Optional, List, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select, func, delete
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from decimal import Decimal
@@ -50,10 +50,10 @@ async def create_course(
         await db.rollback()
         raise e
     
-async def grant_edit_permission(db: AsyncSession, course_id: int, instructor_id: int) -> bool:
+async def grant_edit_permission(db: AsyncSession, course_id: int, instructor_id: int, granted_by: int) -> bool:
     """Grant edit permission to an instructor for a course."""
     try:
-        new_permission = CourseEditPermission(course_id=course_id, instructor_id=instructor_id)
+        new_permission = CourseEditPermission(course_id=course_id, instructor_id=instructor_id, granted_by=granted_by)
         db.add(new_permission)
         await db.commit()
         return True
@@ -147,7 +147,12 @@ async def delete_course(db: AsyncSession, course_id: int) -> bool:
         if not course:
             return False
         
+        # Delete related records first to avoid foreign key constraint issues
+        await db.execute(delete(CourseEditPermission).where(CourseEditPermission.course_id == course_id))
+        await db.execute(delete(Enrollment).where(Enrollment.course_id == course_id))
+        
         await db.delete(course)
+        
         await db.commit()
         return True
         

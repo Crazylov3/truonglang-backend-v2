@@ -10,8 +10,10 @@ from app.schemas.courses.course_schemas import (
     InstructorViewCoursesDetail,
     InstructorViewCourseDetail,
     CourseStudent,
-    CourseStudents
+    CourseStudents,
+    CourseCreateResponse
 )
+import traceback
 from app.schemas.common import PaginatedResponse
 from app.core.operations import course as course_ops
 from .courses import router, logger
@@ -44,7 +46,6 @@ async def get_courses(
         teacher_name=course.teacher_name,
         price=course.price,
         created_at=course.created_at,
-        updated_at=course.updated_at,
         enrolled_students_count=course.enrolled_students_count
     ) for course in courses]
     
@@ -59,7 +60,7 @@ async def get_courses(
     )
 
 
-@router.post("/instructor/create-course", response_model=InstructorViewCourseDetail, status_code=status.HTTP_201_CREATED)
+@router.post("/instructor/create-course", response_model=CourseCreateResponse, status_code=status.HTTP_201_CREATED)
 @authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def create_course(
@@ -79,18 +80,12 @@ async def create_course(
             start_date=course_data.start_date,
             teacher_name=course_data.teacher_name
         )
-        await course_ops.grant_edit_permission(db, course.id, current_user.id)
-        return InstructorViewCourseDetail(
-            id=course.id,
-            title=course.title,
-            description=course.description,
-            location=course.location,
-            start_date=course.start_date,
-            teacher_name=course.teacher_name,
-            price=course.price,
+        await course_ops.grant_edit_permission(db, course.id, current_user.id, current_user.id)
+        return CourseCreateResponse(
+            message=f"Course {course.title} created successfully"
         )
     except Exception as e:
-        logger.error(f"Error creating course: {e}")
+        logger.error(f"Error creating course: {traceback.format_exc()}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to create course"
@@ -199,8 +194,9 @@ async def delete_course(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Course not found"
         )
-    
-    if course_id not in await course_ops.filter_courses_by_edit_permission(db, current_user.id):
+    edit_permissions = await course_ops.filter_courses_by_edit_permission(db, current_user.id)
+    logger.info(f"Edit permissions: {edit_permissions}")
+    if course_id not in edit_permissions and current_user.role < UserRole.STAFF:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized to delete this course"
@@ -210,7 +206,7 @@ async def delete_course(
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.get("/instructor/course/{course_id}/students", response_model=PaginatedResponse[CourseStudents])
+@router.get("/instructor/course/{course_id}/students", response_model=CourseStudents)
 @authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_course_students(
     course_id: int = Path(..., description="Course ID"),

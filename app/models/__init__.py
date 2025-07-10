@@ -1,13 +1,15 @@
 from .user import User, UserRole
 from .user_profile import UserProfile
-from .course import Course
+from .course import Course, CourseEditPermission
 from .enrollment import Enrollment
-from .payment import Payment, PaymentStatus
+from .payment import Payment, PaymentStatus, Invoice, InvoiceStatus, CoursePaymentPeriod
 
 __all__ = [
     "User", "UserRole",
     "UserProfile",
-    "Course",
+    "Course", "CourseEditPermission",
     "Enrollment",
-    "Payment", "PaymentStatus"
+    "Payment", "PaymentStatus",
+    "Invoice", "InvoiceStatus",
+    "CoursePaymentPeriod"
 ] 

@@ -9,10 +9,11 @@ from .course_schemas import (
     CourseStudent,
     CourseStudents,
     EnrollmentResponse,
-    UnenrollmentResponse,
+    UnEnrollmentResponse,
 
     # manipulation schemas
     CourseCreate,
+    CourseCreateResponse,
     CourseUpdate
 )
 
@@ -27,9 +28,10 @@ __all__ = [
     "CourseStudent",
     "CourseStudents",
     "EnrollmentResponse",
-    "UnenrollmentResponse",
+    "UnEnrollmentResponse",
 
     # manipulation schemas
     "CourseCreate",
+    "CourseCreateResponse",
     "CourseUpdate"
 ] 

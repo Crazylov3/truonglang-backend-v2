@@ -5,7 +5,7 @@ from math import ceil
 from app.database import get_db
 from app.schemas.courses.course_schemas import (
     EnrollmentResponse,
-    UnenrollmentResponse,
+    UnEnrollmentResponse,
     PublicViewCourseDetail,
     PublicViewCoursesDetail
 )
@@ -116,7 +116,7 @@ async def enroll_in_course(
     )
 
 
-@router.post("/{course_id}/unenroll", response_model=UnenrollmentResponse)
+@router.post("/{course_id}/unenroll", response_model=UnEnrollmentResponse)
 @authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def unenroll_from_course(
@@ -133,6 +133,6 @@ async def unenroll_from_course(
         )
     
     await enrollment_ops.deactivate_enrollment(db, current_user.id, course_id)
-    return UnenrollmentResponse(
+    return UnEnrollmentResponse(
         message="Unenrolled from course successfully"
     )

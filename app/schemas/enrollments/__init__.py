@@ -1,7 +1,7 @@
-# from .enrollments_schemas import EnrollmentResponse, EnrollmentDetailResponse, EnrollmentListResponse
+from .enrollments_schemas import EnrollmentResponse, Enrollment, Enrollments
 
-# __all__ = [
-#     "EnrollmentResponse",
-#     "EnrollmentDetailResponse",
-#     "EnrollmentListResponse"
-# ] 
+__all__ = [
+    "EnrollmentResponse",
+    "Enrollment",
+    "Enrollments"
+]

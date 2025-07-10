@@ -1,25 +1,18 @@
 from pydantic import BaseModel
 from datetime import datetime
-from app.schemas.users import UserResponse
 from app.schemas.common import PaginatedResponse
 
 
-# class EnrollmentResponse(BaseModel):
-#     id: int
-#     student_id: int
-#     course_id: int
-#     enrolled_at: datetime
-#     is_active: bool
+class EnrollmentResponse(BaseModel):
+    message: str
 
-#     class Config:
-#         from_attributes = True
-
-
-# class EnrollmentDetailResponse(EnrollmentResponse):
-#     student: UserResponse
-#     course: CourseResponse
+class Enrollment(BaseModel):
+    id: int
+    student_id: int
+    course_id: int
+    enrolled_at: datetime
+    is_active: bool
 
 
-# class EnrollmentListResponse(PaginatedResponse[EnrollmentResponse]):
-#     """Paginated response for enrollments."""
-#     pass
+class Enrollments(PaginatedResponse[Enrollment]):
+    pass

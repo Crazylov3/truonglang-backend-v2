@@ -1,86 +1,50 @@
 from app.routers.enrollments.enrollments import router
-from typing import List
-from app.schemas.courses.course_schemas import StudentViewCourseResponse
-from fastapi import Depends, HTTPException, status, Query
+from fastapi import Depends,  Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.user import User, UserRole
+from app.models.user import User
 from app.core.deps import get_current_user
 from app.core.operations import enrollment as enrollment_ops
-from app.schemas.enrollments import EnrollmentResponse
-from app.core.decorators import csrf_protect
+from app.schemas.enrollments import EnrollmentResponse, Enrollments, Enrollment
 
     
-    
-@router.get("/my-courses", response_model=List[StudentViewCourseResponse])
-async def get_my_enrolled_courses(
-    only_active: bool = Query(True, description="Only return active enrollments"),
+@router.get("/my-enrollments", response_model=Enrollments)
+async def get_my_enrollments(
+    active_only: bool = Query(
+        True, description="Only return active enrollments"),
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get all courses the current student is enrolled in."""
-    enrollments, _ = await enrollment_ops.get_user_enrollments(
-        db=db,
-        student_id=current_user.id,
-        active_only=only_active
-    )
-    
-    # Extract courses from enrollments
-    courses = [
-        StudentViewCourseResponse(
-            id=enrollment.course.id,
-            title=enrollment.course.title,
-            description=enrollment.course.description,
-            price=enrollment.course.price,
-            created_at=enrollment.course.created_at,
-            creator_name=enrollment.course.creator.profile.first_name + " " + enrollment.course.creator.profile.last_name
-        )
+    """Get my enrollments."""
+    enrollments, total = await enrollment_ops.get_user_enrollments(db, current_user.id, active_only, page, per_page)
+    enrollment_responses = [
+        EnrollmentResponse(
+            id=enrollment.id,
+            student_id=enrollment.student_id,
+            course_id=enrollment.course_id,
+            enrolled_at=enrollment.enrolled_at,
+            is_active=enrollment.is_active)
         for enrollment in enrollments
     ]
-    return courses
-
-
-@router.get("/{course_id}/enrollment", response_model=EnrollmentResponse)
-async def get_enrollment_by_course_id(
-    course_id: int,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """Get enrollment by course ID."""
-    enrollment = await enrollment_ops.get_enrollment(db, current_user.id, course_id)
-    
-    if not enrollment:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Enrollment not found"
-        )
-    
-    return EnrollmentResponse(
-        id=enrollment.id,
-        student_id=enrollment.student_id,
-        course_id=enrollment.course_id,
-        enrolled_at=enrollment.enrolled_at,
-        is_active=enrollment.is_active
+    return Enrollments.create(
+        items=enrollment_responses,
+        total=total,
+        page=page,
+        per_page=per_page
     )
 
 
-@router.put("/{course_id}/deactivate", response_model=EnrollmentResponse)
-@csrf_protect
-async def deactivate_enrollment(
+@router.get("/my-enrollments/{course_id}", response_model=Enrollment)
+async def get_my_enrollment(
     course_id: int,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Deactivate enrollment by course ID."""
-    enrollment = await enrollment_ops.deactivate_enrollment(db, current_user.id, course_id)
-
-    if not enrollment:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Enrollment not found"
-        )
-    
-    return EnrollmentResponse(
+    """Get my enrollment for a specific course."""
+    enrollment = await enrollment_ops.get_enrollment(db, current_user.id, course_id)
+    return Enrollment(
         id=enrollment.id,
         student_id=enrollment.student_id,
         course_id=enrollment.course_id,

@@ -20,11 +20,15 @@ class User(BaseModel):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     last_login_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-    # Relationships - only essential ones from DBMS
+    # Relationships
     profile = relationship("UserProfile", back_populates="user", uselist=False)
     created_courses = relationship("Course", back_populates="creator", foreign_keys="Course.creator_id")
     enrollments = relationship("Enrollment", back_populates="student")
-    payments = relationship("Payment", back_populates="user")
+    
+    # Updated relationships for new billing structure
+    granted_edit_permissions = relationship("CourseEditPermission", back_populates="granted_by_user", foreign_keys="CourseEditPermission.granted_by")
+    edit_permissions = relationship("CourseEditPermission", back_populates="instructor", foreign_keys="CourseEditPermission.instructor_id")
+    created_payment_periods = relationship("CoursePaymentPeriod", back_populates="created_by_user")
 
     @property
     def full_name(self):

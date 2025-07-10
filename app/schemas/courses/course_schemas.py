@@ -21,7 +21,6 @@ class PublicViewCourseDetail(BaseModel):
 
 class InstructorViewCourseDetail(PublicViewCourseDetail):
     created_at: datetime = Field(..., description="Course creation date")
-    updated_at: datetime = Field(..., description="Course update date")
     enrolled_students_count: int = Field(...,
                                          description="Number of enrolled students")
 
@@ -59,6 +58,8 @@ class CourseCreate(BaseModel):
     def validate_title(cls, v):
         return v.strip() if v else v
 
+class CourseCreateResponse(BaseModel):
+    message: str
 
 class CourseUpdate(CourseCreate):
     pass
@@ -78,7 +79,7 @@ class EnrollmentResponse(BaseModel):
     message: str
 
 
-class UnenrollmentResponse(BaseModel):
+class UnEnrollmentResponse(BaseModel):
     message: str
 
 
