@@ -211,7 +211,46 @@ async def list_courses(
         
     except SQLAlchemyError:
         return [], 0
-    
+
+async def list_enrolled_courses(db: AsyncSession, student_id: int, page: int = 1, per_page: int = 20) -> Tuple[List[Course], int]:
+    """List enrolled courses for a student."""
+    try:
+        # Get enrollment course IDs for the student
+        enrollment_result = await db.execute(
+            select(Enrollment.course_id)
+            .where(Enrollment.student_id == student_id)
+            .where(Enrollment.is_active == True)
+        )
+        course_ids = [row[0] for row in enrollment_result.all()]
+        
+        if not course_ids:
+            return [], 0
+
+        # Get total count
+        count_query = select(func.count(Course.id)).where(Course.id.in_(course_ids))
+        total_result = await db.execute(count_query)
+        total = total_result.scalar()
+
+        # Query courses with pagination and load relationships
+        offset = (page - 1) * per_page
+        query = (
+            select(Course)
+            .options(
+                selectinload(Course.creator),
+                selectinload(Course.enrollments)
+            )
+            .where(Course.id.in_(course_ids))
+            .offset(offset)
+            .limit(per_page)
+        )
+        
+        result = await db.execute(query)
+        courses = result.scalars().all()
+
+        return courses, total
+        
+    except SQLAlchemyError:
+        return [], 0
 
 async def get_course_students(
     db: AsyncSession,

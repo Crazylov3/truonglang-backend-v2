@@ -49,6 +49,31 @@ async def get_courses(
         per_page=per_page
     )
 
+@router.get('/enrolled-courses', response_model=PublicViewCoursesDetail)
+@authentication_required(allowed_role=UserRole.STUDENT)
+@csrf_protect
+async def get_enrolled_courses(
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(20, ge=1, le=100, description="Items per page"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get enrolled courses for a student."""
+    courses, total = await course_ops.list_enrolled_courses(db, current_user.id, page, per_page)
+    
+    # Convert Course objects to PublicViewCourseDetail objects
+    course_details = [PublicViewCourseDetail(
+        id=course.id,
+        title=course.title,
+        description=course.description,
+        location=course.location,
+        start_date=course.start_date,
+        teacher_name=course.teacher_name,
+        price=course.price
+    ) for course in courses]
+    
+    return PublicViewCoursesDetail.create(items=course_details, total=total, page=page, per_page=per_page)
+
 @router.get("/{course_id}", response_model=PublicViewCourseDetail)
 async def get_course(
     course_id: int = Path(..., description="Course ID"),

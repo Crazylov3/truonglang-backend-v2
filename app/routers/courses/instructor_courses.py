@@ -121,7 +121,6 @@ async def get_course(
         teacher_name=course.teacher_name,
         price=course.price,
         created_at=course.created_at,
-        updated_at=course.updated_at,
         enrolled_students_count=course.enrolled_students_count
     )
 
@@ -155,7 +154,6 @@ async def update_course(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions to edit this course"
         )
-    
     update_data = course_update.dict(exclude_unset=True)
     updated_course = await course_ops.update_course(
         db=db,
@@ -177,6 +175,8 @@ async def update_course(
         start_date=updated_course.start_date,
         teacher_name=updated_course.teacher_name,
         price=updated_course.price,
+        created_at=updated_course.created_at,
+        enrolled_students_count=updated_course.enrolled_students_count
     )
 
 @router.delete("/instructor/course/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
