@@ -17,7 +17,7 @@ redis:
 
 jwt:
   algorithm: "HS256"
-  access_token_expire_minutes: 3000
+  access_token_expire_minutes: 259200
 
 email:
   from_name: "Giao Duc Thang Long"

@@ -1,5 +1,7 @@
+"""Payment routers package."""
+from .payments import *
+from .instructor_payments import *
 from .student_payments import *
-from .admin_payments import *
-from .payments import router
 
-__all__ = ["router"]
+# Export the router for the main app to use
+__all__ = ["router"] 

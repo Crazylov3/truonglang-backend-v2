@@ -244,7 +244,6 @@ class ConfigManager:
             # JWT configuration
             'SECRET_KEY': 'jwt.secret_key',
             'ALGORITHM': 'jwt.algorithm',
-            'ACCESS_TOKEN_EXPIRE_MINUTES': 'jwt.access_token_expire_minutes',
             
             # Email configuration
             'SENDGRID_API_KEY': 'email.sendgrid_api_key',

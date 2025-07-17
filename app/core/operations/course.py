@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from decimal import Decimal
 from datetime import datetime
 from app.models.course import Course, CourseEditPermission
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.models.enrollment import Enrollment
 
 
@@ -171,6 +171,25 @@ async def filter_courses_by_edit_permission(db: AsyncSession, instructor_id: int
     except SQLAlchemyError:
         return []
     
+
+async def check_course_editable_permission(
+    db: AsyncSession,
+    course_id: int,
+    user_id: int,
+    user_role: UserRole
+) -> bool:
+    """Check if user can create payment periods for a course."""
+    try:
+      can_edit = False
+      if user_role == UserRole.INSTRUCTOR:
+          can_edit = course_id in await filter_courses_by_edit_permission(db, user_id)
+      elif user_role >= UserRole.STAFF:
+          can_edit = True
+      return can_edit
+        
+    except SQLAlchemyError:
+        return False
+
 
 async def list_courses(
     db: AsyncSession,

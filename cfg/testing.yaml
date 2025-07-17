@@ -12,9 +12,6 @@ redis:
   host: "localhost"
   db: 1  # Use different Redis DB for tests
 
-jwt:
-  access_token_expire_minutes: 5  # Shorter expiration for tests
-
 email:
   from_email: "test@learnify.com"
 
