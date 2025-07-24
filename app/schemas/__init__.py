@@ -62,6 +62,7 @@ __all__ = [
     "StudentInvoiceResponse",
     "InvoicesResponse",
     "StudentInvoicesResponse",
+    "StudentCourseInvoicesResponse",
     "PaymentCreate",
     "PaymentResponse",
     "PaymentPeriodCreateResponse",

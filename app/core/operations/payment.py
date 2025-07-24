@@ -232,7 +232,86 @@ async def get_student_invoices(
                 'invoice_id': invoice.id,
                 'course_id': course.id,
                 'course_title': course.title,
-                'payment_period_title': f"Payment Period #{payment_period.id}",
+                'amount_due': invoice.amount_due,
+                'total_paid': total_paid,
+                'status': status_map.get(invoice.status, "UNKNOWN"),
+                'created_at': invoice.created_at,
+                'due_date': None,  # Not available in original model
+                'is_paid': total_paid >= invoice.amount_due
+            })
+        
+        return invoices, total
+        
+    except SQLAlchemyError:
+        return [], 0
+
+
+async def get_student_invoices_by_course(
+    db: AsyncSession,
+    student_id: int,
+    course_id: int,
+    page: int = 1,
+    per_page: int = 20,
+    status: Optional[str] = None
+) -> Tuple[List[dict], int]:
+    """Get invoices for a student filtered by a specific course."""
+    try:
+        # Build base query with course filter
+        base_query = (
+            select(Invoice, Course, CoursePaymentPeriod)
+            .join(Enrollment, Invoice.enrollment_id == Enrollment.id)
+            .join(Course, Enrollment.course_id == Course.id)
+            .join(CoursePaymentPeriod, Invoice.payment_period_id == CoursePaymentPeriod.id)
+            .where(Enrollment.student_id == student_id)
+            .where(Course.id == course_id)  # Filter by specific course
+        )
+        
+        # Convert string status to integer for filtering
+        if status:
+            status_map = {
+                "DUE": InvoiceStatus.DUE,
+                "PAID": InvoiceStatus.PAID,
+                "OVERDUE": InvoiceStatus.OVERDUE,
+                "CANCELLED": InvoiceStatus.CANCELLED
+            }
+            if status in status_map:
+                base_query = base_query.where(Invoice.status == status_map[status])
+        
+        # Get total count
+        count_query = select(func.count()).select_from(base_query.subquery())
+        total_result = await db.execute(count_query)
+        total = total_result.scalar()
+        
+        # Get invoices with pagination
+        offset = (page - 1) * per_page
+        query = (
+            base_query
+            .options(selectinload(Invoice.payments))
+            .order_by(Invoice.created_at.desc())
+            .offset(offset)
+            .limit(per_page)
+        )
+        
+        result = await db.execute(query)
+        invoice_data = result.all()
+        
+        invoices = []
+        for invoice, course, payment_period in invoice_data:
+            # Calculate total paid amount
+            total_paid = sum(p.amount for p in invoice.payments if p.status == PaymentStatus.SUCCESSFUL)
+            
+            # Convert status to string for API
+            status_map = {
+                InvoiceStatus.DUE: "DUE",
+                InvoiceStatus.PAID: "PAID",
+                InvoiceStatus.OVERDUE: "OVERDUE", 
+                InvoiceStatus.CANCELLED: "CANCELLED"
+            }
+            
+            invoices.append({
+                'invoice_id': invoice.id,
+                'course_id': course.id,
+                'course_title': course.title,
                 'amount_due': invoice.amount_due,
                 'total_paid': total_paid,
                 'status': status_map.get(invoice.status, "UNKNOWN"),

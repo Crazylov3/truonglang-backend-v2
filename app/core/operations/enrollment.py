@@ -1,5 +1,6 @@
 """Enrollment database operations."""
 
+import traceback
 from typing import Optional, List, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
@@ -20,7 +21,7 @@ async def create_enrollment(
     """Create a new enrollment."""
     try:
         # Check if already enrolled
-        existing_enrollment = await db.execute(
+        existing_enrollment_result = await db.execute(
             select(Enrollment).where(
                 and_(
                     Enrollment.student_id == student_id,
@@ -29,7 +30,8 @@ async def create_enrollment(
             )
         )
         
-        if existing_enrollment.scalar_one_or_none():
+        existing_enrollment = existing_enrollment_result.scalar_one_or_none()
+        if existing_enrollment:
             existing_enrollment.is_active = True
             await db.commit()
             await db.refresh(existing_enrollment)
@@ -49,6 +51,7 @@ async def create_enrollment(
         return enrollment
         
     except SQLAlchemyError:
+        traceback.print_exc()
         await db.rollback()
         return None
 

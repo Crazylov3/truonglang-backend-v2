@@ -6,6 +6,8 @@ from typing import Optional
 from app.database import get_db
 from app.schemas.payments import (
     StudentInvoicesResponse,
+    StudentCourseInvoicesResponse,
+    StudentInvoiceResponse,
     PaymentCreate,
     PaymentCreateResponse,
     PaymentResponse,
@@ -40,6 +42,53 @@ async def get_my_invoices(
         per_page=per_page
     )
 
+
+@router.get("/students/me/invoices/{course_id}", response_model=StudentCourseInvoicesResponse)
+@authentication_required(allowed_role=UserRole.STUDENT)
+async def get_my_course_invoices(
+    course_id: int = Path(..., description="Course ID"),
+    status: Optional[str] = Query(None, description="Filter by invoice status"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get all invoices for the current student for a specific course."""
+    
+    # Check if the student is enrolled in this course
+    from app.core.operations import enrollment as enrollment_ops
+    is_enrolled = await enrollment_ops.check_enrollment_exists(
+        db, current_user.id, course_id, active_only=True
+    )
+    
+    if not is_enrolled:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not enrolled in this course"
+        )
+    
+    # Get all invoices by using a large page size
+    invoices, total = await payment_ops.get_student_invoices_by_course(
+        db, current_user.id, course_id, page=1, per_page=100000, status=status
+    )
+    
+    # Convert dictionaries to StudentInvoiceResponse objects
+    invoice_responses = [
+        StudentInvoiceResponse(
+            invoice_id=invoice["invoice_id"],
+            course_id=invoice["course_id"],
+            course_title=invoice["course_title"],
+            amount_due=invoice["amount_due"],
+            total_paid=invoice["total_paid"],
+            status=invoice["status"],
+            created_at=invoice["created_at"],
+            due_date=invoice["due_date"],
+            is_paid=invoice["is_paid"]
+        ) for invoice in invoices
+    ]
+    
+    return StudentCourseInvoicesResponse(
+        invoices=invoice_responses,
+        total=total
+    )
 
 # Payment Endpoints
 @router.post("/invoices/{invoice_id}/payments", response_model=PaymentCreateResponse)

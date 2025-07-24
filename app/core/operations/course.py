@@ -3,6 +3,7 @@
 from typing import Optional, List, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, delete
+from sqlalchemy.sql import case
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from decimal import Decimal
@@ -277,8 +278,15 @@ async def get_course_students(
     page: int = 1,
     per_page: int = 10
 ) -> Tuple[List[dict], int]:
-    """Get students enrolled in a course with pagination."""
+    """Get students enrolled in a course with pagination, sorted by students who owe money first.
+    
+    Returns students with owe_money=True first (those with unpaid invoices for this course),
+    followed by students with owe_money=False (all invoices paid or no invoices).
+    """
     try:
+        # Import payment models for the query
+        from app.models.payment import Invoice, Payment, PaymentStatus
+        
         # Count total students
         count_query = (
             select(Enrollment.id)
@@ -288,14 +296,50 @@ async def get_course_students(
         count_result = await db.execute(count_query)
         total = len(count_result.all())
         
-        # Get enrolled students with profiles (paginated)
+        # Get enrolled students with profiles and payment status (paginated)
         offset = (page - 1) * per_page
+        
+        # Subquery to check if student has unpaid invoices (owes money)
+        unpaid_subquery = (
+            select(Enrollment.student_id)
+            .join(Invoice, Enrollment.id == Invoice.enrollment_id)
+            .outerjoin(Payment, Invoice.id == Payment.invoice_id)
+            .where(Enrollment.course_id == course_id)
+            .where(Enrollment.is_active == True)
+            .group_by(Enrollment.student_id, Invoice.id)
+            .having(
+                func.coalesce(
+                    func.sum(
+                        case(
+                            (Payment.status == PaymentStatus.SUCCESSFUL, Payment.amount),
+                            else_=0
+                        )
+                    ), 0
+                ) < Invoice.amount_due
+            )
+        ).subquery()
+        
         query = (
-            select(User, Enrollment.enrolled_at, Enrollment.is_active)
+            select(
+                User, 
+                Enrollment.enrolled_at, 
+                Enrollment.is_active,
+                case(
+                    (User.id.in_(select(unpaid_subquery.c.student_id)), 1),
+                    else_=0
+                ).label('has_unpaid')
+            )
             .join(Enrollment, User.id == Enrollment.student_id)
             .options(selectinload(User.profile))
             .where(Enrollment.course_id == course_id)
             .where(Enrollment.is_active == True)
+            .order_by(
+                case(
+                    (User.id.in_(select(unpaid_subquery.c.student_id)), 0),
+                    else_=1
+                ),  # Students who owe money first (0), then students who paid (1)
+                User.email  # Secondary sort by email
+            )
             .offset(offset)
             .limit(per_page)
         )
@@ -304,13 +348,13 @@ async def get_course_students(
         students_data = result.all()
         
         students = []
-        for student, enrolled_at, is_active in students_data:
+        for student, enrolled_at, _, has_unpaid in students_data:
             students.append({
                 'id': student.id,
                 'email': student.email,
                 'full_name': student.full_name,
                 'enrolled_at': enrolled_at,
-                'is_active': is_active
+                'owe_money': bool(has_unpaid)
             })
         
         return students, total
@@ -338,5 +382,68 @@ async def get_course_title(db: AsyncSession, course_id: int) -> Optional[str]:
             select(Course.title).where(Course.id == course_id)
         )
         return result.scalar_one_or_none()
+    except SQLAlchemyError:
+        return None
+
+async def get_course_student_detail(
+    db: AsyncSession,
+    course_id: int,
+    student_id: int
+) -> Optional[dict]:
+    """Get detailed information about a student in a course including invoices and payments."""
+    try:
+        # Import payment models
+        from app.models.payment import Invoice, Payment, PaymentStatus, CoursePaymentPeriod
+        
+        # First check if student is enrolled in the course
+        enrollment_result = await db.execute(
+            select(Enrollment)
+            .where(Enrollment.course_id == course_id)
+            .where(Enrollment.student_id == student_id)
+            .where(Enrollment.is_active == True)
+        )
+        enrollment = enrollment_result.scalar_one_or_none()
+        
+        if not enrollment:
+            return None
+        
+        # Get all invoices for this student and course
+        invoices_result = await db.execute(
+            select(Invoice, CoursePaymentPeriod)
+            .join(CoursePaymentPeriod, Invoice.payment_period_id == CoursePaymentPeriod.id)
+            .options(
+                selectinload(Invoice.payments),
+                selectinload(CoursePaymentPeriod.created_by_user)
+            )
+            .where(Invoice.enrollment_id == enrollment.id)
+            .order_by(CoursePaymentPeriod.created_at.desc())
+        )
+        invoice_data = invoices_result.all()
+        
+        # Process invoices and calculate payments
+        invoices_dict = {}
+        payments_dict = {}
+        
+        for invoice, payment_period in invoice_data:
+            # Calculate total paid for this invoice
+            total_paid = sum(
+                float(p.amount) for p in invoice.payments 
+                if p.status == PaymentStatus.SUCCESSFUL
+            )
+            
+            # Add to payments dict (invoice_id -> amount_paid)
+            payments_dict[invoice.id] = total_paid
+            
+            # Add to invoices dict (invoice_id -> _Invoice object data)
+            invoices_dict[invoice.id] = {
+                'amount_due': float(invoice.amount_due),
+                'created_at': invoice.created_at
+            }
+        
+        return {
+            'invoices': invoices_dict,
+            'payments': payments_dict
+        }
+        
     except SQLAlchemyError:
         return None

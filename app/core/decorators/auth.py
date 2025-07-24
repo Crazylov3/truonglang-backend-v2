@@ -4,6 +4,7 @@ from fastapi import Request, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 import redis.asyncio as redis
 import inspect
+import traceback
 
 from app.database import get_db, get_redis
 from app.models.user import UserRole
@@ -81,9 +82,10 @@ def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
             except HTTPException:
                 raise
             except Exception as e:
+                print(traceback.format_exc())
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"Authentication error: {str(e)}"
+                    detail=f"Something went wrong: {str(e)}"
                 )
         
         # Separate original parameters into non-default and default

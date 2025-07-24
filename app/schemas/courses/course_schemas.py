@@ -4,7 +4,7 @@ from decimal import Decimal
 from datetime import datetime
 from app.schemas.users import UserResponse
 from app.schemas.common import PaginatedResponse
-
+from app.schemas.payments.payment_schemas import PaymentPeriodResponse
 
 class PublicViewCourseDetail(BaseModel):
     id: int = Field(..., description="Course ID")
@@ -70,10 +70,18 @@ class CourseStudent(BaseModel):
     email: str
     full_name: str 
     enrolled_at: datetime
+    owe_money: bool
 
 class CourseStudents(PaginatedResponse[CourseStudent]):
     pass
 
+class _Invoice(BaseModel):
+    amount_due: float
+    created_at: datetime
+
+class CourseStudentPaymentDetail(BaseModel):
+    invoices: dict[int, _Invoice]
+    payments: dict[int, float]
 
 class EnrollmentResponse(BaseModel):
     message: str

@@ -11,7 +11,9 @@ from app.schemas.courses.course_schemas import (
     InstructorViewCourseDetail,
     CourseStudent,
     CourseStudents,
-    CourseCreateResponse
+    CourseCreateResponse,
+    CourseStudentPaymentDetail,
+    _Invoice
 )
 import traceback
 from app.schemas.common import PaginatedResponse
@@ -248,6 +250,7 @@ async def get_course_students(
             email=student_data['email'],
             full_name=student_data['full_name'],
             enrolled_at=student_data['enrolled_at'],
+            owe_money=student_data['owe_money']
         )
         for student_data in students_data
     ]
@@ -257,4 +260,57 @@ async def get_course_students(
         total=total,
         page=page,
         per_page=per_page
+    )
+
+@router.get("/instructor/course/{course_id}/students-payment-detail/{student_id}", response_model=CourseStudentPaymentDetail)
+@authentication_required(allowed_role=UserRole.INSTRUCTOR)
+async def get_course_student_detail(
+    course_id: int = Path(..., description="Course ID"),
+    student_id: int = Path(..., description="Student ID"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get detailed information about a student in a course."""
+    
+    # Check if course exists and user has permission
+    course = await course_ops.get_course_by_id(db, course_id)
+    if not course:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found"
+        )
+    
+    # Check permissions (instructor must own course or have edit permission)
+    can_edit = False
+    if current_user.role == UserRole.INSTRUCTOR:
+        can_edit = course_id in await course_ops.filter_courses_by_edit_permission(db, current_user.id)
+    elif current_user.role >= UserRole.STAFF:
+        can_edit = True
+    
+    if not can_edit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions to view student details for this course"
+        )
+    
+    # Get student details
+    student_detail = await course_ops.get_course_student_detail(db, course_id, student_id)
+    
+    if not student_detail:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found or not enrolled in this course"
+        )
+    
+    # Convert invoices dict to _Invoice objects
+    invoices_with_objects = {}
+    for invoice_id, invoice_data in student_detail["invoices"].items():
+        invoices_with_objects[invoice_id] = _Invoice(
+            amount_due=invoice_data["amount_due"],
+            created_at=invoice_data["created_at"]
+        )
+    
+    return CourseStudentPaymentDetail(
+        invoices=invoices_with_objects,
+        payments=student_detail["payments"]
     )
