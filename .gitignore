@@ -131,7 +131,7 @@ log/
 # Static files (if using)
 staticfiles/
 static/
-media/
+#media/
 
 # ===========================================
 # Database Files
