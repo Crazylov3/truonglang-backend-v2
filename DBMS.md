@@ -9,7 +9,6 @@ enum UserRole {
   ADMIN
 }
 
-// --- NEW Enums Required for Billing ---
 enum InvoiceStatus {
   DUE
   PAID
@@ -23,14 +22,29 @@ enum PaymentStatus {
   FAILED
 }
 
+// --- NEW Enums for Attendance System ---
+enum CardStatus {
+  ACTIVE
+  INACTIVE
+  LOST
+  DAMAGED
+}
 
-// --- UNCHANGED ORIGINAL TABLES ---
+enum AttendanceType {
+  CHECK_IN
+  CHECK_OUT
+}
+
+
+// --- ORIGINAL TABLES (UNCHANGED) ---
 
 Table users {
   id integer [pk, increment]
   email string [unique, not null]
   hashed_password string [not null]
   role UserRole [not null]
+  need_change_email bool [not null, default: false]
+  need_change_password bool [not null, default: false]
   created_at timestamp [not null, default: `now()`]
   last_login_at timestamp [not null, default: `now()`]
 }
@@ -74,52 +88,83 @@ Table course_edit_permissions {
   granted_at timestamp [not null, default: `now()`]
 }
 
-
-// --- REQUIRED CHANGES FOR BILLING LOGIC ---
-
-// 1. YOUR ORIGINAL TABLE (Unchanged) - This is the trigger
 Table course_payment_period {
   id integer [pk, increment]
   course_id integer [ref: > courses.id]
   amount decimal(10, 2)
   created_at timestamp 
   created_by integer [ref: > users.id]
-  
-  // Suggested additions for clarity:
-  // title string [note: 'e.g., "Payment for November"']
-  // due_date date
 }
 
-// 2. NEW TABLE (Required) - This is the bridge
 Table invoices {
   id integer [pk, increment]
-  // Links to the specific student's enrollment
   enrollment_id integer [not null, ref: > enrollments.id] 
-  // Links to the payment period created by the instructor
   payment_period_id integer [not null, ref: > course_payment_period.id] 
-  
   status InvoiceStatus [not null, default: 'DUE']
-  // The amount is copied here to prevent issues if the original period's amount changes
   amount_due decimal(10, 2) [not null] 
   created_at timestamp [not null, default: `now()`]
-
-  note: 'A specific, trackable bill for one student. Generated when a course_payment_period is created.'
   indexes {
     (enrollment_id, payment_period_id) [unique]
   }
 }
 
-// 3. MODIFIED PAYMENTS TABLE (Required)
 Table payments {
   id integer [pk, increment]
-  // --- CRITICAL CHANGE: A payment is now made against an INVOICE, not a user.
   invoice_id integer [not null, ref: > invoices.id]
-
-  // --- CRITICAL ADDITION: You need to know if the payment was successful.
   status PaymentStatus [not null, default: 'PENDING']
-
   amount decimal(10, 2) [not null]
   provider_reference string [unique, note: 'ID from Stripe, PayPal, etc.']
   created_at timestamp [not null, default: `now()`]
-  note: 'Records a payment attempt against a specific invoice.'
 }
+
+
+// --- ADDITIONS FOR ATTENDANCE TRACKING SYSTEM (Simplified) ---
+// The following tables implement the best-practice approach for attendance tracking.
+
+// 1. Table to manage the physical cards
+Table attendance_cards {
+  card_uid string [pk, note: 'Unique ID from the card (RFID/NFC UID, Barcode). This is the physical identifier.']
+  status CardStatus [not null, default: 'INACTIVE']
+  issued_at timestamp [not null, default: `now()`, note: 'When the card was first created in the system']
+  notes text
+
+  note: 'Manages the lifecycle of each physical attendance card.'
+}
+
+// 2. Table to link a card to a student over a period of time (The Key Table)
+Table card_assignments {
+  id integer [pk, increment]
+  student_id integer [not null, ref: > users.id]
+  card_uid string [not null, ref: > attendance_cards.card_uid]
+  assigned_at timestamp [not null, default: `now()`, note: 'The moment this card was given to the student']
+  revoked_at timestamp [note: 'The moment the card was returned or deactivated for this student. NULL if currently active.']
+
+  note: 'This table tracks the history of which student used which card and when. This solves the card re-issuance problem.'
+  indexes {
+    // A student can only have one active card at a time
+    (student_id, revoked_at) 
+    // A card can only be actively assigned to one student at a time
+    (card_uid, revoked_at)
+  }
+}
+
+// 3. The main table to log every single swipe event
+Table attendance_records {
+  id integer [pk, increment]
+  // CRITICAL: We store the student_id directly for historical integrity.
+  student_id integer [not null, ref: > users.id]
+  
+  swiped_at timestamp [not null, default: `now()`, note: 'The exact moment of the swipe']
+  type AttendanceType [not null]
+  
+  // This field is for auditing and richer data
+  card_uid_used string [not null, note: 'Which card UID was used for this specific swipe']
+  
+  note: 'An immutable log of every attendance event. Linked directly to a student, not a card assignment.'
+}
+
+Ref: "payments"."id" < "payments"."status"
+
+Ref: "invoices"."id" < "invoices"."status"
+
+Ref: "enrollments"."id" < "enrollments"."enrolled_at"
