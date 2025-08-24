@@ -11,11 +11,13 @@ from . import user_profile
 from . import course
 from . import enrollment
 from . import payment
+from . import attendance
 
 __all__ = [
     "user",
     "user_profile", 
     "course",
     "enrollment",
-    "payment"
+    "payment",
+    "attendance"
 ]

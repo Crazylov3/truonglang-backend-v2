@@ -17,6 +17,7 @@ from app.routers.users import users
 from app.routers.courses import courses
 from app.routers.enrollments import enrollments
 from app.routers.payments import payments
+from app.routers.attendance import attendance
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -134,6 +135,7 @@ app.include_router(users.router, prefix="/api/v1")
 app.include_router(courses.router, prefix="/api/v1")
 app.include_router(enrollments.router, prefix="/api/v1")
 app.include_router(payments.router, prefix="/api/v1")
+app.include_router(attendance.router, prefix="/api/v1")
 
 # Middleware for request logging and monitoring
 @app.middleware("http")
@@ -213,7 +215,7 @@ def custom_openapi():
     }
     openapi_schema["security"] = [{"csrf-token": []}]
     app.openapi_schema = openapi_schema
-    return app.openapi_schema
+    return openapi_schema
 
 app.openapi = custom_openapi
 

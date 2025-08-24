@@ -14,7 +14,7 @@ class UserProfile(BaseModel):
     last_name = Column(String(100), nullable=False)
     date_of_birth = Column(Date, nullable=True)
 
-    # avatar
+    # Avatar
     avatar = Column(String(255), nullable=True)
     
     # Relationships

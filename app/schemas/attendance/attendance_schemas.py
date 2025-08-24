@@ -1,0 +1,139 @@
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import datetime, date
+from app.models.attendance import CardStatus, AttendanceType
+
+
+class AttendanceCardBase(BaseModel):
+    card_uid: str = Field(..., description="Unique ID from the card (RFID/NFC UID, Barcode)")
+    status: CardStatus = Field(CardStatus.INACTIVE, description="Current status of the card")
+    notes: Optional[str] = Field(None, description="Additional notes about the card")
+
+
+class AttendanceCardCreate(AttendanceCardBase):
+    pass
+
+
+class AttendanceCardUpdate(BaseModel):
+    status: Optional[CardStatus] = None
+    notes: Optional[str] = None
+
+
+class AttendanceCardResponse(AttendanceCardBase):
+    issued_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class AttendanceCardsResponse(BaseModel):
+    cards: List[AttendanceCardResponse]
+    total: int
+
+
+# Bulk Card Creation Schemas
+class BulkCardCreateRequest(BaseModel):
+    cards: List[AttendanceCardCreate] = Field(..., description="List of cards to create")
+
+
+class BulkCardCreateResponse(BaseModel):
+    cards: List[AttendanceCardResponse]
+    failed: List[dict]
+    total_requested: int
+    total_successful: int
+    total_failed: int
+
+
+class CardAssignmentBase(BaseModel):
+    student_id: int = Field(..., description="ID of the student")
+    card_uid: str = Field(..., description="UID of the card to assign")
+
+
+class CardAssignmentCreate(CardAssignmentBase):
+    pass
+
+
+class CardAssignmentResponse(CardAssignmentBase):
+    id: int
+    assigned_at: datetime
+    revoked_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class CardAssignmentsResponse(BaseModel):
+    assignments: List[CardAssignmentResponse]
+    total: int
+
+
+class AttendanceRecordBase(BaseModel):
+    student_id: int = Field(..., description="ID of the student")
+    type: AttendanceType = Field(..., description="Type of attendance record")
+    card_uid_used: str = Field(..., description="UID of the card used")
+
+
+class AttendanceRecordCreate(AttendanceRecordBase):
+    pass
+
+
+class AttendanceRecordResponse(AttendanceRecordBase):
+    id: int
+    swiped_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class AttendanceRecordsResponse(BaseModel):
+    records: List[AttendanceRecordResponse]
+    total: int
+
+
+# Bulk Attendance Record Import Schemas
+class BulkAttendanceRecordRequest(BaseModel):
+    records: List[AttendanceRecordCreate] = Field(..., description="List of attendance records to import")
+
+
+class BulkAttendanceRecordResponse(BaseModel):
+    records: List[AttendanceRecordResponse]
+    failed: List[dict]
+    total_requested: int
+    total_successful: int
+    total_failed: int
+
+
+class AttendanceSummaryResponse(BaseModel):
+    student_id: int
+    check_ins: int
+    check_outs: int
+    total_records: int
+    period_start: Optional[date] = None
+    period_end: Optional[date] = None
+
+
+class BulkCardAssignmentRequest(BaseModel):
+    assignments: List[CardAssignmentCreate]
+
+
+class BulkCardAssignmentResponse(BaseModel):
+    successful: List[CardAssignmentResponse]
+    failed: List[dict]
+    total_requested: int
+    total_successful: int
+    total_failed: int
+
+
+class CardStatusUpdateRequest(BaseModel):
+    status: CardStatus
+    notes: Optional[str] = None
+
+
+class AttendanceFilterRequest(BaseModel):
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    student_id: Optional[int] = None
+    course_id: Optional[int] = None
+    attendance_type: Optional[AttendanceType] = None
+    limit: int = Field(100, ge=1, le=1000)
+    offset: int = Field(0, ge=0)

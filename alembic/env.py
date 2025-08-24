@@ -18,6 +18,12 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from app.models.base import BaseModel
+# Import all models to ensure they are registered with the metadata
+from app.models import (
+    User, UserProfile, Course, CourseEditPermission, 
+    Enrollment, Payment, Invoice, CoursePaymentPeriod,
+    AttendanceCard, CardAssignment, AttendanceRecord
+)
 target_metadata = BaseModel.metadata
 
 # Function to construct database URL from environment variables

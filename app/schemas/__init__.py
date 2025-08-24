@@ -15,6 +15,7 @@ from .users import *
 from .courses import *
 from .enrollments import *
 from .payments import *
+from .attendance import *
 
 # Export all schemas for backward compatibility
 __all__ = [
@@ -67,4 +68,25 @@ __all__ = [
     "PaymentResponse",
     "PaymentPeriodCreateResponse",
     "PaymentCreateResponse",
+    
+    # Attendance schemas
+    "AttendanceCardCreate",
+    "AttendanceCardResponse",
+    "AttendanceCardUpdate",
+    "CardAssignmentCreate",
+    "CardAssignmentResponse",
+    "AttendanceRecordCreate",
+    "AttendanceRecordResponse",
+    "AttendanceSummaryResponse",
+    "AttendanceCardsResponse",
+    "CardAssignmentsResponse",
+    "AttendanceRecordsResponse",
+    "BulkCardCreateRequest",
+    "BulkCardCreateResponse",
+    "BulkCardAssignmentRequest",
+    "BulkCardAssignmentResponse",
+    "BulkAttendanceRecordRequest",
+    "BulkAttendanceRecordResponse",
+    "CardStatusUpdateRequest",
+    "AttendanceFilterRequest",
 ] 

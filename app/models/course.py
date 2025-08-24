@@ -13,7 +13,7 @@ class Course(BaseModel):
     description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     location = Column(String(255), nullable=True)
-    start_date = Column(DateTime(timezone=True), nullable=True)  # Note: keeping "start_date" as per DBMS schema
+    start_date = Column(DateTime(timezone=True), nullable=True)
     teacher_name = Column(String(255), nullable=True)
     
     # For ONE_TIME payments - as per DBMS schema
@@ -31,7 +31,7 @@ class Course(BaseModel):
         return len([e for e in self.enrollments if e.is_active]) if self.enrollments else 0
 
     def __repr__(self):
-        return f"<Course(id={self.id}, title='{self.title}', creator_id={self.creator_id})>" 
+        return f"<Course(id={self.id}, title='{self.title}', creator_id={self.creator_id})>"
 
 
 class CourseEditPermission(BaseModel):
