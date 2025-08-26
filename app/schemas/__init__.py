@@ -1,92 +1,54 @@
-# Database Schemas - Organized by Domain
+# Import all schemas
+from .auth.login import *
+from .auth.password_reset import *
+from .auth.register import *
+from .common import *
+from .courses.course_schemas import *
+from .enrollments.enrollments_schemas import *
+from .payments.payment_schemas import *
+from .users.user_schemas import *
+from .attendance.attendance_schemas import *
+from .audit.audit_schemas import *
 
-# Import common schemas
-from .common import (
-    PaginatedResponse,
-    MessageResponse,
-    ErrorResponse,
-    HealthResponse,
-    BaseTimestampedModel
-)
-
-# Import domain-specific schemas
-from .auth import *
-from .users import *
-from .courses import *
-from .enrollments import *
-from .payments import *
-from .attendance import *
-
-# Export all schemas for backward compatibility
 __all__ = [
-    # Common schemas
-    "PaginatedResponse",
-    "MessageResponse", 
-    "ErrorResponse",
-    "HealthResponse",
-    "BaseTimestampedModel",
-    
     # Auth schemas
-    "UserRegister",
-    "UserLogin", 
-    "Token",
-    "TokenData",
-    "VerifyEmail",
-    "ForgotPassword",
-    "ResetPassword",
-    "ChangePassword",
+    "LoginRequest", "LoginResponse", "TokenResponse", "RefreshTokenRequest",
+    "PasswordResetRequest", "PasswordResetConfirmRequest", "PasswordResetResponse",
+    "RegisterRequest", "RegisterResponse", "EmailVerificationRequest",
     
-    # User schemas
-    "UserBase",
-    "UserCreate",
-    "UserUpdate", 
-    "UserResponse",
-    "UserProfile",
+    # Common schemas
+    "MessageResponse", "ErrorResponse", "SuccessResponse", "PaginatedResponse",
     
     # Course schemas
-    "CourseBase",
-    "CourseCreate",
-    "CourseUpdate",
-    "CourseResponse",
-    "CourseDetailResponse",
-    "CourseListResponse",
+    "CourseBase", "CourseCreate", "CourseUpdate", "CourseResponse", "CourseListResponse",
+    "CourseEditPermissionBase", "CourseEditPermissionCreate", "CourseEditPermissionResponse",
+    "CoursePaymentPeriodBase", "CoursePaymentPeriodCreate", "CoursePaymentPeriodResponse",
     
     # Enrollment schemas
-    "EnrollmentResponse",
-    "EnrollmentDetailResponse",
+    "EnrollmentBase", "EnrollmentCreate", "EnrollmentUpdate", "EnrollmentResponse",
+    "EnrollmentListResponse", "EnrollmentFilterRequest",
     
     # Payment schemas
-    "PaymentPeriodCreate",
-    "PaymentPeriodResponse",
-    "PaymentPeriodsResponse",
-    "InvoiceResponse", 
-    "StudentInvoiceResponse",
-    "InvoicesResponse",
-    "StudentInvoicesResponse",
-    "StudentCourseInvoicesResponse",
-    "PaymentCreate",
-    "PaymentResponse",
-    "PaymentPeriodCreateResponse",
-    "PaymentCreateResponse",
+    "PaymentBase", "PaymentCreate", "PaymentResponse", "PaymentListResponse",
+    "InvoiceBase", "InvoiceCreate", "InvoiceUpdate", "InvoiceResponse", "InvoiceListResponse",
+    "CoursePaymentPeriodBase", "CoursePaymentPeriodCreate", "CoursePaymentPeriodResponse",
+    "PaymentFilterRequest", "InvoiceFilterRequest",
+    
+    # User schemas
+    "UserBase", "UserCreate", "UserUpdate", "UserResponse", "UserListResponse",
+    "UserProfileBase", "UserProfileCreate", "UserProfileUpdate", "UserProfileResponse",
+    "UserFilterRequest", "UserRole",
     
     # Attendance schemas
-    "AttendanceCardCreate",
-    "AttendanceCardResponse",
-    "AttendanceCardUpdate",
-    "CardAssignmentCreate",
-    "CardAssignmentResponse",
-    "AttendanceRecordCreate",
-    "AttendanceRecordResponse",
-    "AttendanceSummaryResponse",
-    "AttendanceCardsResponse",
-    "CardAssignmentsResponse",
-    "AttendanceRecordsResponse",
-    "BulkCardCreateRequest",
-    "BulkCardCreateResponse",
-    "BulkCardAssignmentRequest",
-    "BulkCardAssignmentResponse",
-    "BulkAttendanceRecordRequest",
-    "BulkAttendanceRecordResponse",
-    "CardStatusUpdateRequest",
-    "AttendanceFilterRequest",
+    "AttendanceCardBase", "AttendanceCardCreate", "AttendanceCardUpdate", "AttendanceCardResponse",
+    "CardAssignmentBase", "CardAssignmentCreate", "CardAssignmentResponse",
+    "AttendanceRecordBase", "AttendanceRecordCreate", "AttendanceRecordResponse",
+    "AttendanceSummaryResponse", "CardStatusUpdateRequest", "AttendanceFilterRequest",
+    "BulkCardCreateRequest", "BulkCardCreateResponse", "BulkCardAssignmentRequest", "BulkCardAssignmentResponse",
+    "BulkAttendanceRecordRequest", "BulkAttendanceRecordResponse",
+    
+    # Audit schemas
+    "AuditLogResponse", "AuditLogFilter", "AuditStatisticsResponse", "AuditLogSummary",
+    "AuditExportRequest", "AuditCleanupRequest", "AuditCleanupResponse",
+    "AuditAction", "AuditResource", "AuditSeverity"
 ] 

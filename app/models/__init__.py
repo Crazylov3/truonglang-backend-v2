@@ -4,6 +4,7 @@ from .course import Course, CourseEditPermission
 from .enrollment import Enrollment
 from .payment import Payment, PaymentStatus, Invoice, InvoiceStatus, CoursePaymentPeriod
 from .attendance import AttendanceCard, CardAssignment, AttendanceRecord, CardStatus, AttendanceType
+from .audit import AuditLog, AuditAction, AuditResource, AuditSeverity
 
 __all__ = [
     "User", "UserRole",
@@ -11,5 +12,6 @@ __all__ = [
     "Course", "CourseEditPermission",
     "Enrollment",
     "Payment", "PaymentStatus", "Invoice", "InvoiceStatus", "CoursePaymentPeriod",
-    "AttendanceCard", "CardAssignment", "AttendanceRecord", "CardStatus", "AttendanceType"
+    "AttendanceCard", "CardAssignment", "AttendanceRecord", "CardStatus", "AttendanceType",
+    "AuditLog", "AuditAction", "AuditResource", "AuditSeverity"
 ] 

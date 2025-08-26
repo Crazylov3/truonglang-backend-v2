@@ -1,103 +1,154 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.responses import Response
+"""Authentication router for login/logout functionality."""
+
+from datetime import timedelta
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_db
+
+from app.core.deps import get_db, get_current_user
+from app.core.security import create_access_token, verify_password
+from app.core.operations import user as user_ops
+from app.core.operations.audit import log_user_action
+from app.models.user import User
+from app.models.audit import AuditAction
 from app.schemas.auth.login import UserLogin, UserLoginResponse, UserLogoutResponse
-from app.schemas.users.user_schemas import UserInfo, UserProfile
-from app.core.operations import user as user_operations
-from app.core.security import create_user_token
-import json
 from app.config import settings
-from .auth import router
-from .auth import logger
-from app.core.decorators import csrf_protect
-from app.core.cookies import set_cookie, clear_cookie
+
+router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
 @router.post("/login", response_model=UserLoginResponse)
-@csrf_protect
 async def login(
-    user_data: UserLogin,
-    response: Response,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    request: Request = None,
     db: AsyncSession = Depends(get_db)
 ):
-    """Authenticate user and create secure JWT token."""
-    # Get user with profile data using operations
-    user = await user_operations.get_user_by_email(db, user_data.email)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+    """User login endpoint."""
+    try:
+        # Authenticate user
+        user = await user_ops.authenticate_user(db, form_data.username, form_data.password)
+        if not user:
+            # Audit log failed login attempt
+            await log_user_action(
+                db=db,
+                action=AuditAction.LOGIN,
+                user_id=0,  # Unknown user
+                user_email=form_data.username,
+                user_role=0,
+                operation_summary="Failed login attempt - invalid credentials",
+                operation_details={"username": form_data.username},
+                ip_address=request.client.host if request and request.client else None,
+                user_agent=request.headers.get("user-agent") if request else None,
+                request_method="POST",
+                request_path="/api/v1/auth/login"
+            )
+            
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        # Create access token
+        access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
+        access_token = create_access_token(
+            data={"sub": user.email}, expires_delta=access_token_expires
         )
-
-    if not user_operations.verify_password(user_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+        
+        # Update last login time
+        await user_ops.update_last_login(db, user.id)
+        
+        # Audit log successful login
+        await log_user_action(
+            db=db,
+            action=AuditAction.LOGIN,
+            user_id=user.id,
+            user_email=user.email,
+            user_role=user.role,
+            operation_summary="User logged in successfully",
+            operation_details={"login_method": "password"},
+            ip_address=request.client.host if request and request.client else None,
+            user_agent=request.headers.get("user-agent") if request else None,
+            request_method="POST",
+            request_path="/api/v1/auth/login"
         )
-
-    # Update last login time using operations
-    await user_operations.update_user_last_login(db, user.id)
-
-    # Generate avatar URL if user has an avatar
-    avatar_url = f"/users/avatar/{user.id}" if user.profile and user.profile.avatar else None
-
-    user_info = UserInfo(
-        id=user.id,
-        email=user.email,
-        role=user.role,
-        last_login_at=user.last_login_at,
-        created_at=user.created_at,
-        profile=UserProfile(
-            first_name=user.profile.first_name,
-            last_name=user.profile.last_name,
-            date_of_birth=user.profile.date_of_birth,
-            avatar=avatar_url  # Store URL instead of base64
-        ) if user.profile else None,
-    )
-    cookie_max_age = settings.access_token_expire_minutes * 60
-    access_token = create_user_token(user.id, user.role, cookie_max_age)
-    is_development = settings.debug
-
-    set_cookie(
-        response,
-        "access_token",
-        access_token,
-        secure=not is_development,
-        httponly=True,  # Prevent JavaScript access for security
-        max_age=cookie_max_age
-    )
-
-    # Set user display data cookie (non-sensitive info only)
-    user_display_data = {
-        "id": user_info.id,
-        "last_name": user_info.profile.last_name if user_info.profile else None,
-        "first_name": user_info.profile.first_name if user_info.profile else None,
-        "avatar_url": avatar_url,  # Store URL instead of base64
-        "role": user.role,
-    }
-
-    set_cookie(
-        response,
-        "giaoducthanglong_user_data",
-        json.dumps(user_display_data),
-        secure=not is_development,
-        httponly=False,  # Allow JavaScript access for UI display
-        max_age=cookie_max_age
-    )
-
-    return UserLoginResponse(
-        message="Login successful",
-        user=user_info
-    )
+        
+        return UserLoginResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user_id=user.id,
+            email=user.email,
+            role=user.role
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        # Audit log unexpected error during login
+        await log_user_action(
+            db=db,
+            action=AuditAction.LOGIN,
+            user_id=0,
+            user_email=form_data.username if 'form_data' in locals() else "unknown",
+            user_role=0,
+            operation_summary="Login failed due to system error",
+            operation_details={"error": str(e)},
+            ip_address=request.client.host if request and request.client else None,
+            user_agent=request.headers.get("user-agent") if request else None,
+            request_method="POST",
+            request_path="/api/v1/auth/login"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error during login"
+        )
 
 
 @router.post("/logout", response_model=UserLogoutResponse)
 async def logout(
-    response: Response
+    request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
-    """Logout user by clearing cookies."""
-    clear_cookie(response, "access_token")
-    clear_cookie(response, "giaoducthanglong_user_data")
-
-    return UserLogoutResponse(message="Successfully logged out")
+    """User logout endpoint."""
+    try:
+        # Audit log successful logout
+        await log_user_action(
+            db=db,
+            action=AuditAction.LOGOUT,
+            user_id=current_user.id,
+            user_email=current_user.email,
+            user_role=current_user.role,
+            operation_summary="User logged out successfully",
+            operation_details={"logout_method": "api_call"},
+            ip_address=request.client.host if request and request.client else None,
+            user_agent=request.headers.get("user-agent") if request else None,
+            request_method="POST",
+            request_path="/api/v1/auth/logout"
+        )
+        
+        return UserLogoutResponse(
+            message="Successfully logged out",
+            user_id=current_user.id,
+            email=current_user.email
+        )
+        
+    except Exception as e:
+        # Audit log logout error
+        await log_user_action(
+            db=db,
+            action=AuditAction.LOGOUT,
+            user_id=current_user.id,
+            user_email=current_user.email,
+            user_role=current_user.role,
+            operation_summary="Logout failed due to system error",
+            operation_details={"error": str(e)},
+            ip_address=request.client.host if request and request.client else None,
+            user_agent=request.headers.get("user-agent") if request else None,
+            request_method="POST",
+            request_path="/api/v1/auth/logout"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error during logout"
+        )

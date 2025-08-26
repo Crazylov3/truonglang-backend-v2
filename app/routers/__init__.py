@@ -1,10 +1,19 @@
-# API Routers - Organized by Domain
+"""API routers for the application."""
 
-from . import auth
-from . import users  
-from . import attendance
-# from . import courses
-# from . import enrollments
+from .auth import auth, login, password_reset, register
+from .users import users, profile_management, user_management
+from .courses import courses, instructor_courses, public_courses
+from .enrollments import enrollments, instructor_enrollments, student_enrollments
+from .payments import payments, instructor_payments, student_payments
+from .attendance import attendance
+from .audit import audit
 
-# Export routers for easy access
-__all__ = ["auth", "users", "attendance"] 
+__all__ = [
+    "auth", "login", "password_reset", "register",
+    "users", "profile_management", "user_management",
+    "courses", "instructor_courses", "public_courses",
+    "enrollments", "instructor_enrollments", "student_enrollments",
+    "payments", "instructor_payments", "student_payments",
+    "attendance",
+    "audit"
+] 

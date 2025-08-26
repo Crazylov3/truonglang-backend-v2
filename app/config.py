@@ -170,6 +170,12 @@ class Settings:
     def csrf_token_expire_minutes(self) -> int:
         return self._cfg.security.csrf_token_expire_minutes or 60
     
+    @property
+    def allowed_hosts(self) -> List[str]:
+        if self._cfg.security and self._cfg.security.allowed_hosts:
+            return self._cfg.security.allowed_hosts
+        return ["*"]  # Default to allow all hosts
+    
     def __getattr__(self, name: str) -> Any:
         try:
             return super().__getattr__(name)

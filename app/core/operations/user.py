@@ -47,6 +47,21 @@ async def get_user_by_id(db: AsyncSession, user_id: int) -> Optional[User]:
         return None
 
 
+async def authenticate_user(db: AsyncSession, email: str, password: str) -> Optional[User]:
+    """Authenticate a user with email and password."""
+    try:
+        user = await get_user_by_email(db, email)
+        if not user:
+            return None
+        
+        if not verify_password(password, user.hashed_password):
+            return None
+        
+        return user
+    except SQLAlchemyError:
+        return None
+
+
 async def create_user(
     db: AsyncSession,
     email: str,

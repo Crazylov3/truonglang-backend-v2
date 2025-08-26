@@ -279,3 +279,149 @@ async def get_attendance_summary_by_student(
         
     except SQLAlchemyError:
         return {'check_ins': 0, 'check_outs': 0, 'total_records': 0}
+
+
+# Missing functions that the router needs
+async def get_card_assignment(db: AsyncSession, assignment_id: int) -> Optional[CardAssignment]:
+    """Get a specific card assignment by ID."""
+    try:
+        result = await db.execute(
+            select(CardAssignment).where(CardAssignment.id == assignment_id)
+        )
+        return result.scalar_one_or_none()
+    except SQLAlchemyError:
+        return None
+
+
+async def get_student_attendance_records(
+    db: AsyncSession,
+    student_id: int,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    limit: int = 100
+) -> List[AttendanceRecord]:
+    """Get attendance records for a student (alias for get_attendance_records_by_student)."""
+    return await get_attendance_records_by_student(db, student_id, start_date, end_date, limit)
+
+
+async def get_student_attendance_summary(
+    db: AsyncSession,
+    student_id: int,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None
+) -> dict:
+    """Get attendance summary for a student (alias for get_attendance_summary_by_student)."""
+    return await get_attendance_summary_by_student(db, student_id, start_date, end_date)
+
+
+async def bulk_create_attendance_cards(
+    db: AsyncSession,
+    cards: List[dict]
+) -> dict:
+    """Bulk create attendance cards."""
+    successful = []
+    failed = []
+    
+    for card_data in cards:
+        try:
+            card = await create_attendance_card(
+                db=db,
+                card_uid=card_data['card_uid'],
+                notes=card_data.get('notes')
+            )
+            if card:
+                successful.append(card)
+            else:
+                failed.append(card_data)
+        except Exception as e:
+            failed.append(card_data)
+    
+    return {
+        'successful': successful,
+        'failed': failed
+    }
+
+
+async def bulk_assign_cards_for_class(
+    db: AsyncSession,
+    assignments: List[dict]
+) -> dict:
+    """Bulk assign cards to students for a class."""
+    successful = []
+    failed = []
+    
+    for assignment_data in assignments:
+        try:
+            assignment = await assign_card_to_student(
+                db=db,
+                student_id=assignment_data['student_id'],
+                card_uid=assignment_data['card_uid']
+            )
+            if assignment:
+                successful.append(assignment)
+            else:
+                failed.append(assignment_data)
+        except Exception as e:
+            failed.append(assignment_data)
+    
+    return {
+        'successful': successful,
+        'failed': failed
+    }
+
+
+async def bulk_revoke_card_assignments(
+    db: AsyncSession,
+    assignment_ids: List[int]
+) -> dict:
+    """Bulk revoke card assignments."""
+    successful = []
+    failed = []
+    
+    for assignment_id in assignment_ids:
+        try:
+            assignment = await get_card_assignment(db, assignment_id)
+            if assignment:
+                result = await revoke_card_assignment(db, assignment_id)
+                if result:
+                    successful.append(assignment_id)
+                else:
+                    failed.append(assignment_id)
+            else:
+                failed.append(assignment_id)
+        except Exception as e:
+            failed.append(assignment_id)
+    
+    return {
+        'successful': successful,
+        'failed': failed
+    }
+
+
+async def bulk_import_attendance_records(
+    db: AsyncSession,
+    records: List[dict]
+) -> dict:
+    """Bulk import attendance records."""
+    successful = []
+    failed = []
+    
+    for record_data in records:
+        try:
+            record = await create_attendance_record(
+                db=db,
+                student_id=record_data['student_id'],
+                attendance_type=record_data['type'],
+                card_uid=record_data['card_uid']
+            )
+            if record:
+                successful.append(record)
+            else:
+                failed.append(record_data)
+        except Exception as e:
+            failed.append(record_data)
+    
+    return {
+        'successful': successful,
+        'failed': failed
+    }

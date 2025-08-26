@@ -35,6 +35,9 @@ class User(BaseModel):
     # New relationships for attendance system
     card_assignments = relationship("CardAssignment", back_populates="student")
     attendance_records = relationship("AttendanceRecord", back_populates="student")
+    
+    # Audit logging relationship (consolidated)
+    audit_logs = relationship("AuditLog", back_populates="user")
 
     @property
     def full_name(self):

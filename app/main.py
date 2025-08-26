@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, status, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import IntegrityError
@@ -12,12 +13,18 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.config import settings
-from app.routers.auth import auth
+from app.routers.auth.auth import router as auth_router
+from app.routers.auth.login import router as login_router
+from app.routers.auth.register import router as register_router
+from app.routers.auth.password_reset import router as password_reset_router
 from app.routers.users import users
 from app.routers.courses import courses
 from app.routers.enrollments import enrollments
 from app.routers.payments import payments
 from app.routers.attendance import attendance
+from app.routers.audit import audit
+from app.core.middleware.audit_middleware import AuditMiddleware
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -65,6 +72,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=settings.allowed_hosts
+)
+
+# Add audit middleware for automatic API call logging
+app.add_middleware(
+    AuditMiddleware,
+    exclude_paths=[
+        "/docs", "/redoc", "/openapi.json", "/favicon.ico",
+        "/health", "/metrics", "/"
+    ]
+)
 
 # # Global exception handlers
 # @app.exception_handler(RequestValidationError)
@@ -82,11 +102,11 @@ app.add_middleware(
 @app.exception_handler(IntegrityError)
 async def integrity_exception_handler(request: Request, exc: IntegrityError):
     """Handle database integrity errors."""
-    logger.error(f"Database integrity error: {exc}")
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content={
-            "detail": "Database constraint violation. This may indicate duplicate data or invalid relationships."
+            "detail": "Database integrity error",
+            "message": str(exc)
         }
     )
 
@@ -94,73 +114,126 @@ async def integrity_exception_handler(request: Request, exc: IntegrityError):
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     """Handle general exceptions."""
-    logger.error(f"Unexpected error: {exc}")
-    if settings.debug:
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "detail": f"Internal server error: {str(exc)}"
-            }
-        )
-    else:
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "detail": "Internal server error"
-            }
-        )
-
-# API Info endpoint
-@app.get("/", tags=["info"])
-async def root():
-    """Root endpoint with API information."""
-    return {
-        "message": f"Welcome to {settings.app_name} API",
-        "version": settings.version,
-        "docs": "/docs",
-        "redoc": "/redoc",
-        "architecture": {
-            "database": "PostgreSQL with async SQLAlchemy",
-            "cache": "Redis",
-            "authentication": "JWT tokens",
-            "email": "SendGrid",
-            "patterns": "Repository & Service Layer"
+    logger.error(f"Unhandled exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "detail": "Internal server error",
+            "message": "An unexpected error occurred"
         }
+    )
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """Root endpoint with basic information."""
+    return HTMLResponse(
+        f"""
+        <html>
+            <head>
+                <title>{settings.app_name}</title>
+                <style>
+                    body {{ font-family: Arial, sans-serif; margin: 40px; }}
+                    .container {{ max-width: 800px; margin: 0 auto; }}
+                    .header {{ background: #f0f0f0; padding: 20px; border-radius: 5px; }}
+                    .content {{ margin-top: 20px; }}
+                    .link {{ color: #007bff; text-decoration: none; }}
+                    .link:hover {{ text-decoration: underline; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>🚀 {settings.app_name}</h1>
+                        <p>Version: {settings.version}</p>
+                        <p>A modern Learning Management System API built with FastAPI</p>
+                    </div>
+                    <div class="content">
+                        <h2>📚 Available Endpoints</h2>
+                        <ul>
+                            <li><a href="/docs" class="link">📖 Interactive API Documentation (Swagger UI)</a></li>
+                            <li><a href="/redoc" class="link">📚 Alternative API Documentation (ReDoc)</a></li>
+                            <li><a href="/openapi.json" class="link">🔧 OpenAPI Schema (JSON)</a></li>
+                        </ul>
+                        
+                        <h2>🛠️ Development</h2>
+                        <p>This API provides comprehensive endpoints for:</p>
+                        <ul>
+                            <li>👥 User Management & Authentication</li>
+                            <li>📚 Course Management</li>
+                            <li>🎓 Enrollment Management</li>
+                            <li>💳 Payment Processing</li>
+                            <li>📊 Attendance Tracking</li>
+                            <li>📝 Audit Logging</li>
+                        </ul>
+                        
+                        <h2>🚀 Getting Started</h2>
+                        <p>Check out the <a href="/docs" class="link">API documentation</a> to explore all available endpoints and start building!</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        """
+    )
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {
+        "status": "healthy",
+        "timestamp": time.time(),
+        "service": settings.app_name,
+        "version": settings.version
     }
 
 
-# Include routers with consistent API versioning
-app.include_router(auth.router, prefix="/api/v1")
+@app.get("/metrics")
+async def metrics():
+    """Basic metrics endpoint."""
+    return {
+        "uptime": time.time(),
+        "service": settings.app_name,
+        "version": settings.version
+    }
+
+
+# Include routers
+app.include_router(auth_router, prefix="/api/v1")
+app.include_router(login_router, prefix="/api/v1")
+app.include_router(register_router, prefix="/api/v1")
+app.include_router(password_reset_router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
 app.include_router(courses.router, prefix="/api/v1")
 app.include_router(enrollments.router, prefix="/api/v1")
 app.include_router(payments.router, prefix="/api/v1")
 app.include_router(attendance.router, prefix="/api/v1")
+app.include_router(audit.router, prefix="/api/v1")
 
 # Middleware for request logging and monitoring
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    """Log all requests with timing and basic metrics."""
+    """Log all incoming requests."""
     start_time = time.time()
     
-    # Log request
-    logger.info(f"Request: {request.method} {request.url.path}")
+    # Generate request ID
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
     
+    # Log request
+    logger.info(f"Request {request_id}: {request.method} {request.url.path}")
+    
+    # Process request
     response = await call_next(request)
     
     # Calculate processing time
     process_time = time.time() - start_time
     
-    # Log response with metrics
-    logger.info(
-        f"Response: {request.method} {request.url.path} - "
-        f"Status: {response.status_code} - "
-        f"Time: {process_time:.4f}s"
-    )
+    # Log response
+    logger.info(f"Request {request_id}: {response.status_code} - {process_time:.3f}s")
     
-    # Add custom headers for monitoring
-    response.headers["X-Process-Time"] = str(process_time)
-    response.headers["X-API-Version"] = settings.version
+    # Add request ID to response headers
+    response.headers["X-Request-ID"] = request_id
     
     return response
 

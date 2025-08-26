@@ -12,6 +12,7 @@ from . import course
 from . import enrollment
 from . import payment
 from . import attendance
+from . import audit
 
 __all__ = [
     "user",
@@ -19,5 +20,6 @@ __all__ = [
     "course",
     "enrollment",
     "payment",
-    "attendance"
+    "attendance",
+    "audit"
 ]

@@ -26,6 +26,7 @@ security:
   otp_expire_minutes: 15
   password_reset_expire_minutes: 5
   csrf_token_expire_minutes: 60
+  allowed_hosts: ["*"]  # Allow all hosts in base config
 
 media_root: "/app/media"
 
