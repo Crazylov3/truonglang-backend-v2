@@ -45,7 +45,7 @@ Table users {
   role UserRole [not null]
   need_change_email bool [not null, default: false]
   need_change_password bool [not null, default: false]
-  created_at timestamp [not null, default: `now()`]
+  created_at timestamp [not null, default: `now(quay video ddi)`]
   last_login_at timestamp [not null, default: `now()`]
 }
 
@@ -67,6 +67,7 @@ Table courses {
   start_date timestamp
   teacher_name string 
   price decimal(10, 2) [note: 'Used if payment_type is ONE_TIME']
+  preview_picture_path string [note: 'Path to course preview picture for lazy loading']
 }
 
 Table enrollments {
@@ -117,6 +118,23 @@ Table payments {
   created_at timestamp [not null, default: `now()`]
 }
 
+
+// --- Course Documents Table ---
+Table course_documents {
+  id integer [pk, increment]
+  course_id integer [not null, ref: > courses.id]
+  document_path string [note: 'Path to document file']
+  document_name string [not null]
+  document_type string [note: 'File type: PDF, DOCX, etc.']
+  document_size integer [note: 'File size in bytes']
+  uploaded_by integer [not null, ref: > users.id]
+  uploaded_at timestamp [not null, default: `now()`]
+  is_active boolean [default: true]
+  
+  indexes {
+    (course_id, is_active)
+  }
+}
 
 // --- ADDITIONS FOR ATTENDANCE TRACKING SYSTEM (Simplified) ---
 // The following tables implement the best-practice approach for attendance tracking.

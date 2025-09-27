@@ -15,7 +15,13 @@ from app.core.decorators import csrf_protect
 from app.core.deps import get_current_user
 from app.core.operations import user as user_ops
 from app.core.operations import user_profile as profile_ops
-from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, from_image_to_base64
+from app.core.media.io_helper import (
+    save_image_to_disk, 
+    from_base64_to_image, 
+    from_image_to_base64,
+    async_save_image_to_disk,
+    async_from_image_to_base64
+)
 from .users import router, logger
 
 
@@ -35,7 +41,7 @@ async def get_current_user_profile(
         )
     
     try:
-        avatar_base64 = from_image_to_base64(user.profile.avatar) if user.profile and user.profile.avatar else None
+        avatar_base64 = await async_from_image_to_base64(user.profile.avatar) if user.profile and user.profile.avatar else None
     except Exception as e:
         logger.error(f"Error loading avatar image: {e}")
         avatar_base64 = None
@@ -91,7 +97,7 @@ async def update_current_user_profile(
         save_image_path = os.path.join(avatar_dir, f"{current_user.id}.png")
         
         try:
-            save_image_to_disk(from_base64_to_image(profile_update.avatar), save_image_path)
+            await async_save_image_to_disk(from_base64_to_image(profile_update.avatar), save_image_path)
             avatar_path = save_image_path
         except Exception as e:
             raise HTTPException(

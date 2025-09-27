@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models.user import User
 from app.core.deps import get_current_user
 from app.core.operations import enrollment as enrollment_ops
-from app.schemas.enrollments import EnrollmentResponse, Enrollments, Enrollment
+from app.schemas.enrollments import Enrollments, Enrollment
 from app.core.decorators import authentication_required
 from app.models.user import UserRole
 
@@ -18,7 +18,7 @@ async def get_enrollments_by_course_id(
     """Get enrollments by course ID for instructor."""
     enrollments, total = await enrollment_ops.get_course_enrollments(db, course_id)
     enrollment_responses = [
-        EnrollmentResponse(
+        Enrollment(
             id=enrollment.id,
             student_id=enrollment.student_id,
             course_id=enrollment.course_id,

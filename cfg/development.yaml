@@ -13,9 +13,19 @@ redis:
 cors:
   origins:
     - "http://localhost:3000"
+    - "http://localhost:3001"
     - "http://localhost:8080"
     - "http://127.0.0.1:3000"
+    - "http://127.0.0.1:3001"
     - "http://127.0.0.1:8080"
 
 email:
-  from_email: "dev@learnify.com" 
+  from_email: "dev@learnify.com"
+
+rate_limit:
+  enabled: true
+  reset_on_startup: true  # Clear rate limits on startup for easier testing
+  # More generous limits for development
+  requests_per_minute: 120
+  requests_per_hour: 2000
+  burst_size: 20 

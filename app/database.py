@@ -38,10 +38,15 @@ redis_client = redis.from_url(settings.redis_url, encoding="utf-8", decode_respo
 
 # Dependency to get database session
 async def get_db():
+    """
+    Create a new database session for each request.
+    The session will automatically rollback on exceptions.
+    """
     async with AsyncSessionLocal() as session:
         try:
             yield session
-            await session.commit()
+            # Don't auto-commit here - let individual operations handle commits
+            # This prevents issues with partial commits in complex operations
         except Exception:
             await session.rollback()
             raise

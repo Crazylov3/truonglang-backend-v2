@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, status, Path, Query, Response
+import os
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.user import User, UserRole
@@ -18,8 +19,11 @@ from app.schemas.courses.course_schemas import (
 import traceback
 from app.schemas.common import PaginatedResponse
 from app.core.operations import course as course_ops
+from app.core.media.io_helper import from_base64_to_image, async_save_image_to_disk
+from app.config import settings
 from .courses import router, logger
 from math import ceil
+from datetime import datetime
 
 
 @router.get("/instructor/courses", response_model=InstructorViewCoursesDetail)
@@ -48,7 +52,8 @@ async def get_courses(
         teacher_name=course.teacher_name,
         price=course.price,
         created_at=course.created_at,
-        enrolled_students_count=course.enrolled_students_count
+        enrolled_students_count=course.enrolled_students_count,
+        preview_picture_path=course.preview_picture_path
     ) for course in courses]
     
     return InstructorViewCoursesDetail(
@@ -82,6 +87,33 @@ async def create_course(
             start_date=course_data.start_date,
             teacher_name=course_data.teacher_name
         )
+        
+        # Handle preview image if provided
+        if course_data.preview_image:
+            try:
+                # Create directory for course previews
+                preview_dir = os.path.join(settings.media_root, "course_previews")
+                os.makedirs(preview_dir, exist_ok=True)
+                
+                # Generate unique filename
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                preview_filename = f"course_{course.id}_preview_{timestamp}.png"
+                preview_path = os.path.join(preview_dir, preview_filename)
+                
+                # Convert base64 to image and save
+                image_data = from_base64_to_image(course_data.preview_image)
+                await async_save_image_to_disk(image_data, preview_path)
+                
+                # Update course with preview path
+                course = await course_ops.update_course(
+                    db=db,
+                    course_id=course.id,
+                    preview_picture_path=preview_path
+                )
+            except Exception as e:
+                logger.error(f"Error saving preview image: {e}")
+                # Continue without preview image rather than failing the entire course creation
+        
         await course_ops.grant_edit_permission(db, course.id, current_user.id, current_user.id)
         return CourseCreateResponse(
             message=f"Course {course.title} created successfully"
@@ -123,7 +155,8 @@ async def get_course(
         teacher_name=course.teacher_name,
         price=course.price,
         created_at=course.created_at,
-        enrolled_students_count=course.enrolled_students_count
+        enrolled_students_count=course.enrolled_students_count,
+        preview_picture_path=course.preview_picture_path
     )
 
 
@@ -156,7 +189,34 @@ async def update_course(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions to edit this course"
         )
+    
     update_data = course_update.dict(exclude_unset=True)
+    
+    # Handle preview image if provided
+    if course_update.preview_image:
+        try:
+            # Create directory for course previews
+            preview_dir = os.path.join(settings.media_root, "course_previews")
+            os.makedirs(preview_dir, exist_ok=True)
+            
+            # Generate unique filename
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            preview_filename = f"course_{course_id}_preview_{timestamp}.png"
+            preview_path = os.path.join(preview_dir, preview_filename)
+            
+            # Convert base64 to image and save
+            image_data = from_base64_to_image(course_update.preview_image)
+            await async_save_image_to_disk(image_data, preview_path)
+            
+            # Add preview path to update data
+            update_data['preview_picture_path'] = preview_path
+            # Remove base64 data from update
+            update_data.pop('preview_image', None)
+        except Exception as e:
+            logger.error(f"Error saving preview image during update: {e}")
+            # Continue without preview image rather than failing the entire update
+            update_data.pop('preview_image', None)
+    
     updated_course = await course_ops.update_course(
         db=db,
         course_id=course_id,

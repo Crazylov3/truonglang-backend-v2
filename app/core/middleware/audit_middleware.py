@@ -4,12 +4,13 @@ import time
 import json
 import traceback
 from typing import Optional, Dict, Any, List
+from datetime import datetime
 from fastapi import Request, Response
 from fastapi.responses import StreamingResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 import uuid
-
+import traceback
 from app.core.operations.audit import log_api_call, log_user_action
 from app.models.audit import AuditAction, AuditSeverity
 from app.models.user import UserRole
@@ -30,7 +31,8 @@ class AuditMiddleware(BaseHTTPMiddleware):
         start_time = time.time()
         
         # Skip logging for excluded paths
-        if any(request.url.path.startswith(path) for path in self.exclude_paths):
+        # Special handling for root path
+        if request.url.path == "/" or any(request.url.path.startswith(path) for path in self.exclude_paths):
             return await call_next(request)
         
         # Generate correlation ID for tracking related operations
@@ -56,17 +58,17 @@ class AuditMiddleware(BaseHTTPMiddleware):
         request_path = str(request.url.path)
         request_query = str(request.url.query) if request.url.query else None
         
-        # Calculate request body size
+        # Get request body size from content-length header (safer than reading body)
         request_body_size = None
-        if request.method in ["POST", "PUT", "PATCH"]:
+        content_length = request.headers.get("content-length")
+        if content_length and request.method in ["POST", "PUT", "PATCH"]:
             try:
-                body = await request.body()
-                request_body_size = len(body)
-            except:
+                request_body_size = int(content_length)
+            except ValueError:
                 pass
         
         # Set request start time
-        request_started_at = time.time()
+        request_started_at = datetime.utcnow()
         
         try:
             # Process the request
@@ -95,7 +97,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
                 execution_time_ms=execution_time_ms,
                 correlation_id=correlation_id,
                 request_started_at=request_started_at,
-                request_completed_at=time.time(),
+                request_completed_at=datetime.utcnow(),
                 error_message=None,
                 error_traceback=None
             )
@@ -122,7 +124,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
                 execution_time_ms=execution_time_ms,
                 correlation_id=correlation_id,
                 request_started_at=request_started_at,
-                request_completed_at=time.time(),
+                request_completed_at=datetime.utcnow(),
                 error_message=str(e),
                 error_traceback=traceback.format_exc()
             )
@@ -133,13 +135,18 @@ class AuditMiddleware(BaseHTTPMiddleware):
     async def _log_api_call(self, **kwargs):
         """Log an API call to the audit system."""
         try:
-            # Get database session from request state if available
-            db = getattr(kwargs.get('request', {}), 'state', {}).get('db')
-            if db:
-                await log_api_call(db=db, **kwargs)
+            # Import here to avoid circular imports
+            from app.database import AsyncSessionLocal
+            
+            
+            # Create a new database session for audit logging
+            async with AsyncSessionLocal() as db:
+                try:
+                    await log_api_call(db=db, **kwargs)
+                except Exception as inner_e:
+                    raise inner_e
         except Exception as e:
-            # Don't let audit logging failures break the main request
-            print(f"Audit logging failed: {e}")
+            traceback.print_exc()
     
     def _get_client_ip(self, request: Request) -> str:
         """Extract client IP address from request."""
@@ -211,7 +218,7 @@ class DatabaseAuditMiddleware:
             )
         except Exception as e:
             # Don't let audit logging failures break the main operation
-            print(f"Database audit logging failed: {e}")
+            pass
     
     async def __aenter__(self):
         return self
@@ -259,7 +266,8 @@ async def audit_user_action(
         )
     except Exception as e:
         # Don't let audit logging failures break the main operation
-        print(f"User action audit logging failed: {e}")
+        traceback.print_exc()
+        pass
 
 
 async def audit_database_operation(
@@ -302,4 +310,4 @@ async def audit_database_operation(
         )
     except Exception as e:
         # Don't let audit logging failures break the main operation
-        print(f"Database operation audit logging failed: {e}")
+        pass

@@ -113,7 +113,6 @@ class Settings:
     
     @property
     def access_token_expire_minutes(self) -> int:
-        print(f"Access token expire minutes: {self._cfg.jwt.access_token_expire_minutes}")
         return self._cfg.jwt.access_token_expire_minutes or 30
     
     # Email Configuration

@@ -1,7 +1,9 @@
 from fastapi import Depends, HTTPException, status, Query, Path
+from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from math import ceil
+import os
 from app.database import get_db
 from app.schemas.courses.course_schemas import (
     EnrollmentResponse,
@@ -39,7 +41,8 @@ async def get_courses(
         location=course.location,
         start_date=course.start_date,
         teacher_name=course.teacher_name,
-        price=course.price
+        price=course.price,
+        preview_picture_path=course.preview_picture_path
     ) for course in courses]
     
     return PublicViewCoursesDetail.create(
@@ -69,7 +72,8 @@ async def get_enrolled_courses(
         location=course.location,
         start_date=course.start_date,
         teacher_name=course.teacher_name,
-        price=course.price
+        price=course.price,
+        preview_picture_path=course.preview_picture_path
     ) for course in courses]
     
     return PublicViewCoursesDetail.create(items=course_details, total=total, page=page, per_page=per_page)
@@ -95,8 +99,46 @@ async def get_course(
         location=course.location,
         start_date=course.start_date,
         teacher_name=course.teacher_name,
-        price=course.price
+        price=course.price,
+        preview_picture_path=course.preview_picture_path
     ) 
+
+
+@router.get("/{course_id}/preview")
+async def get_course_preview_image(
+    course_id: int = Path(..., description="Course ID"),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get course preview image."""
+    course = await course_ops.get_course_by_id(db, course_id)
+    
+    if not course:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found"
+        )
+    
+    if not course.preview_picture_path or not os.path.exists(course.preview_picture_path):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course preview image not found"
+        )
+    
+    # Determine media type based on file extension
+    _, ext = os.path.splitext(course.preview_picture_path)
+    media_type = "image/jpeg"
+    if ext.lower() in ['.png']:
+        media_type = "image/png"
+    elif ext.lower() in ['.gif']:
+        media_type = "image/gif"
+    elif ext.lower() in ['.webp']:
+        media_type = "image/webp"
+    
+    return FileResponse(
+        path=course.preview_picture_path,
+        media_type=media_type,
+        filename=f"course_{course_id}_preview{ext}"
+    )
 
 
 @router.post("/{course_id}/enroll", response_model=EnrollmentResponse)

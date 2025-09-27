@@ -24,6 +24,9 @@ from app.routers.payments import payments
 from app.routers.attendance import attendance
 from app.routers.audit import audit
 from app.core.middleware.audit_middleware import AuditMiddleware
+from app.core.middleware.security_headers import SecurityHeadersMiddleware
+from app.core.middleware.request_validation import RequestValidationMiddleware
+from app.core.middleware.rate_limit import RateLimitMiddleware
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -34,9 +37,6 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger('sqlalchemy.pool').setLevel(logging.WARNING)
 logging.getLogger('sqlalchemy.dialects').setLevel(logging.WARNING)
 
-csrf_token_header = APIKeyHeader(name="X-Csrftoken", auto_error=False)
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Async context manager for FastAPI lifespan events."""
@@ -46,7 +46,23 @@ async def lifespan(app: FastAPI):
     # Note: Database tables should be created using Alembic migrations
     # Run: alembic upgrade head
     logger.info("Note: Ensure database migrations are up to date with: alembic upgrade head")
-  
+    
+    # Ensure media directories exist with proper permissions
+    import os
+    media_dirs = [
+        settings.media_root,
+        os.path.join(settings.media_root, "avatars"),
+        os.path.join(settings.media_root, "documents"),
+        os.path.join(settings.media_root, "course_materials")
+    ]
+    
+    for directory in media_dirs:
+        try:
+            os.makedirs(directory, exist_ok=True)
+            logger.info(f"Ensured directory exists: {directory}")
+        except Exception as e:
+            logger.error(f"Failed to create directory {directory}: {e}")
+    
     yield
     
     # Shutdown
@@ -63,13 +79,35 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Add security headers middleware (should be first)
+app.add_middleware(
+    SecurityHeadersMiddleware,
+    enable_hsts=not settings.debug,  # Only enable HSTS in production
+)
+
+# Add request validation middleware
+app.add_middleware(
+    RequestValidationMiddleware,
+    max_request_size=10 * 1024 * 1024,  # 10MB for general requests
+    max_upload_size=50 * 1024 * 1024,   # 50MB for file uploads
+)
+
+# Add rate limiting middleware
+app.add_middleware(
+    RateLimitMiddleware,
+    requests_per_minute=60,
+    requests_per_hour=1000,
+    burst_size=10,
+)
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["Accept", "Authorization", "Content-Type", "X-CSRF-Token", "X-Csrftoken"],
+    expose_headers=["X-Request-ID", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"],
 )
 
 app.add_middleware(
@@ -82,21 +120,32 @@ app.add_middleware(
     AuditMiddleware,
     exclude_paths=[
         "/docs", "/redoc", "/openapi.json", "/favicon.ico",
-        "/health", "/metrics", "/"
+        "/health", "/metrics"
     ]
 )
 
-# # Global exception handlers
-# @app.exception_handler(RequestValidationError)
-# async def validation_exception_handler(request: Request, exc: RequestValidationError):
-#     """Handle validation errors."""
-#     return JSONResponse(
-#         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#         content={
-#             "detail": "Validation error",
-#             "errors": exc.errors()
-#         }
-#     )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle validation errors with sanitized output."""
+    # Sanitize error messages to avoid exposing sensitive data
+    errors = []
+    for error in exc.errors():
+        # Remove any sensitive field values from error messages
+        sanitized_error = {
+            "type": error.get("type"),
+            "loc": error.get("loc"),
+            "msg": error.get("msg")
+        }
+        errors.append(sanitized_error)
+    
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={
+            "detail": "Validation error",
+            "errors": errors
+        }
+    )
 
 
 @app.exception_handler(IntegrityError)

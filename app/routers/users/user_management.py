@@ -13,11 +13,13 @@ from app.schemas.users.user_schemas import (
     UserRoleUpdateResponse,
     DeleteUserResponse,
     UserInfo,
-    UserProfile
+    UserProfile,
+    TotalUsersResponse,
+    UserSearchResponse
 )
 from app.schemas.common import PaginatedResponse
 from app.core.decorators import authentication_required, csrf_protect
-from app.core.media.io_helper import save_image_to_disk, from_base64_to_image
+from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, async_save_image_to_disk
 from app.core.operations import user as user_ops
 from .users import router, logger
 
@@ -45,6 +47,80 @@ async def get_all_users(
 
     users_data = []
     for user in users:
+        # Generate avatar URL if user has an avatar
+        avatar_url = f"/users/avatar/{user.id}" if user.profile and user.profile.avatar else None
+
+        user_data = UserInfo(
+            id=user.id,
+            email=user.email,
+            role=user.role,
+            last_login_at=user.last_login_at,
+            created_at=user.created_at,
+            profile=UserProfile(
+                first_name=user.profile.first_name,
+                last_name=user.profile.last_name,
+                date_of_birth=user.profile.date_of_birth,
+                avatar=avatar_url  # Store URL instead of base64
+            ) if user.profile else None,
+        )
+        users_data.append(user_data)
+
+    return PaginatedResponse.create(
+        items=users_data,
+        total=total,
+        page=page,
+        per_page=per_page
+    )
+
+
+@router.get("/total", response_model=TotalUsersResponse)
+@authentication_required(allowed_role=UserRole.STAFF)
+async def get_total_users(
+    db: AsyncSession = Depends(get_db)
+):
+    """Get total users count and breakdown by role (staff/admin only)."""
+    # Get total count
+    total = await user_ops.count_users(db=db)
+    
+    # Get counts by role
+    by_role = {}
+    for role in UserRole:
+        count = await user_ops.count_users(db=db, role=role)
+        by_role[role] = count
+    
+    return TotalUsersResponse(
+        total=total,
+        by_role=by_role
+    )
+
+
+@router.get("/search", response_model=UserSearchResponse)
+@authentication_required(allowed_role=UserRole.STAFF)
+async def search_users(
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
+    email: Optional[str] = Query(None, description="Search by email (partial match)"),
+    name: Optional[str] = Query(None, description="Search by first or last name (partial match)"),
+    role: Optional[UserRole] = Query(None, description="Filter by user role"),
+    db: AsyncSession = Depends(get_db)
+):
+    """Search users by email, name, or role (staff/admin only)."""
+    # Perform search
+    users = await user_ops.search_users(
+        db=db,
+        email=email,
+        name=name,
+        role=role
+    )
+    
+    # Apply pagination manually since search_users returns all results
+    offset = (page - 1) * per_page
+    paginated_users = users[offset:offset + per_page]
+    total = len(users)
+    
+    # Convert to UserInfo format
+    users_data = []
+    for user in paginated_users:
         # Generate avatar URL if user has an avatar
         avatar_url = f"/users/avatar/{user.id}" if user.profile and user.profile.avatar else None
 
@@ -130,7 +206,7 @@ async def update_user_profile_by_id(
         save_image_path = os.path.join(avatar_dir, f"{user_id}.png")
 
         try:
-            save_image_to_disk(from_base64_to_image(
+            await async_save_image_to_disk(from_base64_to_image(
                 profile_update.avatar), save_image_path)
             avatar_path = save_image_path
         except Exception as e:

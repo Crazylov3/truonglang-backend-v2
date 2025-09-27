@@ -5,24 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
-from passlib.context import CryptContext
 from datetime import datetime
 
 from app.models.user import User, UserRole
 from app.models.user_profile import UserProfile
-
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-def hash_password(password: str) -> str:
-    """Hash a password using bcrypt."""
-    return pwd_context.hash(password)
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+from app.core.security import get_password_hash, verify_password
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
@@ -74,7 +61,7 @@ async def create_user(
     """Create a new user with optional profile."""
     try:
         # Hash the password
-        hashed_password = hash_password(password)
+        hashed_password = get_password_hash(password)
         
         # Create user object
         user = User(
@@ -335,6 +322,7 @@ async def search_users(
 ) -> List[User]:
     """Search users by various criteria."""
     try:
+        from sqlalchemy import or_, and_
         query = select(User).options(selectinload(User.profile))
         conditions = []
         
@@ -343,8 +331,8 @@ async def search_users(
         
         if name:
             # Search in profile names
-            profile_condition = (
-                User.profile.has(UserProfile.first_name.ilike(f"%{name}%")) |
+            profile_condition = or_(
+                User.profile.has(UserProfile.first_name.ilike(f"%{name}%")),
                 User.profile.has(UserProfile.last_name.ilike(f"%{name}%"))
             )
             conditions.append(profile_condition)
@@ -353,7 +341,7 @@ async def search_users(
             conditions.append(User.role == role)
         
         if conditions:
-            query = query.where(*conditions)
+            query = query.where(and_(*conditions))
         
         result = await db.execute(query.order_by(User.created_at.desc()))
         users = result.scalars().all()

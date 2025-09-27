@@ -17,6 +17,7 @@ class PublicViewCourseDetail(BaseModel):
     teacher_name: Optional[str] = Field(
         None, description="Course teacher name")
     price: Optional[Decimal] = Field(None, description="Course price")
+    preview_picture_path: Optional[str] = Field(None, description="Path to course preview picture for lazy loading")
 
 
 class InstructorViewCourseDetail(PublicViewCourseDetail):
@@ -53,6 +54,8 @@ class CourseCreate(BaseModel):
         None, description="Course start date")
     teacher_name: Optional[str] = Field(
         None, description="Course teacher name")
+    preview_image: Optional[str] = Field(
+        None, description="Preview image in base64 format")
     
     @validator('title')
     def validate_title(cls, v):

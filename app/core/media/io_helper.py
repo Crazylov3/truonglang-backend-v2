@@ -1,5 +1,6 @@
 import base64
 import os
+import aiofiles
 
 def from_base64_to_image(base64_string: str) -> bytes:
     """
@@ -10,7 +11,7 @@ def from_base64_to_image(base64_string: str) -> bytes:
 
 def from_image_to_base64(image_path: str) -> str:
     """
-    Convert an image to a base64 string.
+    Convert an image to a base64 string (synchronous version).
     """
     # Validate the input
     if not image_path or not isinstance(image_path, str):
@@ -25,13 +26,41 @@ def from_image_to_base64(image_path: str) -> str:
     
     with open(clean_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
+
+
+async def async_from_image_to_base64(image_path: str) -> str:
+    """
+    Convert an image to a base64 string (asynchronous version).
+    """
+    # Validate the input
+    if not image_path or not isinstance(image_path, str):
+        raise ValueError("Image path must be a non-empty string")
+    
+    # Check if file exists
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image file not found: {image_path}")
+    
+    # Clean the path to remove any potential null bytes
+    clean_path = image_path.replace('\x00', '')
+    
+    async with aiofiles.open(clean_path, "rb") as image_file:
+        content = await image_file.read()
+        return base64.b64encode(content).decode('utf-8')
     
 def save_image_to_disk(image_data: bytes, image_path: str) -> None:
     """
-    Save an image to disk.
+    Save an image to disk (synchronous version).
     """
     with open(image_path, "wb") as image_file:
         image_file.write(image_data)
+
+
+async def async_save_image_to_disk(image_data: bytes, image_path: str) -> None:
+    """
+    Save an image to disk (asynchronous version).
+    """
+    async with aiofiles.open(image_path, "wb") as image_file:
+        await image_file.write(image_data)
 
 def delete_image_from_disk(image_path: str) -> None:
     """
@@ -42,7 +71,7 @@ def delete_image_from_disk(image_path: str) -> None:
 
 def load_image_from_disk(image_path: str) -> bytes:
     """
-    Load an image from disk.
+    Load an image from disk (synchronous version).
     """
     # Validate the input
     if not image_path or not isinstance(image_path, str):
@@ -57,3 +86,22 @@ def load_image_from_disk(image_path: str) -> bytes:
     
     with open(clean_path, "rb") as image_file:
         return image_file.read()
+
+
+async def async_load_image_from_disk(image_path: str) -> bytes:
+    """
+    Load an image from disk (asynchronous version).
+    """
+    # Validate the input
+    if not image_path or not isinstance(image_path, str):
+        raise ValueError("Image path must be a non-empty string")
+    
+    # Check if file exists
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image file not found: {image_path}")
+    
+    # Clean the path to remove any potential null bytes
+    clean_path = image_path.replace('\x00', '')
+    
+    async with aiofiles.open(clean_path, "rb") as image_file:
+        return await image_file.read()

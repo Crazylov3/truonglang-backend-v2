@@ -44,10 +44,16 @@ async def get_current_user(
                 detail=f"Invalid user role in database: {user.role}"
             )
     
-    if user.role != token_data.get("user_role"):
+    # Compare role values - handle both role name and role value in token
+    user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
+    user_role_value = str(user.role.value if hasattr(user.role, 'value') else user.role)
+    token_role = str(token_data.get("user_role"))
+    
+    # Accept either role name or role value from token for backward compatibility
+    if token_role != user_role_name and token_role != user_role_value:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Role mismatch. Please log in again."
+            detail=f"Role mismatch. DB role: {user_role_name} (value={user_role_value}), Token role: {token_role}. Please log in again."
         )
     
     return user

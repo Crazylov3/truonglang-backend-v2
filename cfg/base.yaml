@@ -31,4 +31,34 @@ security:
 media_root: "/app/media"
 
 cors:
-  origins: [] 
+  origins: []
+
+rate_limit:
+  enabled: true
+  reset_on_startup: false  # Set to true in development
+  # Default limits
+  requests_per_minute: 120
+  requests_per_hour: 1000
+  burst_size: 10
+  # Endpoint specific limits
+  endpoints:
+    login:
+      path: "/api/v1/auth/login"
+      per_minute: 120
+      per_hour: 2000
+    register:
+      path: "/api/v1/auth/register"
+      per_minute: 120
+      per_hour: 2000
+    forgot_password:
+      path: "/api/v1/auth/forgot-password"
+      per_minute: 120
+      per_hour: 2000
+    reset_password:
+      path: "/api/v1/auth/reset-password"
+      per_minute: 120
+      per_hour: 2000
+    payments:
+      path: "/api/v1/payments"
+      per_minute: 120
+      per_hour: 2000

@@ -41,7 +41,10 @@ async def create_course(
         
         # Reload the course with relationships
         result = await db.execute(
-            select(Course).options(selectinload(Course.enrollments)).where(Course.id == new_course.id)
+            select(Course)
+            .options(selectinload(Course.enrollments))
+            .options(selectinload(Course.course_documents))
+            .where(Course.id == new_course.id)
         )
         course_with_enrollments = result.scalar_one()
         
@@ -50,6 +53,47 @@ async def create_course(
     except SQLAlchemyError as e:
         await db.rollback()
         raise e
+
+
+async def check_enrollment(
+    db: AsyncSession,
+    student_id: int,
+    course_id: int
+) -> Optional[Enrollment]:
+    """Check if a student is enrolled in a course."""
+    result = await db.execute(
+        select(Enrollment)
+        .where(
+            Enrollment.student_id == student_id,
+            Enrollment.course_id == course_id,
+            Enrollment.is_active == True
+        )
+    )
+    return result.scalar_one_or_none()
+
+
+async def check_instructor_permission(
+    db: AsyncSession,
+    instructor_id: int,
+    course_id: int
+) -> bool:
+    """Check if an instructor has permission to manage a course."""
+    # Check if instructor is the course creator
+    course = await db.get(Course, course_id)
+    if course and course.creator_id == instructor_id:
+        return True
+    
+    # Check if instructor has been granted permission
+    result = await db.execute(
+        select(CourseEditPermission)
+        .where(
+            CourseEditPermission.course_id == course_id,
+            CourseEditPermission.instructor_id == instructor_id
+        )
+    )
+    permission = result.scalar_one_or_none()
+    return permission is not None
+
     
 async def grant_edit_permission(db: AsyncSession, course_id: int, instructor_id: int, granted_by: int) -> bool:
     """Grant edit permission to an instructor for a course."""
@@ -99,7 +143,8 @@ async def update_course(
     price: Optional[Decimal] = None,
     location: Optional[str] = None,
     start_date: Optional[datetime] = None,
-    teacher_name: Optional[str] = None
+    teacher_name: Optional[str] = None,
+    preview_picture_path: Optional[str] = None
 ) -> Optional[Course]:
     """Update a course."""
     try:
@@ -122,6 +167,8 @@ async def update_course(
             course.start_date = start_date
         if teacher_name is not None:
             course.teacher_name = teacher_name
+        if preview_picture_path is not None:
+            course.preview_picture_path = preview_picture_path
         
         await db.commit()
         await db.refresh(course)

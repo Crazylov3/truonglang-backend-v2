@@ -69,8 +69,9 @@ RUN uv sync --frozen --no-dev
 # Copy application code
 COPY --chown=appuser:appuser . .
 
-# Create directories for logs, uploads, and UV cache with proper permissions
-RUN mkdir -p /app/logs /app/uploads /app/.uv-cache && \
+# Create directories for logs, uploads, media, and UV cache with proper permissions
+RUN mkdir -p /app/logs /app/uploads /app/media /app/.uv-cache && \
+    mkdir -p /app/media/avatars /app/media/documents /app/media/course_materials && \
     chown -R appuser:appuser /app
 
 # Switch to non-root user

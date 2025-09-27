@@ -92,8 +92,11 @@ async def create_audit_log(
         
         return audit_log
         
-    except SQLAlchemyError:
+    except SQLAlchemyError as e:
         await db.rollback()
+        print(f"ERROR creating audit log: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 

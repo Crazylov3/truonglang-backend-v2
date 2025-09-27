@@ -82,7 +82,7 @@ def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
             except HTTPException:
                 raise
             except Exception as e:
-                print(traceback.format_exc())
+                traceback.print_exc()
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail=f"Something went wrong: {str(e)}"

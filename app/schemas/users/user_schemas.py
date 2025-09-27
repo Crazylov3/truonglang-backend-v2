@@ -48,3 +48,11 @@ class DeleteUserResponse(BaseModel):
 
 class AvatarResponse(BaseModel):
     avatar: str 
+
+
+class TotalUsersResponse(BaseModel):
+    total: int
+    by_role: dict[UserRole, int]
+
+
+UserSearchResponse = PaginatedResponse[UserInfo]

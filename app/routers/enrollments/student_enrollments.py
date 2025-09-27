@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models.user import User
 from app.core.deps import get_current_user
 from app.core.operations import enrollment as enrollment_ops
-from app.schemas.enrollments import EnrollmentResponse, Enrollments, Enrollment
+from app.schemas.enrollments import Enrollments, Enrollment
 
     
 @router.get("/my-enrollments", response_model=Enrollments)
@@ -20,7 +20,7 @@ async def get_my_enrollments(
     """Get my enrollments."""
     enrollments, total = await enrollment_ops.get_user_enrollments(db, current_user.id, active_only, page, per_page)
     enrollment_responses = [
-        EnrollmentResponse(
+        Enrollment(
             id=enrollment.id,
             student_id=enrollment.student_id,
             course_id=enrollment.course_id,
