@@ -110,6 +110,7 @@ app.add_middleware(
     expose_headers=["X-Request-ID", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"],
 )
 
+
 app.add_middleware(
     TrustedHostMiddleware,
     allowed_hosts=settings.allowed_hosts

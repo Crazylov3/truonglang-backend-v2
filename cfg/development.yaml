@@ -14,10 +14,18 @@ cors:
   origins:
     - "http://localhost:3000"
     - "http://localhost:3001"
-    - "http://localhost:8080"
-    - "http://127.0.0.1:3000"
-    - "http://127.0.0.1:3001"
-    - "http://127.0.0.1:8080"
+    - "http://localhost:3002"
+    - "http://localhost:3003"
+    - "http://localhost:8000"
+    # Add subdomain origins for testing
+    - "http://teacher.localhost:3001"
+    - "http://admin.localhost:3002"
+    - "http://auth.localhost:3003"  # Your login page
+
+# Cookie configuration for localhost testing
+cookies:
+  domain: null  # No domain sharing - cookies only work on exact same origin
+  samesite: "lax"
 
 email:
   from_email: "dev@learnify.com"

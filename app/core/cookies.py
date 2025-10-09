@@ -8,7 +8,8 @@ def set_cookie(
     secure: bool = True,
     max_age: int = None,
     httponly: bool = True,
-    samesite: str = "strict"
+    samesite: str = "strict",
+    domain: str = None
 ) -> None:
     response.set_cookie(
         key=name,
@@ -17,7 +18,8 @@ def set_cookie(
         httponly=httponly,
         secure=secure,
         samesite=samesite,
-        path="/"
+        path="/",
+        domain=domain
     )
 
 
@@ -26,7 +28,8 @@ def clear_cookie(
     name: str,
     secure: bool = True,
     httponly: bool = True,
-    samesite: str = "strict"
+    samesite: str = "strict",
+    domain: str = None
 ) -> None:
     """Clear a cookie."""
     response.delete_cookie(
@@ -34,5 +37,6 @@ def clear_cookie(
         path="/",
         httponly=httponly,
         secure=secure,
-        samesite=samesite
+        samesite=samesite,
+        domain=domain
     )

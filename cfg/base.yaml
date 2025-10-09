@@ -28,6 +28,11 @@ security:
   csrf_token_expire_minutes: 60
   allowed_hosts: ["*"]  # Allow all hosts in base config
 
+# Cookie configuration
+cookies:
+  domain: null  # Set to parent domain for cross-subdomain sharing (e.g., ".example.com")
+  samesite: "lax"  # Allow cookies to be sent with navigation
+
 media_root: "/app/media"
 
 cors:

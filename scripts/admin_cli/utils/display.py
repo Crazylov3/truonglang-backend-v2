@@ -46,10 +46,6 @@ def display_user_info(user: User, detailed: bool = False):
             click.echo(f"⚠️  Needs email change")
         
         if user.profile:
-            if user.profile.phone:
-                click.echo(f"📱 Phone: {user.profile.phone}")
-            if user.profile.address:
-                click.echo(f"🏠 Address: {user.profile.address}")
             if user.profile.date_of_birth:
                 click.echo(f"🎂 Birth Date: {format_date(user.profile.date_of_birth)}")
 

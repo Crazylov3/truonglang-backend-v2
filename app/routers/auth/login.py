@@ -68,7 +68,8 @@ async def login(
             secure=not settings.debug,  # Use secure cookies in production
             max_age=access_token_expires,
             httponly=True,
-            samesite="lax"  # Allow cookie to be sent with navigation
+            samesite=settings.cookie_samesite,  # Use configured samesite
+            domain=settings.cookie_domain  # Use configured domain for cross-subdomain sharing
         )
         
         # Update last login time
@@ -101,7 +102,8 @@ async def login(
         
         return UserLoginResponse(
             message="Login successful",
-            user=user_info
+            user=user_info,
+            access_token=access_token
         )
         
     except HTTPException:
@@ -143,7 +145,8 @@ async def logout(
             name="access_token",
             secure=not settings.debug,
             httponly=True,
-            samesite="lax"
+            samesite=settings.cookie_samesite,
+            domain=settings.cookie_domain
         )
         
         # Audit log successful logout

@@ -36,8 +36,8 @@ services:
       - VERSION=${VERSION}
       - DEBUG=${DEBUG}
       
-      # CORS (from .env file)
-      - CORS_ORIGINS=${CORS_ORIGINS}
+      # CORS (from .env file) - commented out to use YAML config
+      # - CORS_ORIGINS=${CORS_ORIGINS}
       
       # OTP Configuration (from .env file)
       - OTP_EXPIRE_MINUTES=${OTP_EXPIRE_MINUTES}

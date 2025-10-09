@@ -175,6 +175,19 @@ class Settings:
             return self._cfg.security.allowed_hosts
         return ["*"]  # Default to allow all hosts
     
+    # Cookie Configuration
+    @property
+    def cookie_domain(self) -> Optional[str]:
+        return self._cfg.cookies.domain if self._cfg.cookies else None
+    
+    @property
+    def cookie_samesite(self) -> str:
+        return self._cfg.cookies.samesite if self._cfg.cookies else "lax"
+    
+    @property
+    def cookie_secure(self) -> bool:
+        return not self.debug  # Use secure cookies in production
+    
     def __getattr__(self, name: str) -> Any:
         try:
             return super().__getattr__(name)

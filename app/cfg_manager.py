@@ -183,7 +183,6 @@ class ConfigManager:
     def _load_yaml_file(self, filename: str) -> Optional[Dict]:
         """Load a single YAML file."""
         file_path = self.config_dir / filename
-        
         if not file_path.exists():
             if filename != "base.yaml":  # base.yaml is required
                 logger.warning(f"Config file not found: {file_path}")

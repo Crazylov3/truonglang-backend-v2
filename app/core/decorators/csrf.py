@@ -84,7 +84,8 @@ def ensure_csrf_token(func: Callable) -> Callable:
         # Set CSRF token in cookie and header
         if not existing_token:
             set_cookie(response, "csrftoken", csrf_token, 
-                      secure=not settings.debug, httponly=False)  # Must be readable by JS
+                      secure=not settings.debug, httponly=True,
+                      domain=settings.cookie_domain, samesite=settings.cookie_samesite) 
         
         response.headers["X-Csrftoken"] = csrf_token
         

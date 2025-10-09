@@ -208,14 +208,11 @@ async def info(email: str, field: str):
         if field in ['all', 'profile'] and user.profile:
             click.echo("\n👤 Profile Information:")
             profile = user.profile
-            if profile.phone:
-                click.echo(f"   Phone: {profile.phone}")
-            if profile.address:
-                click.echo(f"   Address: {profile.address}")
+            click.echo(f"   Name: {profile.full_name}")
             if profile.date_of_birth:
                 click.echo(f"   Birth Date: {profile.date_of_birth}")
-            if profile.bio:
-                click.echo(f"   Bio: {profile.bio[:100]}...")
+            if profile.avatar:
+                click.echo(f"   Avatar: {profile.avatar}")
 
 
 @users_group.command()

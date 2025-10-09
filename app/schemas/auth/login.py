@@ -8,6 +8,7 @@ class UserLogin(BaseModel):
 class UserLoginResponse(BaseModel):
     message: str
     user: UserInfo
+    access_token: str
 
 class UserLogoutResponse(BaseModel):
     message: str
