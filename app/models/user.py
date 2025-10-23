@@ -1,42 +1,34 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, func
+from sqlalchemy import Column, String, DateTime, Boolean, func, Enum as SQLAEnum, text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from enum import IntEnum
+from enum import Enum
 from .base import BaseModel
 
-class UserRole(IntEnum):
-    STUDENT = 1
-    INSTRUCTOR = 2
-    STAFF = 3
-    ADMIN = 4
+class UserRole(str, Enum):
+    STUDENT = "STUDENT"
+    INSTRUCTOR = "INSTRUCTOR"
+    STAFF = "STAFF"
+    ADMIN = "ADMIN"
 
 
 class User(BaseModel):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"), index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    role = Column(Integer, nullable=False, default=UserRole.STUDENT)
+    role = Column(SQLAEnum(UserRole), nullable=False, default=UserRole.STUDENT)
     need_change_email = Column(Boolean, nullable=False, default=False)
     need_change_password = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     last_login_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Relationships
-    profile = relationship("UserProfile", back_populates="user", uselist=False)
+    profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     created_courses = relationship("Course", back_populates="creator", foreign_keys="Course.creator_id")
     enrollments = relationship("Enrollment", back_populates="student")
     
-    # Updated relationships for new billing structure
-    granted_edit_permissions = relationship("CourseEditPermission", back_populates="granted_by_user", foreign_keys="CourseEditPermission.granted_by")
-    edit_permissions = relationship("CourseEditPermission", back_populates="instructor", foreign_keys="CourseEditPermission.instructor_id")
-    created_payment_periods = relationship("CoursePaymentPeriod", back_populates="created_by_user")
-    
-    # New relationships for attendance system
-    card_assignments = relationship("CardAssignment", back_populates="student")
-    attendance_records = relationship("AttendanceRecord", back_populates="student")
-    
-    # Audit logging relationship (consolidated)
+    # Audit logging relationship
     audit_logs = relationship("AuditLog", back_populates="user")
 
     @property

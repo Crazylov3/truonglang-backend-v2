@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON, func
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON, func, text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from enum import IntEnum
 from .base import BaseModel
@@ -51,10 +52,10 @@ class AuditLog(BaseModel):
     """Comprehensive audit log table for tracking all user operations, API calls, and database changes."""
     __tablename__ = "audit_logs"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"), index=True)
     
     # User information
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # NULL for unauthenticated actions
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)  # NULL for unauthenticated actions
     user_email = Column(String(255), nullable=True)  # Store email for historical reference
     user_role = Column(Integer, nullable=True)  # Store role for historical reference
     
