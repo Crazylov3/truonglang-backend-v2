@@ -1,5 +1,4 @@
 # Import all schemas
-from .auth.login import *
 from .auth.password_reset import *
 from .auth.register import *
 from .common import *
@@ -12,7 +11,7 @@ from .audit.audit_schemas import *
 
 __all__ = [
     # Auth schemas
-    "LoginRequest", "LoginResponse", "TokenResponse", "RefreshTokenRequest",
+    "TokenResponse", "RefreshTokenRequest",
     "PasswordResetRequest", "PasswordResetConfirmRequest", "PasswordResetResponse",
     "RegisterRequest", "RegisterResponse", "EmailVerificationRequest",
     

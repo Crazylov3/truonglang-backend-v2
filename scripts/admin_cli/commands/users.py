@@ -252,9 +252,11 @@ async def delete(email: str, force: bool):
                 return
         
         try:
-            await db.delete(user)
-            await db.commit()
-            click.echo(f"✅ User '{email}' deleted successfully!")
+            success = await user_ops.delete_user(db, email)
+            if success:
+                click.echo(f"✅ User '{email}' deleted successfully!")
+            else:
+                click.echo(f"❌ Failed to delete user '{email}'.")
         except Exception as e:
             click.echo(f"❌ Error deleting user: {e}")
 

@@ -1,5 +1,5 @@
 from .auth import router
-from .login import *
+from .auth_code import *
 from .register import * 
 from .password_reset import *
 

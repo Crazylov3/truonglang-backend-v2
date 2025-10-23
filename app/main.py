@@ -14,9 +14,9 @@ from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.config import settings
 from app.routers.auth.auth import router as auth_router
-from app.routers.auth.login import router as login_router
 from app.routers.auth.register import router as register_router
 from app.routers.auth.password_reset import router as password_reset_router
+from app.routers.auth.auth_code import router as auth_code_router
 from app.routers.users import users
 from app.routers.courses import courses
 from app.routers.enrollments import enrollments
@@ -250,9 +250,9 @@ async def metrics():
 
 # Include routers
 app.include_router(auth_router, prefix="/api/v1")
-app.include_router(login_router, prefix="/api/v1")
 app.include_router(register_router, prefix="/api/v1")
 app.include_router(password_reset_router, prefix="/api/v1")
+app.include_router(auth_code_router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
 app.include_router(courses.router, prefix="/api/v1")
 app.include_router(enrollments.router, prefix="/api/v1")

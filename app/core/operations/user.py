@@ -6,11 +6,12 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
-
+import logging
 from app.models.user import User, UserRole
 from app.models.user_profile import UserProfile
 from app.core.security import get_password_hash, verify_password
 
+logger = logging.getLogger(__name__)
 
 async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
     """Get user by email address."""
@@ -111,7 +112,7 @@ async def update_user_password(db: AsyncSession, email: str, new_password: str) 
         if not user:
             return False
         
-        user.hashed_password = hash_password(new_password)
+        user.hashed_password = get_password_hash(new_password)
         await db.commit()
         return True
         
@@ -237,8 +238,31 @@ async def delete_user(db: AsyncSession, email: str) -> bool:
         user = result.scalar_one_or_none()
         
         if not user:
+            logger.error(f"User with email {email} not found")
             return False
         
+        # Delete dependent rows for NOT NULL FKs before deleting the user
+        # 1) Delete enrollments and their invoices/payments
+        try:
+            from app.models import Enrollment
+            from app.models.payment import Invoice, Payment
+            enrollments_result = await db.execute(
+                select(Enrollment).options(
+                    selectinload(Enrollment.invoices).selectinload(Invoice.payments)
+                ).where(Enrollment.student_id == user.id)
+            )
+            enrollments = enrollments_result.scalars().all()
+            for enrollment in enrollments:
+                # Delete payments for each invoice
+                for invoice in list(enrollment.invoices or []):
+                    for payment in list(invoice.payments or []):
+                        await db.delete(payment)
+                    await db.delete(invoice)
+                await db.delete(enrollment)
+        except Exception:
+            # Log and continue to rollback in outer except if needed
+            logger.error("Error deleting user enrollments/invoices/payments", exc_info=True)
+
         # Delete profile first if it exists (due to foreign key constraints)
         if user.profile:
             await db.delete(user.profile)
@@ -248,6 +272,7 @@ async def delete_user(db: AsyncSession, email: str) -> bool:
         return True
         
     except SQLAlchemyError:
+        logger.error(f"Error deleting user with email {email}", exc_info=True)
         await db.rollback()
         return False
 
@@ -263,6 +288,28 @@ async def delete_user_by_id(db: AsyncSession, user_id: int) -> bool:
         if not user:
             return False
         
+        # Delete dependent rows for NOT NULL FKs before deleting the user
+        # 1) Delete enrollments and their invoices/payments
+        try:
+            from app.models import Enrollment
+            from app.models.payment import Invoice, Payment
+            enrollments_result = await db.execute(
+                select(Enrollment).options(
+                    selectinload(Enrollment.invoices).selectinload(Invoice.payments)
+                ).where(Enrollment.student_id == user.id)
+            )
+            enrollments = enrollments_result.scalars().all()
+            for enrollment in enrollments:
+                # Delete payments for each invoice
+                for invoice in list(enrollment.invoices or []):
+                    for payment in list(invoice.payments or []):
+                        await db.delete(payment)
+                    await db.delete(invoice)
+                await db.delete(enrollment)
+        except Exception:
+            # Log and continue to rollback in outer except if needed
+            logger.error("Error deleting user enrollments/invoices/payments", exc_info=True)
+
         # Delete profile first if it exists (due to foreign key constraints)
         if user.profile:
             await db.delete(user.profile)

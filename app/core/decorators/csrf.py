@@ -4,7 +4,7 @@ from typing import Callable
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 import inspect
-from app.core.cookies import set_cookie
+# Removed cookie wrapper - using FastAPI Response methods directly
 from app.config import settings
 from pydantic import BaseModel
 
@@ -83,9 +83,15 @@ def ensure_csrf_token(func: Callable) -> Callable:
 
         # Set CSRF token in cookie and header
         if not existing_token:
-            set_cookie(response, "csrftoken", csrf_token, 
-                      secure=not settings.debug, httponly=True,
-                      domain=settings.cookie_domain, samesite=settings.cookie_samesite) 
+            response.set_cookie(
+                key="csrftoken",
+                value=csrf_token,
+                httponly=True,
+                secure=not settings.debug,
+                samesite="lax",
+                path="/",
+                domain=None
+            ) 
         
         response.headers["X-Csrftoken"] = csrf_token
         
