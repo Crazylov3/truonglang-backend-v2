@@ -122,6 +122,7 @@ def quick_start():
     click.echo("   List users:         admin_cli.py users list")
     click.echo("   Reset password:     admin_cli.py users reset-password")
     click.echo("   Change role:        admin_cli.py users change-role")
+    click.echo("   Delete all students: admin_cli.py users delete-all-students")
     
     click.echo("\n📚 Course Management:")
     click.echo("   List courses:       admin_cli.py courses list")

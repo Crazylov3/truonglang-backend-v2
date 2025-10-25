@@ -48,6 +48,7 @@ async def get_current_user_profile(
     
     return UserInfo(
         id=user.id,
+        public_id=user.public_id,
         email=user.email,
         role=user.role,
         last_login_at=user.last_login_at,

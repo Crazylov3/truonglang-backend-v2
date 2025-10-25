@@ -54,6 +54,7 @@ enum DayOfWeek {
 
 Table users {
   id uuid [pk, default: `uuid_generate_v7()`]
+  public_id integer [unique, not null, increment, note: 'Human-readable ID for support, URLs, etc.']
   email string [unique, not null]
   hashed_password string [not null]
   role UserRole [not null]

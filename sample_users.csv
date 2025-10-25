@@ -1,0 +1,3001 @@
+first_name,last_name,date_of_birth,current_school,current_grade,default_discount_percentage
+Olivia,Davis,2011-08-07,Truong THPT Quang Trung,Freshman,15.9
+Minh,Lopez,2008-09-27,University of Chicago,,40.4
+Grace,Jackson,,Truong THPT Nguyen Trai,,0.7
+Oanh,Bui,2009-10-15,Truong THPT Le Quy Don,,5.8
+Brian,Davis,2009-05-12,University of California,,40.5
+David,Davis,,University of California,,49.5
+Linh,Do,2010-08-11,Truong THPT Le Quy Don,Junior,40.4
+Em,Do,,Truong THPT Nguyen Du,12,33.5
+Liam,Dang,2011-10-09,MIT,Freshman,8.8
+Phong,Moore,2009-11-03,,,33.2
+Em,Truong,2010-11-20,University of Chicago,Junior,23.4
+Jack,Pham,2011-09-09,Truong THPT Nguyen Du,Freshman,9.6
+David,Pham,2008-06-06,Truong THPT Le Loi,,14.5
+Catherine,Smith,2010-09-25,,9,13.7
+Em,Hoang,2009-03-27,,,38.2
+Hoa,Tran,,Truong THPT Ly Tu Trong,9,2.6
+Ivy,Dang,,,,31.9
+Nam,Dong,2010-03-05,University of California,Senior,11.1
+Nam,Smith,2011-05-10,Harvard University,,16.1
+Sam,Jackson,2008-12-16,Princeton University,,26.6
+Quinn,Brown,2010-08-18,Stanford University,9,22.2
+Grace,Davis,2009-05-29,Truong THPT Nguyen Trai,,3.0
+Brian,Lopez,2008-04-01,,10,6.4
+Brian,Smith,2009-10-06,Yale University,Sophomore,10.2
+Jack,Davis,2010-12-13,,,39.4
+Frank,Nguyen,2007-11-28,Truong THPT Nguyen Hue,10,6.7
+Phong,Moore,,,,11.5
+Chi,Wilson,2009-01-20,Harvard University,Sophomore,4.0
+Frank,Miller,2008-04-29,Truong THPT Nguyen Hue,Sophomore,43.3
+Chi,Gonzalez,2007-11-08,Truong THPT Nguyen Hue,12,16.5
+Quang,Vo,2010-08-11,,,41.6
+Giang,Vo,2011-07-10,University of Chicago,Senior,16.5
+Em,Le,,,,27.2
+Liam,Gonzalez,,Truong THPT Hai Ba Trung,,36.0
+Alex,Johnson,2007-12-25,Truong THPT Vo Thi Sau,,2.0
+Viet,Martinez,2009-01-30,Truong THPT Nguyen Trai,9,36.5
+Rachel,Phan,2010-11-15,Truong THPT Le Loi,,31.0
+Yen,Pham,2009-01-21,,Junior,48.8
+David,Martinez,2010-02-24,Truong THPT Vo Thi Sau,Freshman,29.2
+Quang,Moore,2009-10-01,,,35.2
+Henry,Duong,2008-01-05,Columbia University,,10.2
+Catherine,Lopez,2010-03-12,Truong THPT Ly Tu Trong,10,48.2
+Rachel,Gonzalez,,MIT,,9.2
+An,Ho,2008-03-30,Truong THPT Nguyen Trai,12,37.6
+Jack,Ho,2011-01-18,,,17.8
+Rachel,Vu,2010-11-23,Truong THPT Nguyen Hue,11,19.7
+Jack,Brown,2011-03-24,University of California,,27.2
+Liam,Jones,,,,26.5
+Hoa,Davis,2009-08-15,Truong THPT Nguyen Du,Freshman,35.1
+Giang,Johnson,2010-07-26,Truong THPT Ly Tu Trong,,50.0
+Grace,Anderson,2010-06-05,Truong THPT Nguyen Hue,,40.2
+David,Taylor,2008-06-29,Truong THPT Vo Thi Sau,9,27.0
+Tina,Dong,2009-10-08,,,16.6
+Jack,Le,,Truong THPT Ly Tu Trong,10,31.6
+Quinn,Nguyen,2009-12-25,University of California,,21.4
+Maya,Lopez,,Truong THPT Hai Ba Trung,,42.2
+Catherine,Le,2009-07-16,,,19.9
+Hoa,Vu,2009-05-23,Truong THPT Le Quy Don,11,5.3
+Binh,Ho,2010-09-14,Northwestern University,11,24.9
+Uyen,Smith,2011-09-24,Duke University,12,20.6
+Henry,Brown,,,,25.8
+Viet,Phung,2008-06-08,,11,33.0
+Brian,Taylor,2008-10-02,Harvard University,Junior,19.4
+Minh,Tran,2009-09-29,Truong THPT Vo Thi Sau,11,13.9
+Em,Phan,2009-03-09,,,21.9
+Olivia,Dang,2007-12-14,Yale University,Junior,25.6
+Nam,Do,,Truong THPT Ly Tu Trong,11,25.5
+Quinn,Jackson,2010-08-18,,,35.5
+Em,Lopez,2009-06-24,,Sophomore,34.6
+Liam,Miller,,Truong THPT Le Quy Don,9,21.6
+Liam,Dang,2008-07-10,Truong THPT Hai Ba Trung,,35.5
+Chi,Ngo,,University of Chicago,,16.8
+Kelly,Anderson,2009-05-02,Truong THPT Hai Ba Trung,11,25.5
+Quang,Anderson,2010-10-05,Northwestern University,9,33.5
+Xuan,Phung,,,,13.6
+Olivia,Lopez,2008-08-18,,Sophomore,9.4
+Yen,Johnson,2007-11-03,Truong THPT Le Loi,,15.9
+Kelly,Dinh,2010-12-08,Truong THPT Vo Thi Sau,Sophomore,15.8
+Ivy,Bui,2009-11-20,Northwestern University,Sophomore,38.9
+Brian,Gonzalez,,,,5.9
+An,Nguyen,,Truong THPT Tran Phu,11,37.2
+Yen,Bui,2010-01-20,Duke University,,41.0
+Yen,Pham,2009-02-22,Northwestern University,,3.9
+Kelly,Martin,2008-06-15,Truong THPT Nguyen Trai,Junior,42.6
+An,Jones,,Duke University,Freshman,6.2
+Tina,Duong,,MIT,Senior,4.5
+Thu,Dang,2009-01-07,,Senior,38.5
+Brian,Dang,2010-02-07,Truong THPT Nguyen Du,,48.5
+Quinn,Dong,,,Junior,17.0
+Uyen,Gonzalez,2010-09-29,,,18.3
+Noah,Do,2008-08-09,Truong THPT Le Loi,,9.4
+Grace,Taylor,2008-09-23,,,33.0
+Em,Lopez,2008-12-09,University of Chicago,,10.4
+Chi,Do,2008-11-04,Columbia University,,38.8
+Binh,Anderson,2010-10-21,Northwestern University,,46.5
+Rachel,Jackson,2010-08-27,Truong THPT Ly Tu Trong,,13.5
+David,Dinh,2010-09-30,Truong THPT Nguyen Trai,,48.6
+Henry,Hoang,2011-10-04,Columbia University,,20.5
+An,Jackson,2010-01-17,,Senior,5.1
+Brian,Hoang,2009-01-22,Truong THPT Le Loi,Freshman,44.3
+Viet,Miller,2009-08-17,Truong THPT Le Quy Don,Sophomore,22.5
+Em,Johnson,2010-10-01,University of Chicago,11,16.0
+Quinn,Dang,2009-06-30,,,43.9
+Chi,Gonzalez,2007-12-03,,11,3.8
+Oanh,Williams,2008-06-27,Columbia University,,24.1
+Yen,Duong,2011-08-12,Truong THPT Le Quy Don,12,21.7
+Alex,Lopez,2008-12-08,Truong THPT Hai Ba Trung,,27.4
+Henry,Wilson,2008-11-15,Truong THPT Hai Ba Trung,12,7.6
+Oanh,Ly,2009-04-15,,,31.4
+An,Do,2009-03-25,Duke University,10,18.2
+Rachel,Jackson,2009-08-11,,Senior,38.5
+Viet,Dinh,2009-08-05,Princeton University,Senior,35.1
+Catherine,Moore,2010-10-27,,10,17.9
+Alex,Jackson,2008-12-05,Stanford University,,44.6
+Henry,Davis,2011-09-22,Duke University,,27.6
+Frank,Truong,2009-10-19,Princeton University,,12.5
+Henry,Bui,2010-12-04,Harvard University,Junior,14.2
+Henry,Jones,,University of Chicago,10,0.8
+Binh,Ly,2008-11-12,,,5.2
+Grace,Dang,2008-08-15,Truong THPT Le Loi,9,24.1
+Maya,Davis,2008-04-11,Truong THPT Nguyen Trai,,40.8
+Alex,Garcia,2010-04-02,Truong THPT Hai Ba Trung,10,35.6
+An,Nguyen,2011-08-27,Truong THPT Ly Tu Trong,Junior,38.2
+Chi,Jones,,Truong THPT Tran Phu,11,36.0
+Linh,Jones,2008-07-02,Truong THPT Nguyen Du,12,29.2
+Sang,Martin,,,,39.7
+Viet,Lopez,2009-07-18,Harvard University,10,21.0
+Tina,Pham,2008-04-29,Duke University,,38.6
+Khanh,Garcia,2010-05-08,Stanford University,,7.8
+Frank,Bui,2010-08-02,Truong THPT Hai Ba Trung,,11.0
+Ivy,Ho,2011-01-13,Truong THPT Tran Phu,,7.2
+David,Tran,2010-06-26,,Junior,34.1
+Brian,Duong,2007-11-30,University of Chicago,10,34.2
+Hoa,Dang,2011-09-11,,Sophomore,38.1
+Henry,Garcia,,,,2.4
+Hoa,Phan,,Columbia University,9,38.9
+Quinn,Thomas,2008-08-25,MIT,,30.1
+Jack,Wilson,2011-06-29,Princeton University,12,29.1
+Sam,Ngo,2010-01-23,,12,36.3
+Quang,Ngo,,Truong THPT Nguyen Hue,12,2.9
+Nam,Davis,2011-05-10,,Junior,20.4
+Nam,Ly,,,9,38.3
+Quang,Truong,2009-10-20,Truong THPT Le Quy Don,11,6.2
+Em,Phung,2010-12-06,MIT,,38.7
+Uyen,Gonzalez,2011-02-13,Truong THPT Le Loi,Senior,41.3
+Sam,Dong,,University of Chicago,Senior,14.4
+Paul,Duong,2009-02-17,University of Chicago,,21.6
+An,Pham,2008-07-17,MIT,9,4.0
+An,Phan,2011-03-16,Yale University,12,36.6
+Minh,Jones,2008-08-09,Yale University,11,26.5
+Tina,Dong,2010-01-30,Truong THPT Quang Trung,Senior,8.4
+Sang,Anderson,2010-06-06,Truong THPT Le Loi,,44.4
+Minh,Vu,2011-03-30,University of Chicago,10,44.2
+Grace,Martinez,2009-02-17,Truong THPT Tran Phu,,38.5
+Khanh,Bui,2009-01-25,,12,8.9
+Frank,Hernandez,2008-02-19,,Junior,9.2
+Xuan,Gonzalez,2010-03-15,Truong THPT Vo Thi Sau,,44.5
+Quang,Moore,2011-08-30,Truong THPT Nguyen Du,Freshman,14.2
+Catherine,Vu,2009-01-01,,10,44.8
+Uyen,Brown,2008-09-25,MIT,,49.3
+Quang,Thomas,,,,45.1
+Oanh,Ly,2009-06-30,University of California,Freshman,27.5
+Sam,Jones,2009-04-17,Truong THPT Hai Ba Trung,Sophomore,9.2
+Rachel,Le,2009-09-27,,10,7.3
+Duc,Hoang,2010-04-02,University of Chicago,Senior,35.8
+Paul,Thomas,2009-02-27,Stanford University,Senior,13.6
+Thu,Phung,2009-04-17,Harvard University,9,2.6
+Minh,Williams,2011-05-11,,11,13.4
+Emma,Gonzalez,,Columbia University,,48.6
+Uyen,Johnson,2008-08-11,University of California,10,34.3
+Linh,Jones,2011-09-01,University of Chicago,11,36.9
+Uyen,Rodriguez,,,9,19.8
+Nam,Ly,,Princeton University,,31.9
+Paul,Williams,,,,5.3
+Em,Johnson,2009-04-13,University of California,9,35.2
+Oanh,Thomas,,Harvard University,Senior,3.4
+Sam,Le,,Truong THPT Tran Phu,,10.1
+Thu,Jackson,2011-06-15,,12,34.6
+Xuan,Do,2008-11-21,,9,0.4
+Tina,Hoang,2010-02-09,Truong THPT Quang Trung,,17.1
+Linh,Brown,2009-03-30,Columbia University,,18.3
+Oanh,Phung,2009-12-11,MIT,9,16.6
+Binh,Moore,2008-04-01,Northwestern University,,20.7
+Grace,Ly,2010-11-23,,9,21.6
+Henry,Johnson,2010-11-06,Truong THPT Hai Ba Trung,Senior,9.2
+Nam,Miller,2011-07-19,Truong THPT Le Quy Don,Sophomore,34.2
+Paul,Dong,2009-05-31,Columbia University,9,39.5
+Henry,Phan,2010-12-03,,,33.0
+Paul,Taylor,2009-03-30,Northwestern University,11,27.3
+Quang,Bui,,Truong THPT Quang Trung,10,8.8
+Ivy,Anderson,2010-12-26,Duke University,Junior,39.7
+Uyen,Garcia,2009-11-17,University of California,10,10.9
+David,Truong,2009-04-28,,,5.2
+Thu,Lopez,2009-08-27,,10,33.7
+Rachel,Gonzalez,2011-08-04,Truong THPT Vo Thi Sau,,40.4
+Em,Hoang,2010-09-18,,Freshman,36.0
+Sam,Martinez,2008-07-21,,,9.5
+Paul,Le,2009-08-17,Truong THPT Nguyen Trai,,24.4
+Oanh,Rodriguez,2011-03-07,Truong THPT Vo Thi Sau,,49.8
+Duc,Gonzalez,,,9,35.4
+Quinn,Martin,2010-01-15,Duke University,9,20.6
+Linh,Nguyen,2011-02-12,Truong THPT Vo Thi Sau,10,45.0
+Frank,Moore,2010-05-12,Truong THPT Nguyen Du,,37.5
+Quinn,Martinez,2008-10-11,Truong THPT Vo Thi Sau,12,31.7
+Rachel,Moore,,Truong THPT Le Quy Don,Junior,1.8
+Quinn,Hoang,2011-03-07,Truong THPT Hai Ba Trung,11,48.3
+Sam,Garcia,2010-05-26,Truong THPT Nguyen Du,,3.2
+Catherine,Vu,,Truong THPT Hai Ba Trung,10,12.1
+David,Lopez,2007-11-05,University of Chicago,Sophomore,26.6
+Maya,Moore,2009-01-22,Truong THPT Nguyen Trai,,21.3
+Alex,Vu,2011-05-15,,,7.6
+Alex,Pham,,,,44.0
+David,Truong,2008-11-16,Columbia University,,40.3
+Maya,Duong,2008-07-15,Yale University,,0.9
+Quang,Garcia,2011-09-15,,Junior,14.9
+Liam,Davis,,,,9.4
+Thu,Garcia,2007-12-18,,Senior,13.7
+Hoa,Ho,,,Junior,22.0
+Quinn,Hoang,2009-12-11,Truong THPT Tran Phu,Junior,9.3
+Emma,Martinez,2010-11-05,Truong THPT Ly Tu Trong,,10.1
+Giang,Dang,,University of California,Sophomore,21.6
+Paul,Duong,2011-09-23,,Freshman,40.5
+Olivia,Le,2011-03-24,Yale University,10,1.5
+Liam,Williams,,,,9.5
+Frank,Pham,,Northwestern University,10,2.3
+Quinn,Hernandez,2008-03-06,Truong THPT Nguyen Hue,10,47.9
+Em,Do,2008-12-05,Truong THPT Nguyen Hue,9,11.4
+Phong,Vo,2011-04-16,Truong THPT Tran Phu,Freshman,7.2
+Viet,Vu,,Truong THPT Nguyen Du,,22.6
+Thu,Anderson,2011-05-17,,,29.2
+Grace,Ngo,2008-01-22,Northwestern University,12,7.5
+Linh,Phung,,Truong THPT Nguyen Hue,,46.9
+Linh,Smith,2008-05-18,Truong THPT Hai Ba Trung,,25.9
+Chi,Tran,2008-05-07,Truong THPT Hai Ba Trung,Junior,29.2
+Noah,Johnson,2008-09-30,,,32.5
+Jack,Phan,2008-07-01,Princeton University,12,42.2
+Tina,Martin,2010-05-04,,Sophomore,11.7
+Oanh,Anderson,2008-12-04,,9,12.6
+Kelly,Anderson,,Truong THPT Hai Ba Trung,,11.2
+Phong,Tran,2009-11-07,,,38.8
+Linh,Hernandez,2009-12-24,University of Chicago,Senior,10.4
+Yen,Davis,2009-12-02,Truong THPT Quang Trung,,25.4
+Noah,Vo,2008-08-05,Columbia University,Freshman,21.0
+Paul,Ly,2008-03-14,Duke University,9,38.9
+Brian,Brown,2007-11-19,Harvard University,,3.6
+Phong,Jones,2011-09-20,Harvard University,10,27.6
+Frank,Miller,2009-07-31,,9,22.4
+Jack,Taylor,2011-04-10,Truong THPT Nguyen Hue,,1.2
+Paul,Wilson,2010-11-25,University of Chicago,Freshman,37.6
+Em,Dong,2008-08-12,Northwestern University,,43.2
+Kelly,Dinh,,Truong THPT Nguyen Du,,39.1
+Paul,Pham,2007-11-06,Truong THPT Tran Phu,,23.8
+Grace,Miller,2009-10-08,MIT,Junior,6.0
+Nam,Dinh,2011-05-30,,,43.1
+Thu,Dang,2009-02-17,Stanford University,12,20.7
+Brian,Johnson,2011-08-10,,Junior,13.2
+Giang,Phung,2009-06-07,Truong THPT Ly Tu Trong,11,41.9
+Olivia,Dinh,,,12,7.4
+Binh,Johnson,2008-11-30,,Freshman,25.6
+Khanh,Wilson,2009-04-30,Columbia University,,36.5
+Oanh,Lopez,2008-01-18,Truong THPT Le Quy Don,Junior,25.1
+Thu,Nguyen,2008-08-14,Northwestern University,12,23.5
+An,Ly,,,10,27.6
+Paul,Jones,2010-01-11,MIT,Senior,13.7
+Frank,Jackson,2009-11-20,Columbia University,10,12.0
+An,Martinez,2008-07-27,,,10.4
+Uyen,Bui,,Duke University,,42.8
+Liam,Hernandez,2009-07-25,,Sophomore,28.8
+Yen,Ly,,Truong THPT Nguyen Hue,11,1.1
+Noah,Vu,2008-04-18,,11,43.4
+Jack,Tran,2010-02-23,Truong THPT Ly Tu Trong,12,29.6
+Rachel,Moore,2009-09-23,Truong THPT Le Loi,,16.2
+Catherine,Thomas,2011-10-02,Yale University,,45.1
+Henry,Do,2009-06-18,Yale University,,33.9
+Binh,Le,,University of California,,15.7
+Giang,Jackson,,Yale University,,16.1
+Yen,Hoang,2009-11-08,Duke University,,48.2
+Noah,Hernandez,2010-09-10,Truong THPT Tran Phu,10,23.2
+Henry,Do,2011-01-20,Truong THPT Le Loi,,10.0
+Em,Jones,2009-01-03,Truong THPT Nguyen Trai,12,44.0
+Henry,Pham,2008-12-02,Stanford University,,21.0
+Hoa,Ho,2008-02-01,,11,6.3
+Khanh,Dang,2010-08-27,Truong THPT Le Loi,9,34.3
+Oanh,Williams,2010-10-17,Yale University,Freshman,13.5
+Paul,Moore,,Truong THPT Hai Ba Trung,12,43.8
+Yen,Wilson,2008-08-27,Truong THPT Tran Phu,11,30.3
+Chi,Bui,2008-06-08,Truong THPT Le Loi,,11.5
+Rachel,Taylor,2010-01-01,,Junior,16.9
+Sang,Johnson,2011-05-29,Yale University,10,41.8
+Emma,Phan,,,,22.3
+Em,Phan,2011-06-17,Truong THPT Ly Tu Trong,Senior,19.0
+Phong,Miller,2009-07-01,Truong THPT Le Quy Don,12,13.9
+Brian,Miller,,Northwestern University,,26.1
+Ivy,Garcia,,,11,10.7
+Quang,Dang,,Truong THPT Le Quy Don,,0.0
+Thu,Martinez,2010-11-30,Truong THPT Le Loi,,9.1
+Grace,Anderson,2009-02-11,Princeton University,11,43.8
+Quinn,Vu,2008-05-13,Yale University,,47.9
+Olivia,Do,2011-02-02,,Sophomore,43.6
+David,Hoang,2007-12-13,Truong THPT Le Quy Don,,41.8
+Grace,Jones,2009-05-06,,Sophomore,11.1
+Linh,Le,2010-11-10,,,25.3
+Giang,Dang,2009-04-17,Truong THPT Vo Thi Sau,Junior,1.5
+Duc,Davis,2011-10-16,Truong THPT Vo Thi Sau,Senior,41.4
+Chi,Moore,2008-07-05,Princeton University,Freshman,28.9
+Duc,Jones,2011-01-03,University of California,Junior,39.9
+Thu,Ly,2009-07-26,Truong THPT Ly Tu Trong,10,18.3
+Noah,Gonzalez,2008-08-01,Truong THPT Quang Trung,,9.4
+Noah,Miller,,Truong THPT Hai Ba Trung,Freshman,48.3
+Alex,Anderson,,Truong THPT Le Quy Don,,5.8
+Viet,Ly,,University of Chicago,9,6.5
+Ivy,Martin,2008-07-03,Truong THPT Nguyen Du,,14.6
+Binh,Vo,,Truong THPT Nguyen Trai,,31.4
+Phong,Jackson,,Truong THPT Hai Ba Trung,Senior,22.4
+Viet,Smith,2011-09-08,Truong THPT Quang Trung,Junior,27.8
+Paul,Gonzalez,2011-04-08,Princeton University,Freshman,33.7
+Brian,Le,2010-08-28,University of California,,41.2
+Ivy,Martinez,2010-07-17,Truong THPT Vo Thi Sau,10,26.7
+Xuan,Le,2008-04-28,Truong THPT Hai Ba Trung,Senior,9.1
+Hoa,Taylor,2009-07-14,,,25.9
+Uyen,Phan,2010-01-24,Columbia University,9,10.4
+Oanh,Wilson,2011-07-12,,Junior,44.0
+Giang,Phung,,Truong THPT Vo Thi Sau,Sophomore,14.4
+An,Vu,2008-08-28,Truong THPT Nguyen Du,,23.8
+Uyen,Wilson,2010-07-25,MIT,9,21.5
+Uyen,Rodriguez,,MIT,Freshman,30.8
+Rachel,Do,,Princeton University,Senior,21.5
+Thu,Taylor,2008-02-29,MIT,10,35.7
+David,Vo,2010-03-20,University of California,,30.1
+Jack,Moore,2008-04-24,MIT,12,23.8
+Kelly,Thomas,2008-08-11,Truong THPT Quang Trung,12,19.8
+Sang,Martin,2010-06-03,Truong THPT Quang Trung,,9.3
+Hoa,Wilson,2010-05-01,Truong THPT Tran Phu,,44.5
+Linh,Ngo,2008-12-17,Truong THPT Ly Tu Trong,12,4.4
+Quinn,Hoang,,,11,47.8
+Alex,Vu,2009-06-16,University of Chicago,,21.9
+Linh,Vo,2008-01-13,,12,48.2
+Maya,Moore,,Truong THPT Nguyen Du,,4.2
+Quinn,Anderson,2010-07-02,Truong THPT Nguyen Du,,18.3
+Brian,Hoang,2008-10-30,Truong THPT Tran Phu,Senior,27.2
+Henry,Phan,2011-09-15,Columbia University,11,6.4
+Maya,Garcia,2010-06-14,Yale University,9,49.3
+Brian,Dang,2010-02-12,Truong THPT Vo Thi Sau,,6.6
+Giang,Miller,2011-02-10,MIT,9,44.1
+Nam,Jackson,,University of Chicago,11,44.0
+Liam,Moore,2011-08-27,Princeton University,,3.9
+Uyen,Ho,2007-11-29,Truong THPT Vo Thi Sau,,1.5
+Binh,Taylor,2009-10-01,,9,46.3
+Olivia,Garcia,,Stanford University,,2.9
+Khanh,Davis,2010-09-29,Truong THPT Nguyen Trai,Sophomore,38.6
+Henry,Vo,2009-11-08,Truong THPT Ly Tu Trong,,43.6
+Sang,Ly,2011-10-29,Truong THPT Le Quy Don,9,22.9
+Paul,Garcia,2008-05-02,MIT,11,14.3
+Sang,Hoang,2009-04-11,,,4.6
+Xuan,Ly,,Truong THPT Le Loi,,47.7
+Quang,Dang,2010-01-14,Truong THPT Tran Phu,,19.7
+Chi,Le,,Truong THPT Nguyen Hue,9,48.9
+Binh,Nguyen,2007-11-26,Columbia University,9,2.3
+Emma,Rodriguez,2010-06-17,Northwestern University,Senior,28.4
+Jack,Ngo,2010-12-19,MIT,Freshman,40.6
+Liam,Rodriguez,2010-08-14,Harvard University,,26.4
+Alex,Taylor,2011-06-17,Truong THPT Nguyen Trai,12,32.1
+Alex,Johnson,2008-03-26,Truong THPT Vo Thi Sau,,5.1
+Minh,Davis,,Northwestern University,12,16.7
+Chi,Brown,2008-11-20,,,34.5
+Em,Garcia,2010-11-30,Northwestern University,12,25.7
+Chi,Hoang,2009-01-18,Truong THPT Hai Ba Trung,Senior,35.1
+David,Vo,2011-05-13,Northwestern University,,39.9
+Kelly,Duong,2011-09-27,,,15.0
+Liam,Jackson,2011-06-04,Northwestern University,,3.2
+Quang,Martin,2011-08-25,Truong THPT Nguyen Trai,10,23.4
+Jack,Ngo,2008-09-12,Columbia University,,48.9
+Liam,Taylor,2010-12-18,Truong THPT Nguyen Trai,12,8.1
+Alex,Tran,2010-05-26,,Senior,47.3
+Ivy,Duong,,Truong THPT Hai Ba Trung,Freshman,12.9
+Binh,Le,2009-01-10,,Junior,0.4
+Rachel,Phan,2010-06-06,University of Chicago,Sophomore,0.9
+Rachel,Moore,2007-12-08,,Freshman,17.8
+Chi,Thomas,2011-10-20,,Senior,11.7
+Chi,Dong,2010-09-05,Truong THPT Le Loi,,34.3
+Maya,Vo,2011-10-15,Truong THPT Nguyen Hue,Senior,17.7
+David,Vu,2010-01-05,,12,45.2
+Linh,Garcia,2011-10-30,,9,28.2
+Viet,Vu,,Yale University,,35.6
+Kelly,Ngo,2008-07-14,Truong THPT Le Quy Don,Sophomore,0.7
+Kelly,Dong,2010-03-05,,,45.2
+Jack,Taylor,,Harvard University,,20.5
+Duc,Dong,,,Freshman,1.7
+Jack,Rodriguez,2009-10-18,Truong THPT Tran Phu,,42.8
+Phong,Lopez,,,9,33.5
+Jack,Le,2010-07-16,Truong THPT Vo Thi Sau,9,47.1
+Minh,Thomas,2010-08-24,,Junior,27.2
+Maya,Hoang,,Harvard University,,48.2
+Linh,Jones,,,Senior,38.1
+Paul,Do,2011-02-03,,,12.3
+Duc,Smith,2009-05-11,Columbia University,12,49.3
+Ivy,Jackson,2010-01-29,Truong THPT Le Loi,Senior,28.1
+Sam,Dang,2011-03-30,Truong THPT Le Loi,9,27.8
+Frank,Garcia,2008-03-19,Truong THPT Nguyen Du,10,1.0
+Thu,Garcia,2007-12-20,,12,8.6
+Paul,Garcia,2010-10-25,Princeton University,,37.5
+Jack,Ngo,2011-10-13,Truong THPT Vo Thi Sau,,37.7
+Yen,Thomas,,Truong THPT Le Quy Don,,7.3
+Grace,Nguyen,,Duke University,,17.0
+Chi,Moore,2011-02-24,,,16.4
+Duc,Martinez,2011-07-22,,9,47.6
+Chi,Nguyen,2009-10-31,,11,47.7
+Brian,Nguyen,,Truong THPT Nguyen Trai,Freshman,49.0
+Frank,Dang,2011-08-10,Princeton University,,40.3
+Khanh,Hoang,2010-01-25,Truong THPT Hai Ba Trung,,45.4
+Alex,Tran,2009-10-11,,Junior,27.8
+Yen,Do,2009-05-04,Truong THPT Vo Thi Sau,Sophomore,38.6
+Quang,Martinez,2009-08-21,,Freshman,30.3
+Sang,Smith,2009-02-24,,Senior,27.9
+Quang,Ly,,,9,23.5
+Rachel,Rodriguez,,Truong THPT Ly Tu Trong,10,3.0
+Frank,Rodriguez,2008-11-25,University of Chicago,,37.7
+Ivy,Phan,2008-04-02,Truong THPT Le Quy Don,Sophomore,40.5
+Duc,Pham,2008-05-04,Truong THPT Nguyen Hue,,25.3
+Grace,Dang,2009-03-13,,10,17.8
+Quang,Duong,2009-05-13,,,5.2
+Sang,Miller,,Princeton University,11,11.0
+Yen,Smith,2008-04-13,,Senior,4.0
+Xuan,Duong,,Truong THPT Hai Ba Trung,Freshman,34.9
+Brian,Dinh,2008-01-28,,Junior,1.0
+Binh,Dong,2011-01-06,Truong THPT Le Loi,Freshman,25.8
+An,Smith,2011-09-24,,Senior,32.6
+Minh,Dang,2009-05-23,University of California,10,44.8
+Brian,Lopez,2008-10-13,,Junior,4.8
+Minh,Williams,2010-01-29,MIT,,30.7
+Binh,Nguyen,2010-01-18,MIT,,7.1
+Sang,Dinh,,,Freshman,43.2
+Kelly,Jackson,,Truong THPT Tran Phu,10,43.3
+David,Williams,2009-12-19,Harvard University,,42.9
+Giang,Vu,2008-08-16,Duke University,,9.7
+Paul,Dong,2010-07-19,,9,32.1
+Catherine,Davis,2009-11-09,Truong THPT Nguyen Du,Senior,27.3
+David,Brown,2008-03-08,Truong THPT Ly Tu Trong,Senior,40.7
+Sang,Do,2010-06-04,Princeton University,11,23.6
+Yen,Brown,2008-12-12,Truong THPT Nguyen Du,,11.6
+Emma,Johnson,2008-06-15,,Senior,31.6
+Khanh,Hoang,2008-07-29,Truong THPT Nguyen Du,Sophomore,9.9
+Ivy,Jackson,2010-11-04,Truong THPT Nguyen Trai,9,10.7
+Catherine,Davis,2011-05-10,Truong THPT Nguyen Trai,,8.4
+Maya,Vu,2010-06-16,Princeton University,Sophomore,26.8
+Quang,Dong,2011-08-11,MIT,10,4.1
+Khanh,Ly,2010-06-19,Princeton University,Freshman,3.1
+Nam,Truong,,,,23.2
+An,Martinez,2008-02-16,Truong THPT Nguyen Du,10,2.0
+Linh,Ngo,2009-08-08,,,12.2
+David,Brown,2010-06-13,Northwestern University,,10.1
+Sam,Lopez,2011-06-15,Truong THPT Nguyen Hue,11,3.6
+Grace,Smith,2010-11-10,,,33.0
+Giang,Williams,2008-09-05,University of Chicago,9,12.0
+Rachel,Le,2011-07-18,,Junior,1.2
+Catherine,Taylor,2009-11-09,Columbia University,,32.4
+Grace,Ly,,Stanford University,,47.5
+Linh,Martin,2008-11-20,Princeton University,,32.4
+Viet,Jackson,2010-09-10,Columbia University,,4.6
+Thu,Rodriguez,,,,35.1
+Duc,Gonzalez,2008-07-20,University of California,Sophomore,1.3
+Paul,Brown,2011-04-24,Truong THPT Le Loi,10,40.6
+Kelly,Vu,,Truong THPT Quang Trung,Freshman,16.1
+Brian,Duong,,,Freshman,28.3
+Nam,Bui,,Princeton University,Sophomore,25.0
+Viet,Wilson,2009-12-07,Truong THPT Hai Ba Trung,,10.3
+Grace,Garcia,2009-07-31,Princeton University,,28.0
+Emma,Vu,2009-08-09,Truong THPT Nguyen Trai,Freshman,48.8
+Noah,Gonzalez,2010-07-02,Columbia University,12,25.1
+Ivy,Dang,2008-07-15,University of California,10,11.9
+Quinn,Garcia,2011-06-01,,,5.2
+Oanh,Tran,2007-12-15,Truong THPT Le Quy Don,,43.1
+Jack,Rodriguez,2010-04-18,Truong THPT Quang Trung,Sophomore,45.8
+Maya,Thomas,2010-07-10,,9,16.7
+Giang,Vu,2008-09-30,Princeton University,Senior,46.7
+Chi,Johnson,,University of California,12,12.3
+Hoa,Miller,2010-03-11,,,25.6
+Paul,Anderson,2007-12-16,,Freshman,46.5
+Olivia,Dinh,2011-10-09,Truong THPT Nguyen Hue,,2.4
+Thu,Williams,2011-08-11,Truong THPT Nguyen Hue,9,18.8
+Liam,Tran,2011-01-21,Yale University,Freshman,11.1
+Yen,Le,2009-03-17,Truong THPT Quang Trung,11,9.2
+Tina,Moore,,Truong THPT Ly Tu Trong,,43.7
+Henry,Ly,2010-03-10,Truong THPT Tran Phu,Sophomore,16.4
+Sam,Do,2008-02-02,,,16.5
+Grace,Vo,2009-09-06,,Junior,9.8
+Ivy,Hoang,2008-05-18,,Freshman,47.6
+Henry,Nguyen,,Stanford University,Sophomore,27.8
+Tina,Dang,2011-04-02,Columbia University,12,8.9
+Quang,Williams,2008-05-22,,10,46.0
+Nam,Do,,,,21.2
+Chi,Pham,2008-03-09,Truong THPT Nguyen Du,,47.5
+Sam,Do,,Truong THPT Le Loi,,31.4
+David,Garcia,2011-08-25,,11,6.2
+Catherine,Thomas,2010-03-18,,,9.4
+Quinn,Hernandez,2009-02-18,Truong THPT Hai Ba Trung,,7.7
+Linh,Phung,2010-12-13,Truong THPT Quang Trung,10,1.9
+Frank,Pham,2008-08-02,Truong THPT Nguyen Trai,,37.9
+Binh,Do,2010-10-20,,11,8.7
+Noah,Smith,2008-10-13,,10,8.2
+Liam,Pham,,,Sophomore,5.9
+Alex,Nguyen,2010-06-16,Truong THPT Le Quy Don,Sophomore,27.3
+Frank,Dang,2011-09-30,Princeton University,Sophomore,43.6
+Tina,Ho,2011-06-26,Truong THPT Le Quy Don,,37.6
+Nam,Johnson,,Stanford University,,24.3
+Khanh,Davis,2010-07-18,Truong THPT Nguyen Hue,,39.8
+Paul,Ly,,Truong THPT Tran Phu,Senior,5.1
+Nam,Thomas,2008-03-15,Truong THPT Le Quy Don,Junior,1.3
+Brian,Martinez,2011-05-22,Truong THPT Nguyen Du,10,36.1
+Em,Gonzalez,2009-07-17,,Senior,7.5
+Yen,Jackson,,Stanford University,Senior,1.9
+Maya,Miller,2010-07-03,University of California,12,24.8
+Ivy,Martin,,Truong THPT Le Quy Don,Freshman,14.6
+David,Williams,2011-07-19,,Freshman,0.3
+Tina,Vo,2009-10-11,University of California,,12.0
+Sam,Pham,,Truong THPT Le Loi,Junior,13.0
+Frank,Truong,2009-08-25,Truong THPT Le Quy Don,,33.8
+Grace,Smith,2010-10-16,Stanford University,,46.6
+Catherine,Smith,2009-07-16,,11,5.6
+Frank,Phan,2007-12-11,,,23.8
+Thu,Hoang,2011-10-27,,,30.9
+Henry,Nguyen,2011-10-22,Truong THPT Le Quy Don,9,2.1
+Nam,Dang,2010-06-30,University of Chicago,12,34.6
+Uyen,Garcia,2011-06-03,Truong THPT Le Loi,Junior,41.3
+Sang,Gonzalez,2009-11-24,,,38.4
+Nam,Johnson,2010-10-11,Truong THPT Vo Thi Sau,11,40.8
+Frank,Phan,2011-02-02,MIT,,33.3
+Noah,Do,,,10,0.4
+Xuan,Dang,2009-05-25,Truong THPT Nguyen Du,,20.4
+Sam,Ly,,University of Chicago,,44.9
+Quang,Le,2009-06-10,,Sophomore,26.3
+Paul,Ly,2010-06-10,Duke University,,8.2
+Tina,Dang,2010-06-03,Harvard University,11,7.8
+Paul,Hoang,2008-05-04,,,2.0
+Noah,Anderson,2010-03-04,,Senior,44.0
+Maya,Vu,,,10,29.7
+Emma,Smith,2010-04-10,,,14.5
+Uyen,Nguyen,,Truong THPT Vo Thi Sau,Junior,9.5
+David,Miller,2010-06-01,University of California,,10.9
+Kelly,Vu,,Columbia University,9,22.7
+Linh,Dang,2008-10-18,Harvard University,Sophomore,25.7
+Quinn,Williams,2008-07-08,,Freshman,17.9
+Duc,Dang,2009-04-08,Truong THPT Le Loi,11,27.4
+Brian,Dinh,2008-12-09,Stanford University,11,44.8
+Liam,Vu,2010-08-12,,,31.4
+Tina,Pham,2011-05-27,Truong THPT Vo Thi Sau,Junior,19.5
+Binh,Ly,2008-07-22,,,5.7
+Hoa,Truong,,Truong THPT Quang Trung,,16.9
+Xuan,Moore,2008-03-08,,Sophomore,27.7
+Hoa,Truong,2008-05-13,MIT,,37.2
+Brian,Duong,2010-06-24,Truong THPT Hai Ba Trung,,19.2
+Nam,Vo,2010-02-20,Truong THPT Nguyen Hue,11,35.0
+Maya,Dang,2011-08-26,Northwestern University,10,11.7
+Catherine,Taylor,2010-09-24,Truong THPT Tran Phu,Sophomore,37.5
+Hoa,Smith,2010-05-26,Truong THPT Nguyen Hue,Junior,4.2
+Viet,Thomas,2010-07-07,,10,1.8
+Duc,Thomas,2011-03-04,Truong THPT Le Loi,11,7.9
+Hoa,Dang,2010-06-22,Yale University,12,25.2
+Kelly,Gonzalez,2008-10-06,Northwestern University,,32.3
+Binh,Vu,2010-03-03,Truong THPT Le Quy Don,Junior,43.6
+Paul,Ly,2011-04-26,,,27.1
+Sang,Nguyen,2008-08-21,MIT,Sophomore,37.9
+Catherine,Dong,2010-04-08,Yale University,,2.6
+An,Tran,2011-08-13,,,25.4
+Quang,Jones,,Northwestern University,,17.1
+Maya,Tran,2010-03-19,Truong THPT Nguyen Hue,,46.1
+Olivia,Do,,,Junior,11.8
+Hoa,Davis,,,10,48.8
+Grace,Phung,2008-12-28,Duke University,Sophomore,29.1
+Binh,Moore,2009-11-06,Truong THPT Nguyen Du,Junior,3.1
+Sam,Brown,2011-10-02,MIT,,15.7
+Minh,Williams,2010-12-28,,,10.6
+Jack,Hoang,2008-11-28,Duke University,12,18.1
+Linh,Garcia,,Yale University,10,33.9
+Sam,Jones,,Truong THPT Le Loi,11,37.5
+Viet,Duong,2008-11-11,Truong THPT Tran Phu,9,11.3
+Hoa,Brown,2011-01-06,,Freshman,9.7
+Chi,Dong,2008-01-03,Yale University,,25.8
+Alex,Tran,2008-04-13,,10,28.8
+Rachel,Dong,2011-07-23,Princeton University,11,14.1
+An,Phan,2008-03-25,Columbia University,Sophomore,35.0
+Quang,Vo,2011-03-29,,10,12.1
+Giang,Vu,2008-08-14,MIT,,42.1
+An,Do,2009-08-05,Truong THPT Hai Ba Trung,Senior,45.5
+Hoa,Ho,2009-12-29,,10,21.7
+Jack,Thomas,2010-12-24,,Sophomore,40.5
+Uyen,Davis,2009-05-30,Duke University,11,45.3
+Minh,Bui,,Truong THPT Tran Phu,,47.2
+Thu,Hernandez,,Truong THPT Hai Ba Trung,,14.6
+Chi,Hoang,2010-01-12,Northwestern University,,4.3
+Emma,Miller,2009-04-12,Princeton University,12,29.6
+Henry,Anderson,2010-07-18,Truong THPT Hai Ba Trung,11,5.5
+Jack,Anderson,2009-03-07,Harvard University,11,0.2
+Em,Dinh,2011-09-19,Truong THPT Le Quy Don,11,23.8
+Henry,Duong,2008-12-15,,12,19.2
+Phong,Davis,2010-11-26,,12,14.4
+Kelly,Dang,2009-11-07,Harvard University,Junior,8.6
+Liam,Hoang,,Harvard University,,11.2
+Olivia,Vu,2010-06-25,,,29.3
+Grace,Vu,,Columbia University,12,17.2
+Giang,Ly,2009-10-28,Truong THPT Nguyen Du,,23.9
+An,Dang,2009-05-06,Truong THPT Vo Thi Sau,,11.2
+Xuan,Martinez,2010-09-09,Stanford University,,30.9
+Uyen,Thomas,2009-11-18,Truong THPT Nguyen Trai,Sophomore,13.3
+Hoa,Smith,2011-09-14,Duke University,,40.2
+Catherine,Thomas,2009-01-24,Princeton University,Sophomore,20.7
+Maya,Phung,2009-03-06,Duke University,,18.0
+Ivy,Thomas,2011-09-23,Duke University,Sophomore,40.1
+Thu,Brown,,Truong THPT Nguyen Trai,,36.1
+Tina,Phung,2009-06-08,,,35.1
+Rachel,Ngo,2010-09-05,Columbia University,10,24.1
+Quinn,Martin,2009-12-27,University of Chicago,9,8.4
+Henry,Ho,,Stanford University,Junior,23.2
+Alex,Nguyen,2010-03-12,Truong THPT Vo Thi Sau,11,43.1
+Linh,Ngo,2009-07-24,Duke University,,11.9
+Sam,Ly,2009-04-01,Truong THPT Tran Phu,12,5.1
+Emma,Wilson,,Truong THPT Ly Tu Trong,Senior,10.0
+Frank,Garcia,2008-06-05,,Senior,10.1
+Chi,Jones,2009-03-27,Truong THPT Nguyen Du,,15.4
+Hoa,Dang,2010-11-28,Truong THPT Tran Phu,,29.3
+Phong,Phan,,,Junior,1.5
+Kelly,Wilson,,Northwestern University,10,40.8
+Quang,Wilson,2011-02-12,Truong THPT Tran Phu,10,23.7
+Liam,Dinh,,Truong THPT Nguyen Hue,12,23.6
+Viet,Gonzalez,2010-04-17,Harvard University,,44.7
+Sang,Jones,2011-06-02,Truong THPT Quang Trung,12,24.1
+Henry,Duong,2011-07-14,Truong THPT Nguyen Trai,Junior,30.0
+Chi,Dang,2011-03-09,Northwestern University,11,23.8
+Em,Duong,2010-08-16,,,40.7
+Uyen,Ho,2010-10-28,,,4.7
+Em,Dong,2010-06-25,Princeton University,,10.5
+Maya,Garcia,2010-08-13,University of California,,5.7
+Nam,Hoang,2010-04-25,,12,19.0
+Khanh,Garcia,,Yale University,,12.1
+Sam,Moore,,Truong THPT Quang Trung,9,14.8
+Giang,Do,2011-07-30,Truong THPT Vo Thi Sau,Senior,15.1
+Emma,Moore,,,,49.6
+David,Johnson,,,,11.4
+Catherine,Martin,2010-02-01,,Sophomore,3.5
+Minh,Jackson,2008-06-24,,10,13.9
+Noah,Miller,2010-06-06,University of Chicago,,27.6
+Oanh,Phan,,Princeton University,,26.2
+Tina,Thomas,2008-08-10,,Freshman,0.0
+Viet,Moore,2010-09-10,,12,18.6
+Ivy,Dang,,Harvard University,9,40.6
+Viet,Pham,2009-02-19,,,3.6
+Ivy,Gonzalez,,Truong THPT Hai Ba Trung,Junior,13.1
+Emma,Dinh,2010-09-20,Truong THPT Ly Tu Trong,,29.6
+Grace,Thomas,2010-03-21,Truong THPT Hai Ba Trung,9,9.9
+Linh,Jackson,2008-11-16,Truong THPT Le Quy Don,,44.0
+Giang,Wilson,2007-12-30,Truong THPT Vo Thi Sau,12,4.3
+Maya,Ngo,,Truong THPT Hai Ba Trung,,39.2
+Rachel,Brown,2009-04-08,,12,16.6
+Phong,Gonzalez,2010-05-02,Truong THPT Le Loi,,29.5
+Grace,Phan,2010-09-19,Stanford University,11,41.5
+Giang,Johnson,2008-01-06,University of Chicago,Senior,38.0
+Sang,Ly,2008-11-15,Northwestern University,Freshman,46.5
+Grace,Truong,2008-12-25,,,1.9
+Catherine,Bui,2011-08-24,Truong THPT Hai Ba Trung,Freshman,0.2
+Hoa,Ly,,,11,28.6
+Quinn,Pham,2011-06-07,,,42.1
+Quinn,Duong,2007-11-02,,,8.3
+Emma,Phung,2011-05-05,,Junior,3.2
+Kelly,Ho,2008-02-04,Truong THPT Nguyen Du,9,3.1
+Quinn,Nguyen,2009-04-12,Truong THPT Tran Phu,Sophomore,4.9
+Yen,Bui,2010-03-09,Northwestern University,10,7.5
+David,Dang,2011-08-19,,,10.3
+Chi,Brown,2009-05-25,,,25.1
+Thu,Johnson,,Truong THPT Nguyen Trai,9,9.1
+Rachel,Martinez,2008-03-16,,,23.7
+Brian,Thomas,2008-01-04,Duke University,Junior,35.3
+Catherine,Hernandez,2007-12-19,Princeton University,Freshman,45.7
+Phong,Hoang,2011-03-21,Duke University,,9.8
+An,Wilson,2008-05-09,Northwestern University,9,20.0
+Paul,Dinh,2010-07-12,,,24.1
+Quinn,Ly,2011-09-04,,11,15.1
+Frank,Thomas,2011-04-13,Truong THPT Tran Phu,11,47.6
+Paul,Phung,2008-09-09,Yale University,,10.3
+Jack,Ly,2009-12-17,,9,1.5
+Paul,Smith,2011-01-03,,,24.1
+Oanh,Moore,,Harvard University,,27.2
+Sang,Do,2011-02-13,Duke University,,30.8
+Catherine,Hoang,2010-12-25,Duke University,Sophomore,43.8
+Viet,Jones,2011-03-26,Northwestern University,Sophomore,21.3
+Quinn,Thomas,2010-09-27,,,36.1
+Frank,Duong,2010-03-16,Yale University,12,1.3
+Paul,Nguyen,2010-05-22,Truong THPT Nguyen Du,,21.4
+Henry,Taylor,,University of Chicago,,2.1
+Paul,Moore,2011-10-20,,,13.5
+Khanh,Tran,2008-12-15,Truong THPT Nguyen Trai,11,0.5
+Hoa,Miller,2008-02-07,,Junior,30.5
+Emma,Vo,2008-06-26,Truong THPT Ly Tu Trong,,15.9
+Kelly,Rodriguez,2008-02-16,Northwestern University,,10.9
+Tina,Phung,2009-06-02,Columbia University,,14.3
+Thu,Hernandez,2009-01-28,,9,40.7
+Khanh,Johnson,2010-10-31,,,37.4
+Quinn,Miller,,Truong THPT Nguyen Trai,,44.7
+Olivia,Martin,,Duke University,10,6.4
+Ivy,Hoang,2011-09-02,Truong THPT Hai Ba Trung,,36.6
+Catherine,Williams,2010-04-11,,,15.6
+Kelly,Do,2010-02-23,University of California,9,45.9
+Jack,Gonzalez,2008-07-23,University of California,,16.6
+David,Pham,2008-03-19,University of California,11,6.7
+Jack,Smith,,,11,47.5
+Catherine,Taylor,,,,27.3
+Giang,Taylor,2011-07-30,,,45.2
+Catherine,Le,2011-03-04,Northwestern University,,40.8
+Catherine,Vo,2010-03-30,,,19.9
+Alex,Nguyen,,,10,21.9
+Paul,Vu,2008-01-10,,Senior,48.9
+An,Anderson,2010-01-18,Truong THPT Tran Phu,,9.4
+Catherine,Johnson,2010-08-22,Truong THPT Vo Thi Sau,10,15.4
+Quinn,Phan,2009-04-01,Truong THPT Le Loi,,42.7
+An,Miller,2008-06-10,,,46.9
+Alex,Truong,2009-10-13,Yale University,,15.5
+Frank,Martin,2010-01-02,,,12.3
+Emma,Lopez,,,9,17.3
+Alex,Miller,2009-06-25,,Junior,30.6
+Chi,Lopez,,Truong THPT Vo Thi Sau,Senior,36.2
+Binh,Taylor,2008-04-06,,11,13.7
+Yen,Moore,2008-05-31,Truong THPT Le Quy Don,,14.4
+Uyen,Gonzalez,2010-09-28,Yale University,Sophomore,14.2
+Henry,Ly,2007-11-29,MIT,,19.9
+Rachel,Ly,2009-10-05,,,16.7
+Brian,Rodriguez,,,9,33.0
+Jack,Martinez,,Duke University,Freshman,16.2
+David,Rodriguez,2009-01-19,Truong THPT Tran Phu,9,23.8
+Chi,Dinh,,Truong THPT Vo Thi Sau,,25.5
+Frank,Smith,2008-02-25,Truong THPT Hai Ba Trung,,1.5
+David,Do,2010-11-18,Truong THPT Hai Ba Trung,,5.3
+Catherine,Gonzalez,2010-02-26,Truong THPT Nguyen Hue,10,43.2
+Sam,Pham,2009-07-19,Truong THPT Nguyen Hue,,10.8
+Liam,Dang,2010-09-15,,10,30.9
+Quang,Rodriguez,2010-10-27,,,1.3
+Tina,Rodriguez,2010-11-08,Duke University,,46.4
+Sam,Duong,2009-04-15,Truong THPT Hai Ba Trung,11,19.5
+Kelly,Dang,2009-03-09,Duke University,12,23.1
+Chi,Dang,2010-03-28,Northwestern University,,4.4
+Maya,Phan,2008-03-19,Truong THPT Vo Thi Sau,Sophomore,1.8
+Frank,Vo,2009-07-17,,9,32.5
+Alex,Dinh,,Truong THPT Le Loi,,2.5
+Noah,Tran,2010-11-28,,9,14.9
+Em,Hernandez,2010-11-30,,10,46.0
+Grace,Vo,2009-02-07,Northwestern University,9,38.1
+Henry,Ho,2008-09-03,Truong THPT Tran Phu,Sophomore,37.4
+Frank,Pham,,,Junior,43.1
+Emma,Gonzalez,2007-11-01,Harvard University,,41.9
+Brian,Duong,2011-09-06,Harvard University,,34.5
+Chi,Pham,2009-10-07,Harvard University,,14.6
+Khanh,Pham,2010-12-01,Truong THPT Nguyen Hue,10,25.9
+Rachel,Dang,2009-12-07,Duke University,11,31.4
+Maya,Dang,2011-03-06,Truong THPT Le Loi,,35.5
+Frank,Vu,2008-04-09,Truong THPT Nguyen Trai,Sophomore,19.1
+An,Tran,2010-04-17,Truong THPT Quang Trung,10,40.9
+Thu,Lopez,2008-04-29,Truong THPT Hai Ba Trung,,7.6
+Ivy,Anderson,,Truong THPT Nguyen Trai,10,28.0
+Uyen,Johnson,2011-06-10,Truong THPT Nguyen Trai,,38.3
+Kelly,Phan,2011-07-24,,Sophomore,11.2
+Rachel,Le,2009-05-02,,,36.5
+Thu,Tran,2008-07-20,,,35.3
+Giang,Anderson,2008-05-15,,,11.1
+Chi,Lopez,2008-01-19,,12,16.5
+Yen,Moore,2010-07-14,,12,31.1
+Binh,Davis,2008-03-03,,12,11.8
+Yen,Tran,2011-03-04,,Freshman,26.9
+Duc,Miller,2007-12-26,Columbia University,12,46.2
+Giang,Ho,2011-05-17,Princeton University,,42.3
+Jack,Miller,2009-12-17,Stanford University,Senior,10.5
+Emma,Truong,,,Junior,43.2
+Grace,Williams,2008-06-02,,Freshman,15.1
+Quinn,Gonzalez,2010-12-18,Truong THPT Hai Ba Trung,10,45.1
+Sam,Bui,,University of Chicago,Freshman,14.0
+Liam,Anderson,2009-08-22,University of Chicago,12,27.2
+David,Truong,2010-12-03,Northwestern University,,6.3
+Binh,Smith,2008-10-11,Truong THPT Tran Phu,Senior,25.8
+Catherine,Dang,2009-11-03,Truong THPT Ly Tu Trong,,38.2
+Yen,Phan,,,12,18.3
+Oanh,Gonzalez,2008-01-08,Columbia University,,20.5
+Sam,Jones,,,Junior,14.4
+Henry,Williams,2010-11-22,Truong THPT Quang Trung,12,11.3
+Hoa,Wilson,2008-10-29,,10,9.4
+Olivia,Dang,2009-06-01,,Junior,29.4
+Khanh,Truong,2009-09-22,Truong THPT Tran Phu,11,29.7
+Oanh,Jackson,2009-10-29,Truong THPT Nguyen Hue,10,3.8
+Rachel,Le,2008-04-06,Stanford University,Junior,2.4
+Catherine,Phan,2009-02-04,,Freshman,21.6
+Olivia,Bui,,,,42.9
+Olivia,Vu,2008-10-18,,Junior,32.3
+Xuan,Hernandez,2008-08-26,Truong THPT Nguyen Du,,5.6
+Rachel,Ho,2011-08-24,Columbia University,,3.9
+Uyen,Le,2010-01-22,Truong THPT Hai Ba Trung,,32.3
+Linh,Gonzalez,,,Sophomore,26.9
+Catherine,Nguyen,2008-05-22,Princeton University,,39.5
+Duc,Smith,2011-05-27,Truong THPT Hai Ba Trung,,26.8
+Giang,Phung,2008-07-04,Harvard University,,18.3
+Grace,Phung,2011-01-16,MIT,Freshman,12.9
+Phong,Johnson,2009-09-28,,9,29.3
+Ivy,Phan,2008-05-26,Truong THPT Nguyen Du,Freshman,3.0
+Chi,Martinez,2010-08-03,Truong THPT Nguyen Du,9,31.6
+Grace,Vu,2010-04-27,,,10.6
+Linh,Miller,2011-05-01,Truong THPT Nguyen Du,10,31.3
+Xuan,Pham,2010-01-02,,,46.7
+Liam,Garcia,2011-03-19,,Freshman,25.0
+Olivia,Jackson,,Northwestern University,Senior,0.0
+Binh,Do,2007-11-02,University of California,Sophomore,33.0
+Catherine,Martin,2010-06-26,Duke University,Junior,29.9
+Viet,Dang,2011-05-03,,11,1.3
+Brian,Wilson,2007-12-03,Truong THPT Le Loi,,42.8
+Giang,Ho,2009-08-06,Truong THPT Le Quy Don,Freshman,29.9
+Jack,Lopez,2008-11-07,,11,6.7
+Catherine,Ngo,2011-04-24,Truong THPT Vo Thi Sau,,16.8
+Viet,Martinez,,,,16.0
+Xuan,Dang,2011-10-03,Truong THPT Quang Trung,Freshman,34.6
+Henry,Ly,2011-02-09,University of California,9,1.8
+Alex,Vo,2009-12-31,Truong THPT Vo Thi Sau,12,27.1
+Giang,Gonzalez,2008-05-19,Truong THPT Nguyen Trai,Sophomore,40.1
+Tina,Bui,2009-05-17,Truong THPT Hai Ba Trung,,35.0
+Brian,Phung,2010-03-09,,11,27.4
+Henry,Vo,2010-12-08,Truong THPT Nguyen Trai,12,45.0
+Olivia,Dang,2009-10-06,Truong THPT Ly Tu Trong,10,34.3
+Linh,Taylor,,,Sophomore,44.7
+Alex,Lopez,,Truong THPT Nguyen Du,,25.9
+Uyen,Duong,,,Sophomore,21.7
+An,Pham,2010-07-11,,Sophomore,46.8
+Emma,Truong,2011-07-04,Truong THPT Le Quy Don,12,1.4
+Linh,Smith,2011-01-10,,9,15.5
+Henry,Jackson,2010-07-26,Northwestern University,,36.1
+Olivia,Phan,2011-08-05,Truong THPT Nguyen Hue,,26.3
+Yen,Ly,,Truong THPT Nguyen Hue,Junior,14.7
+Linh,Dong,2011-03-15,Truong THPT Nguyen Trai,9,22.9
+Yen,Rodriguez,2010-03-26,Truong THPT Ly Tu Trong,,36.6
+Quinn,Martin,2010-06-01,,Senior,20.8
+Grace,Gonzalez,2009-01-08,,Sophomore,44.1
+Sam,Johnson,2008-02-02,Truong THPT Quang Trung,,19.9
+Quang,Truong,2011-09-02,Truong THPT Le Quy Don,,27.5
+Frank,Miller,2011-03-29,Northwestern University,,44.6
+Oanh,Dong,,Truong THPT Nguyen Trai,12,41.6
+Olivia,Miller,2010-05-25,Columbia University,,7.9
+Yen,Jones,2009-08-22,,,13.3
+Quang,Davis,,University of California,Sophomore,26.1
+Viet,Nguyen,,Truong THPT Tran Phu,,12.8
+Grace,Johnson,2008-10-09,MIT,11,33.9
+Quinn,Anderson,2011-06-27,Truong THPT Hai Ba Trung,,30.7
+Khanh,Taylor,2008-02-18,,Freshman,26.2
+Oanh,Phung,2010-08-09,,,5.9
+Binh,Johnson,2009-02-02,Truong THPT Tran Phu,Sophomore,25.3
+Chi,Dong,2011-06-17,,12,10.3
+David,Rodriguez,2011-04-22,Truong THPT Quang Trung,9,49.7
+Jack,Jackson,2011-08-23,Yale University,10,25.7
+Emma,Vo,2008-01-30,,11,11.2
+Catherine,Pham,2009-05-28,,Junior,31.4
+An,Jones,2008-06-25,,9,41.7
+Olivia,Do,2008-11-19,Columbia University,,29.9
+Kelly,Dang,,MIT,,43.9
+Noah,Johnson,2009-12-22,,,44.9
+Grace,Martin,2008-06-05,MIT,Sophomore,43.7
+Chi,Le,2008-11-16,Columbia University,Freshman,39.8
+Grace,Do,2011-08-31,,9,2.8
+Phong,Ly,2010-11-12,,Senior,37.2
+Emma,Thomas,,,,3.4
+Xuan,Dang,2010-08-17,,,42.5
+Alex,Hoang,2008-12-28,Truong THPT Nguyen Trai,,45.1
+Oanh,Dang,2008-01-16,Stanford University,,1.9
+Brian,Smith,2008-08-26,Yale University,Senior,3.6
+Oanh,Le,2009-08-07,Truong THPT Nguyen Trai,Junior,44.9
+Uyen,Ho,2010-10-22,Northwestern University,11,34.5
+Catherine,Gonzalez,,Northwestern University,10,46.7
+Alex,Ngo,2009-04-02,Truong THPT Ly Tu Trong,9,25.7
+Brian,Smith,2010-03-12,,Junior,24.3
+Chi,Hoang,2007-12-31,,,16.5
+Nam,Vo,2009-04-28,Truong THPT Le Loi,,4.2
+Nam,Jackson,,Truong THPT Nguyen Trai,Senior,38.5
+Ivy,Duong,2010-11-08,,,39.6
+Linh,Williams,2009-12-25,Truong THPT Nguyen Du,Sophomore,21.4
+Linh,Gonzalez,2009-09-29,,Sophomore,20.5
+Tina,Hernandez,2008-08-30,Truong THPT Le Quy Don,,38.5
+Jack,Martinez,2009-05-05,Truong THPT Nguyen Du,Senior,38.9
+Emma,Gonzalez,2010-12-23,Truong THPT Hai Ba Trung,,0.8
+Olivia,Taylor,2008-08-28,Truong THPT Vo Thi Sau,11,44.0
+Hoa,Miller,,Truong THPT Quang Trung,12,36.0
+Frank,Do,2008-03-01,MIT,10,6.9
+Grace,Phan,,University of Chicago,Sophomore,30.3
+Minh,Do,2009-11-19,Truong THPT Ly Tu Trong,Senior,24.4
+Rachel,Miller,2009-10-01,Truong THPT Le Quy Don,,10.7
+Henry,Bui,2011-02-18,Stanford University,,22.3
+Noah,Dang,2009-07-01,Truong THPT Ly Tu Trong,Sophomore,41.6
+Noah,Phung,2010-07-01,MIT,Freshman,27.4
+Xuan,Anderson,2008-08-13,MIT,Sophomore,37.8
+Liam,Martin,2008-11-20,Truong THPT Nguyen Hue,,9.7
+Emma,Miller,,Harvard University,Senior,37.6
+Chi,Smith,2010-08-30,University of Chicago,,21.2
+Uyen,Martin,2009-02-25,Columbia University,,10.1
+Em,Dong,2007-11-09,Truong THPT Nguyen Trai,11,33.7
+Tina,Vu,,Truong THPT Nguyen Du,,1.9
+Frank,Jones,2011-06-30,University of California,Sophomore,26.5
+Thu,Lopez,2011-07-11,Truong THPT Le Quy Don,10,15.1
+Minh,Bui,2008-01-31,,Junior,10.4
+Kelly,Do,2010-06-04,Truong THPT Le Quy Don,Sophomore,30.6
+Paul,Hernandez,2011-01-13,Stanford University,10,45.7
+Nam,Dang,2008-06-09,Truong THPT Ly Tu Trong,11,1.2
+Phong,Taylor,2011-09-29,,Junior,26.7
+Khanh,Dang,2009-04-26,Northwestern University,,1.8
+Ivy,Bui,,Princeton University,Freshman,19.3
+Khanh,Dang,2010-03-23,Northwestern University,,18.6
+Em,Ho,2011-08-03,,,10.3
+Khanh,Le,2008-12-15,,,14.1
+Uyen,Thomas,2009-05-29,Columbia University,,29.3
+Thu,Miller,,,,41.4
+Duc,Le,2008-05-29,University of California,,38.1
+Emma,Taylor,2009-04-29,,Junior,44.1
+Uyen,Phung,2008-11-05,Harvard University,11,9.7
+An,Martinez,,Truong THPT Vo Thi Sau,Freshman,12.1
+Oanh,Tran,2009-09-29,Truong THPT Ly Tu Trong,9,36.3
+Binh,Ho,2011-09-23,,,45.8
+Linh,Ho,,Duke University,,19.0
+Thu,Wilson,2010-01-26,,12,13.8
+Noah,Ly,2009-07-28,Duke University,Senior,1.9
+Quang,Davis,2008-12-27,Truong THPT Hai Ba Trung,11,22.8
+Xuan,Jones,,Truong THPT Le Loi,Freshman,17.3
+Linh,Vu,2010-02-17,Princeton University,11,24.7
+Quang,Pham,2009-03-08,Truong THPT Nguyen Trai,Freshman,42.7
+Brian,Moore,2009-12-01,Columbia University,,7.3
+Quinn,Ngo,2011-07-29,Truong THPT Quang Trung,,31.6
+Sam,Vu,2009-07-24,,,16.1
+Oanh,Miller,,,,11.7
+Linh,Jackson,2010-06-09,,12,42.8
+Henry,Dang,2008-06-18,Truong THPT Le Quy Don,Sophomore,34.4
+Oanh,Tran,2011-09-07,,11,7.2
+Tina,Miller,2008-06-03,Truong THPT Tran Phu,Senior,4.7
+Noah,Dong,2009-12-12,Harvard University,,15.4
+David,Duong,,Columbia University,9,36.9
+Quang,Rodriguez,2009-12-19,Truong THPT Nguyen Trai,,25.8
+Brian,Thomas,2009-06-27,Truong THPT Le Quy Don,12,48.8
+Brian,Hernandez,2011-09-16,Columbia University,,0.8
+Maya,Truong,,Yale University,Sophomore,35.9
+Duc,Hoang,,,12,33.6
+Frank,Martinez,2010-03-15,Truong THPT Nguyen Hue,,8.3
+Duc,Anderson,2010-12-18,Harvard University,,18.5
+Xuan,Duong,2010-03-02,,11,44.7
+Olivia,Phan,2008-08-13,,,4.3
+An,Nguyen,2011-02-28,,Sophomore,39.9
+Viet,Le,2010-06-13,Truong THPT Quang Trung,,48.6
+Nam,Anderson,2008-02-25,Truong THPT Le Quy Don,11,22.6
+An,Moore,,,Senior,31.6
+Henry,Miller,,Truong THPT Nguyen Hue,9,40.7
+Oanh,Phung,2008-07-30,Harvard University,9,17.7
+Liam,Ngo,2009-08-31,,,34.6
+Alex,Miller,2008-04-17,Northwestern University,Junior,45.7
+Maya,Do,,,,48.8
+Chi,Bui,2010-07-19,Truong THPT Nguyen Hue,,11.1
+Oanh,Jones,2010-12-09,,11,25.6
+Chi,Moore,2009-12-20,MIT,,19.2
+Alex,Dinh,2010-12-27,,Junior,46.3
+Em,Wilson,2007-12-29,Truong THPT Nguyen Du,Freshman,14.2
+Viet,Gonzalez,2011-02-01,Truong THPT Le Quy Don,,31.9
+Emma,Miller,,,12,21.8
+Binh,Lopez,2009-10-14,,,46.2
+Giang,Ngo,2009-04-12,,Sophomore,27.1
+Noah,Tran,2008-01-29,,11,9.9
+Noah,Dong,,Stanford University,10,35.4
+Liam,Nguyen,2008-03-14,University of Chicago,Sophomore,29.2
+Phong,Anderson,2007-11-12,University of Chicago,Freshman,45.0
+Sang,Jones,2010-02-26,Yale University,Senior,37.9
+Nam,Brown,2010-09-28,,12,28.7
+Xuan,Dang,2008-09-22,Truong THPT Quang Trung,12,39.7
+Nam,Ly,2010-01-09,Northwestern University,Sophomore,5.7
+Quinn,Ngo,2011-02-09,,12,7.6
+Emma,Martinez,,Stanford University,,41.3
+Grace,Anderson,2009-04-05,,,42.6
+Nam,Phan,2008-12-12,,,33.2
+Binh,Tran,2010-05-22,Harvard University,9,0.3
+Em,Vu,2008-06-23,Truong THPT Nguyen Du,Senior,35.2
+Xuan,Taylor,2010-05-14,Truong THPT Vo Thi Sau,10,20.2
+Kelly,Hoang,,Truong THPT Hai Ba Trung,,28.0
+Grace,Rodriguez,2010-07-14,Columbia University,10,34.4
+Oanh,Bui,2011-04-17,Truong THPT Nguyen Hue,,2.4
+Sam,Brown,2009-03-03,Truong THPT Nguyen Hue,,37.3
+An,Davis,2009-11-09,,,12.8
+David,Rodriguez,2008-09-11,,Junior,36.6
+Olivia,Lopez,2010-07-01,Yale University,9,6.9
+Viet,Jackson,2008-04-27,Duke University,Sophomore,45.6
+Kelly,Gonzalez,2010-02-11,Truong THPT Le Loi,,49.1
+David,Brown,2008-06-01,,,33.3
+Quang,Jones,2008-06-14,Princeton University,,28.5
+Brian,Vu,,,,26.6
+Ivy,Thomas,2010-12-01,Truong THPT Le Quy Don,11,29.2
+Quinn,Martinez,2010-02-18,Princeton University,,14.2
+Giang,Dinh,2010-06-12,Truong THPT Tran Phu,12,38.4
+Linh,Martinez,2009-09-14,Harvard University,,25.1
+Duc,Bui,,Truong THPT Quang Trung,,17.2
+An,Martinez,2009-01-11,,,43.0
+Brian,Martin,2010-12-26,,Sophomore,24.4
+Catherine,Gonzalez,2010-07-16,Truong THPT Vo Thi Sau,,42.8
+Quinn,Tran,,Truong THPT Nguyen Trai,,23.1
+Thu,Phung,2009-12-23,Truong THPT Nguyen Hue,,23.5
+Xuan,Bui,2011-05-23,Truong THPT Ly Tu Trong,Junior,23.3
+Minh,Ly,2009-03-28,,12,30.7
+Paul,Phung,2009-12-12,Stanford University,Senior,34.9
+Sang,Tran,2008-05-15,University of Chicago,,4.9
+Frank,Williams,2011-09-11,,Freshman,48.2
+Brian,Davis,,,Junior,41.9
+Ivy,Davis,2011-05-01,,,1.2
+An,Vu,2009-03-17,Truong THPT Nguyen Hue,,34.2
+Yen,Le,,University of California,,29.8
+David,Lopez,2010-03-14,Truong THPT Vo Thi Sau,Freshman,3.7
+Brian,Rodriguez,,Northwestern University,Freshman,1.2
+Rachel,Vo,2008-03-16,Truong THPT Le Loi,Sophomore,24.4
+Oanh,Dang,2010-01-01,Truong THPT Quang Trung,9,30.8
+Chi,Moore,,Truong THPT Hai Ba Trung,9,45.5
+Catherine,Hernandez,2009-08-11,,Sophomore,4.5
+Giang,Nguyen,,MIT,Freshman,43.1
+Sang,Brown,,MIT,,29.0
+Kelly,Wilson,2011-08-01,Princeton University,Junior,14.0
+Henry,Do,2011-01-15,Truong THPT Ly Tu Trong,10,44.0
+Henry,Dong,2010-09-07,University of Chicago,12,17.5
+Nam,Le,2008-06-23,University of Chicago,,45.0
+Oanh,Le,2009-08-30,Stanford University,9,31.0
+Kelly,Ly,2008-07-02,MIT,,27.4
+Henry,Vo,2009-11-20,Northwestern University,,44.9
+Sam,Moore,,Northwestern University,11,3.2
+Phong,Jones,,Columbia University,,37.4
+Chi,Ho,2010-06-10,Truong THPT Vo Thi Sau,Junior,21.8
+Sang,Vo,2010-07-25,Yale University,,0.4
+Nam,Gonzalez,,Truong THPT Le Quy Don,,11.4
+Xuan,Le,,,,27.3
+Duc,Miller,2009-01-23,,,16.5
+Binh,Hernandez,2008-01-01,Truong THPT Ly Tu Trong,,30.1
+Ivy,Jackson,2009-08-30,Truong THPT Hai Ba Trung,Freshman,43.8
+Thu,Davis,2009-11-08,Stanford University,Senior,38.4
+Grace,Dong,2010-04-21,Princeton University,,31.1
+Viet,Brown,2009-08-15,Columbia University,,30.0
+Duc,Taylor,2010-04-28,Truong THPT Le Quy Don,,38.6
+Kelly,Hoang,2010-03-22,University of Chicago,,25.7
+Nam,Garcia,2009-01-28,Truong THPT Ly Tu Trong,,48.8
+Nam,Ly,2011-02-15,Truong THPT Le Quy Don,,27.8
+Viet,Dang,2010-03-31,,10,38.5
+Noah,Ho,2009-04-26,Princeton University,12,23.2
+Olivia,Vo,2010-05-07,Truong THPT Tran Phu,Junior,25.1
+Giang,Do,,Duke University,,35.6
+Brian,Dang,2011-01-14,Truong THPT Hai Ba Trung,12,38.4
+Minh,Vo,2009-08-15,Harvard University,,7.2
+Uyen,Tran,,Truong THPT Vo Thi Sau,Junior,15.2
+Khanh,Miller,2009-03-06,Northwestern University,,41.4
+Quinn,Taylor,2010-10-30,Truong THPT Le Quy Don,,24.1
+Ivy,Dang,2011-05-06,Yale University,12,10.5
+Paul,Taylor,2010-04-03,Princeton University,,17.0
+Catherine,Phan,2011-02-27,Stanford University,11,21.2
+Giang,Anderson,,Truong THPT Hai Ba Trung,Freshman,1.1
+Thu,Lopez,2009-07-18,Princeton University,,26.8
+Brian,Davis,2009-08-26,,Sophomore,25.8
+Binh,Rodriguez,2010-03-15,Truong THPT Quang Trung,,30.7
+Brian,Pham,2011-03-09,Truong THPT Vo Thi Sau,,10.2
+Sang,Dinh,2009-09-22,,,33.7
+Jack,Phung,2009-11-03,Columbia University,12,49.3
+Giang,Vo,2011-10-29,Truong THPT Hai Ba Trung,,24.4
+Yen,Garcia,,Harvard University,Junior,4.4
+Binh,Dang,2009-09-06,Truong THPT Le Loi,10,32.4
+Emma,Taylor,,Truong THPT Nguyen Du,,36.6
+Noah,Vu,2011-01-15,,10,29.1
+Uyen,Lopez,2008-07-03,Columbia University,12,40.1
+Emma,Duong,2009-08-20,,Junior,35.1
+David,Vo,2009-08-09,Truong THPT Nguyen Hue,Sophomore,18.6
+Sang,Vu,2008-05-06,Princeton University,Sophomore,16.6
+Tina,Hernandez,2008-03-10,Truong THPT Quang Trung,11,7.1
+Giang,Le,2010-09-22,,,21.9
+Kelly,Tran,,Truong THPT Quang Trung,12,25.7
+Khanh,Garcia,2009-11-15,Truong THPT Ly Tu Trong,,35.5
+Minh,Do,2008-02-29,Harvard University,Freshman,41.2
+Jack,Hoang,2010-06-07,Truong THPT Le Quy Don,,30.8
+Em,Anderson,2010-03-28,Truong THPT Hai Ba Trung,12,25.9
+Alex,Dang,2010-03-17,Truong THPT Ly Tu Trong,Freshman,10.0
+Thu,Ngo,2009-10-06,,10,25.4
+Khanh,Martinez,2011-08-22,Truong THPT Tran Phu,11,47.1
+Frank,Do,2009-01-28,Truong THPT Hai Ba Trung,Sophomore,27.7
+Binh,Garcia,2010-05-15,Stanford University,,25.7
+Yen,Vu,2009-06-18,,,4.7
+Binh,Phung,,Truong THPT Hai Ba Trung,10,41.2
+Thu,Martin,2010-10-05,Yale University,,9.8
+Catherine,Martinez,2008-03-23,,,5.2
+Maya,Dang,,Truong THPT Le Loi,,16.5
+Paul,Garcia,2009-12-29,Truong THPT Nguyen Du,10,2.4
+Ivy,Tran,2011-09-13,,9,35.8
+Chi,Vo,2011-01-19,,Senior,34.6
+Olivia,Martin,2010-04-03,Harvard University,,49.0
+Liam,Thomas,2009-06-21,Northwestern University,12,4.9
+Henry,Vu,2008-01-05,,Junior,41.6
+Quang,Dang,2011-04-30,Northwestern University,,35.3
+Ivy,Jackson,2008-08-20,Truong THPT Vo Thi Sau,,18.9
+Linh,Moore,,Truong THPT Vo Thi Sau,Sophomore,6.7
+Quinn,Davis,,,Sophomore,18.8
+Hoa,Tran,2010-01-03,Truong THPT Nguyen Trai,,41.4
+Yen,Lopez,2011-07-29,Columbia University,Senior,7.1
+Thu,Smith,2008-08-10,,12,31.3
+Khanh,Phung,2009-01-05,Truong THPT Tran Phu,10,23.3
+Yen,Ho,,Truong THPT Ly Tu Trong,11,27.7
+Grace,Davis,2008-05-30,Yale University,,37.4
+Minh,Wilson,2010-11-04,,,28.8
+Noah,Davis,,,Junior,30.6
+An,Hernandez,2009-10-14,,Sophomore,20.3
+Quinn,Smith,2008-03-16,University of Chicago,Senior,46.1
+Yen,Dang,2010-05-12,Truong THPT Nguyen Trai,10,18.9
+Brian,Le,2007-12-01,Truong THPT Quang Trung,,10.9
+Emma,Ngo,2009-10-20,,Freshman,22.1
+Sang,Le,2009-10-25,,,41.9
+Xuan,Le,,Columbia University,Senior,19.9
+Yen,Ngo,2009-04-23,MIT,Sophomore,2.3
+Quang,Phung,2009-04-12,Truong THPT Le Loi,9,30.7
+Henry,Pham,2011-09-27,Stanford University,Senior,42.5
+Sam,Dang,2011-05-13,MIT,10,35.0
+Henry,Lopez,2009-02-23,Truong THPT Nguyen Trai,Junior,7.9
+Nam,Nguyen,2010-12-30,Truong THPT Hai Ba Trung,,2.6
+Minh,Taylor,2011-05-05,Princeton University,10,12.9
+Khanh,Rodriguez,2010-10-17,Northwestern University,,49.7
+Yen,Le,2009-06-06,University of Chicago,Junior,33.1
+Maya,Dang,2008-03-14,Stanford University,Freshman,2.6
+Minh,Johnson,2008-09-30,Princeton University,,33.6
+Oanh,Dinh,2011-07-31,,Senior,16.5
+Sang,Jones,2011-03-10,,Sophomore,4.3
+Phong,Lopez,2008-10-07,Princeton University,12,8.5
+Jack,Thomas,2008-11-22,Duke University,Junior,24.4
+Paul,Dong,2009-01-15,,12,11.3
+David,Brown,2008-03-29,Truong THPT Vo Thi Sau,11,18.7
+Binh,Pham,2009-09-10,Northwestern University,Sophomore,7.3
+Alex,Martin,2007-12-17,Truong THPT Quang Trung,11,14.3
+Thu,Taylor,2011-06-14,,,35.4
+Grace,Gonzalez,2011-03-16,Truong THPT Le Quy Don,10,26.4
+Paul,Garcia,2008-12-20,Truong THPT Vo Thi Sau,9,21.8
+Xuan,Brown,,Stanford University,,37.3
+Sang,Moore,2009-04-15,,,48.5
+David,Hoang,2011-01-26,,,21.0
+Giang,Johnson,2011-05-21,Truong THPT Nguyen Du,,41.8
+Liam,Vo,2011-03-08,Princeton University,,37.4
+Minh,Brown,2009-02-05,Princeton University,10,42.8
+Xuan,Hernandez,2009-11-09,Truong THPT Le Loi,,23.8
+Maya,Taylor,2010-05-07,,10,38.6
+Brian,Thomas,2008-09-23,Truong THPT Hai Ba Trung,,48.6
+Noah,Hoang,,Truong THPT Quang Trung,,32.7
+Grace,Pham,2010-11-20,Harvard University,,41.4
+Henry,Williams,2009-03-27,Truong THPT Quang Trung,,33.8
+Brian,Jackson,2009-03-07,Princeton University,,30.5
+Sam,Wilson,2008-03-18,Truong THPT Nguyen Du,10,3.8
+Sang,Lopez,,University of California,10,33.0
+Frank,Ly,2010-01-08,,Senior,21.8
+Uyen,Taylor,2008-10-31,Truong THPT Vo Thi Sau,,5.1
+Emma,Wilson,2011-07-30,Truong THPT Nguyen Trai,,2.0
+Giang,Dang,2011-10-23,Truong THPT Vo Thi Sau,Freshman,1.1
+Noah,Dong,2011-08-21,,11,15.0
+Khanh,Williams,,Truong THPT Vo Thi Sau,,24.5
+Oanh,Dang,2011-01-26,University of California,12,37.7
+Quinn,Martin,2011-03-01,,9,33.3
+Yen,Martinez,2007-11-22,Truong THPT Nguyen Du,Freshman,15.8
+Binh,Brown,2009-07-16,University of Chicago,,48.9
+Quinn,Truong,2010-09-01,Truong THPT Le Loi,,44.3
+Tina,Martin,2009-07-22,Truong THPT Tran Phu,,0.2
+Chi,Ngo,2009-09-30,,Junior,20.5
+Kelly,Vo,,Yale University,,8.6
+Kelly,Dong,,,,39.2
+Quang,Ngo,2008-12-28,Princeton University,Sophomore,47.5
+Viet,Jackson,2010-07-01,Northwestern University,,26.1
+Quang,Vu,,Columbia University,,28.5
+Xuan,Williams,2008-08-07,Truong THPT Le Loi,Sophomore,13.5
+Sam,Smith,2008-10-05,,,25.2
+Giang,Brown,2008-06-24,,,29.6
+Noah,Hernandez,2010-02-24,MIT,9,27.5
+Maya,Brown,2010-07-17,Truong THPT Quang Trung,,24.7
+An,Martinez,2010-02-09,,Senior,24.9
+Phong,Jackson,2010-06-11,,9,40.2
+David,Truong,2009-05-26,Princeton University,,23.9
+Sam,Truong,,,,49.2
+Frank,Phan,2009-02-20,,Junior,9.4
+Uyen,Dang,2008-04-22,University of California,Senior,26.0
+Rachel,Truong,,,,13.2
+Oanh,Wilson,2009-04-11,,Senior,48.7
+Tina,Moore,2010-05-27,Harvard University,,19.2
+Ivy,Le,2008-09-10,Stanford University,Sophomore,6.7
+Xuan,Anderson,2009-06-21,Truong THPT Quang Trung,Freshman,28.9
+Uyen,Vu,2009-05-17,Truong THPT Ly Tu Trong,12,31.5
+Binh,Rodriguez,2011-05-19,Truong THPT Nguyen Hue,11,27.9
+Kelly,Duong,2009-08-27,Yale University,9,46.7
+Duc,Lopez,,,Junior,19.6
+Thu,Tran,,Truong THPT Le Loi,11,39.2
+Frank,Taylor,,Stanford University,12,33.7
+Uyen,Duong,2008-04-02,University of California,,22.3
+Xuan,Brown,2010-11-08,Truong THPT Le Quy Don,Freshman,37.0
+Duc,Miller,,,,38.7
+Henry,Truong,,,11,6.7
+Khanh,Hernandez,2008-08-18,Columbia University,9,35.1
+An,Dinh,,Truong THPT Vo Thi Sau,,2.4
+Oanh,Hoang,2009-05-11,Truong THPT Vo Thi Sau,10,6.1
+Frank,Vu,2010-08-06,,Senior,27.7
+Ivy,Johnson,2011-04-25,Truong THPT Quang Trung,,33.7
+Uyen,Tran,2009-10-23,University of Chicago,,32.7
+Olivia,Jones,2009-09-09,Northwestern University,10,5.8
+Henry,Jones,2009-10-01,,,35.4
+Maya,Truong,2009-06-21,Truong THPT Le Quy Don,,31.3
+Quang,Ngo,2010-06-12,,,46.1
+Thu,Jackson,,Columbia University,,22.8
+Yen,Ngo,2009-04-11,,,23.3
+Jack,Le,2009-08-20,Columbia University,11,38.5
+Paul,Moore,2008-07-09,Truong THPT Le Quy Don,Freshman,43.8
+Catherine,Tran,2010-05-01,Truong THPT Quang Trung,,47.4
+Noah,Dang,2010-05-31,Truong THPT Vo Thi Sau,Senior,28.1
+Frank,Truong,2011-05-15,,,46.4
+Alex,Davis,2009-08-27,Princeton University,Sophomore,18.7
+Henry,Duong,2008-11-26,Princeton University,,31.9
+Linh,Pham,,Truong THPT Le Quy Don,Junior,20.4
+Minh,Dong,2009-06-08,Yale University,,31.7
+Jack,Phan,,Duke University,Junior,31.4
+Binh,Gonzalez,2011-08-24,,Junior,9.6
+Yen,Truong,2009-04-15,Stanford University,Sophomore,21.5
+Em,Martinez,2011-02-09,,,30.5
+Minh,Brown,2008-10-15,Northwestern University,9,39.8
+An,Taylor,2011-05-30,Harvard University,,2.7
+Sang,Vo,2010-08-23,University of Chicago,,4.6
+Grace,Lopez,,Truong THPT Nguyen Trai,9,15.1
+Phong,Dong,2009-12-25,Truong THPT Nguyen Hue,,23.6
+Brian,Anderson,2008-09-01,,,24.1
+Henry,Truong,,Princeton University,Sophomore,8.6
+Phong,Bui,2010-11-05,,,25.0
+Xuan,Phan,2008-01-15,Truong THPT Le Quy Don,9,43.8
+Sang,Wilson,,Northwestern University,Sophomore,42.9
+Binh,Pham,2009-03-23,MIT,Senior,25.1
+Sang,Smith,,Northwestern University,Sophomore,17.8
+David,Thomas,2010-03-04,,9,41.9
+Giang,Rodriguez,2007-12-11,Truong THPT Tran Phu,Freshman,7.0
+Henry,Lopez,2011-01-04,Stanford University,Junior,7.4
+Quinn,Miller,,Harvard University,,41.0
+Duc,Gonzalez,2008-12-08,Truong THPT Nguyen Hue,,21.6
+Brian,Thomas,,Truong THPT Nguyen Du,10,9.4
+Duc,Anderson,2010-06-16,Truong THPT Ly Tu Trong,,45.2
+Frank,Vu,2010-01-09,Duke University,12,11.9
+Grace,Miller,2008-06-25,Truong THPT Hai Ba Trung,,35.6
+Henry,Gonzalez,,Stanford University,Freshman,5.1
+David,Smith,2008-04-10,Duke University,,16.7
+Nam,Hernandez,2008-11-18,Truong THPT Ly Tu Trong,Senior,33.3
+Jack,Duong,2010-01-19,MIT,Freshman,19.7
+Chi,Phan,2010-06-26,Truong THPT Quang Trung,,21.3
+Kelly,Wilson,2008-03-02,University of California,Senior,21.8
+Minh,Dang,2009-08-29,,10,10.4
+Xuan,Le,2009-04-13,,,42.2
+Catherine,Davis,2010-05-02,,9,17.7
+Binh,Jackson,2009-05-27,,Freshman,47.3
+Phong,Vo,2010-09-07,Northwestern University,9,12.4
+Henry,Nguyen,,,Sophomore,28.4
+Giang,Rodriguez,,Columbia University,12,48.7
+Sam,Ngo,2008-11-16,MIT,Junior,36.1
+Em,Pham,2011-03-25,Columbia University,9,12.2
+Em,Jackson,,MIT,,46.0
+Maya,Dong,2009-08-28,,11,27.1
+Sang,Phung,2010-01-26,Princeton University,Senior,35.6
+Xuan,Vu,,Truong THPT Nguyen Hue,,2.9
+Minh,Lopez,2010-07-01,Truong THPT Le Loi,Sophomore,45.3
+Phong,Wilson,2011-01-24,,Sophomore,39.5
+Phong,Phung,2009-01-27,Stanford University,,19.8
+Kelly,Garcia,,Truong THPT Ly Tu Trong,12,5.1
+Linh,Rodriguez,2010-08-18,Truong THPT Quang Trung,11,28.8
+Oanh,Lopez,2010-08-19,,Sophomore,13.0
+Brian,Ho,2010-08-22,,,12.3
+Tina,Wilson,2008-03-10,,,29.2
+Quang,Williams,2008-09-25,Truong THPT Vo Thi Sau,,34.8
+Henry,Ly,,Truong THPT Nguyen Du,11,42.3
+Alex,Ly,2008-05-23,Truong THPT Nguyen Hue,10,47.0
+Tina,Le,2009-10-25,Northwestern University,,27.2
+Duc,Lopez,2010-07-20,Harvard University,,24.2
+Liam,Rodriguez,,Truong THPT Nguyen Du,,22.9
+Minh,Pham,2009-10-28,,,6.7
+Noah,Jones,2008-01-13,Princeton University,Junior,24.9
+Tina,Ly,2009-06-05,Princeton University,Sophomore,46.9
+Kelly,Dang,2010-09-10,Truong THPT Vo Thi Sau,,41.9
+Alex,Williams,2008-08-15,MIT,,14.3
+Noah,Dinh,2008-10-11,Truong THPT Nguyen Hue,10,33.9
+Minh,Le,,,Junior,34.2
+Uyen,Smith,2007-12-20,Truong THPT Nguyen Trai,,16.1
+Ivy,Do,2010-01-12,,,15.8
+Thu,Brown,,,Sophomore,1.4
+Maya,Pham,,,10,37.4
+Giang,Nguyen,2008-12-11,Truong THPT Nguyen Trai,,1.7
+Rachel,Jackson,2007-11-21,Truong THPT Nguyen Hue,,26.1
+Oanh,Garcia,,,Junior,0.0
+Nam,Thomas,2011-09-24,,Senior,8.2
+Frank,Wilson,2009-02-16,Truong THPT Ly Tu Trong,,40.2
+Viet,Dang,,Harvard University,,35.4
+Ivy,Phan,2010-11-21,Truong THPT Nguyen Trai,,13.8
+Hoa,Anderson,2008-02-17,,Sophomore,43.2
+Uyen,Vo,2010-09-20,,,20.1
+Yen,Phung,2010-11-24,,,19.9
+Binh,Nguyen,,Truong THPT Nguyen Du,,30.0
+Frank,Smith,,Northwestern University,11,43.3
+Noah,Ly,2011-02-22,Truong THPT Le Loi,,21.7
+Quinn,Ly,2008-04-15,University of Chicago,,19.8
+Alex,Jones,2007-12-13,,Freshman,1.6
+Giang,Rodriguez,2009-02-17,,Sophomore,34.6
+Alex,Smith,,Truong THPT Le Quy Don,,37.3
+Olivia,Dang,2007-12-17,,,46.1
+Liam,Hernandez,,University of California,,11.3
+Noah,Rodriguez,2010-06-12,Truong THPT Le Quy Don,Sophomore,28.5
+Binh,Thomas,2008-04-06,Truong THPT Le Quy Don,Senior,33.7
+Henry,Ngo,2008-04-17,Princeton University,10,39.8
+Henry,Dong,2007-11-14,,,25.5
+Phong,Williams,2010-02-04,Truong THPT Le Quy Don,,4.5
+Xuan,Vo,2010-03-23,University of California,Sophomore,22.4
+Xuan,Phung,2008-11-24,,,8.5
+Maya,Wilson,2010-03-03,,9,35.3
+Quang,Le,,Columbia University,9,37.5
+Hoa,Taylor,2008-04-29,Truong THPT Nguyen Trai,10,25.4
+Khanh,Pham,2008-11-10,MIT,,19.9
+Noah,Gonzalez,2008-07-15,Truong THPT Nguyen Hue,10,49.8
+Quang,Pham,,,Sophomore,11.9
+Tina,Davis,2010-01-24,,Junior,36.8
+Hoa,Smith,2011-09-10,Truong THPT Vo Thi Sau,11,5.1
+Duc,Lopez,,Columbia University,,5.8
+David,Lopez,2008-06-02,MIT,Sophomore,36.2
+Phong,Dinh,2008-11-20,,12,7.9
+Brian,Martinez,,,,25.7
+An,Johnson,,,,26.9
+Quang,Moore,2009-12-23,Truong THPT Vo Thi Sau,11,46.6
+Alex,Lopez,2008-04-21,MIT,12,8.9
+Xuan,Martin,2010-06-03,,,44.6
+Catherine,Tran,2009-04-28,Northwestern University,,10.3
+Frank,Duong,2011-07-17,MIT,,38.3
+Em,Jackson,2008-09-18,,,3.5
+Oanh,Martin,,Truong THPT Nguyen Du,10,29.8
+Ivy,Miller,2008-05-11,Truong THPT Nguyen Du,Sophomore,8.5
+Quang,Davis,,Stanford University,,31.3
+Thu,Garcia,,Truong THPT Ly Tu Trong,,38.1
+Xuan,Martin,2008-09-30,,Junior,2.8
+Xuan,Phan,2010-09-14,Northwestern University,10,39.4
+Jack,Wilson,2011-04-02,,Junior,10.6
+Rachel,Moore,2008-02-05,MIT,,9.5
+Minh,Martinez,2008-05-03,,11,32.5
+Noah,Vo,2011-06-04,Truong THPT Le Quy Don,Freshman,7.1
+Brian,Hernandez,,,Senior,29.2
+Hoa,Martin,2009-06-26,Truong THPT Nguyen Du,Junior,18.3
+Hoa,Vu,2008-02-06,,11,29.0
+Viet,Ngo,2009-05-20,Truong THPT Tran Phu,Junior,12.7
+Paul,Anderson,2007-12-01,Harvard University,10,13.7
+Tina,Dang,,Truong THPT Nguyen Trai,10,3.8
+An,Moore,2010-10-07,Northwestern University,Freshman,29.2
+Xuan,Dong,2008-01-04,Northwestern University,,29.2
+Nam,Dang,2008-02-13,Truong THPT Nguyen Hue,9,35.5
+Ivy,Lopez,2011-01-21,Columbia University,Junior,8.6
+Yen,Dinh,,Truong THPT Le Quy Don,,48.1
+Liam,Phung,2010-05-06,MIT,12,14.7
+Thu,Martin,,Truong THPT Nguyen Trai,Junior,17.0
+Giang,Duong,2008-04-29,Stanford University,12,3.5
+Linh,Anderson,,Duke University,,9.1
+Quang,Lopez,,,,43.8
+Uyen,Ly,2010-04-16,Truong THPT Tran Phu,10,32.6
+Jack,Martin,2009-08-20,Truong THPT Nguyen Trai,11,22.2
+David,Vo,2009-04-17,,Freshman,2.9
+Chi,Ly,2011-01-16,University of California,,39.9
+Uyen,Moore,2009-10-29,,12,15.4
+Sam,Nguyen,2009-03-21,Stanford University,10,20.9
+Duc,Nguyen,2009-05-11,Truong THPT Le Loi,,27.6
+Brian,Taylor,2009-12-30,Truong THPT Le Quy Don,10,10.4
+Jack,Le,2009-08-12,Truong THPT Hai Ba Trung,,5.9
+Sang,Ngo,2008-01-30,,10,17.3
+David,Rodriguez,2010-07-07,Truong THPT Le Quy Don,,27.8
+Binh,Hernandez,2010-04-22,,,36.3
+Henry,Johnson,,,Senior,50.0
+Yen,Brown,2009-05-25,Princeton University,11,21.2
+Giang,Phung,2010-06-04,Truong THPT Le Quy Don,Freshman,24.2
+Chi,Vu,,,,26.3
+Sam,Anderson,2009-11-05,Truong THPT Nguyen Trai,10,3.8
+Em,Dang,,Truong THPT Vo Thi Sau,12,24.9
+Olivia,Dang,2010-11-16,Princeton University,Sophomore,23.6
+Duc,Nguyen,2010-06-17,Truong THPT Tran Phu,,48.9
+Quang,Jones,,Truong THPT Ly Tu Trong,,49.5
+Viet,Duong,2010-10-30,,,26.4
+Brian,Le,2009-03-09,Northwestern University,,14.6
+Quinn,Johnson,2011-06-06,Stanford University,11,27.0
+Duc,Martin,2011-07-30,Truong THPT Hai Ba Trung,Sophomore,31.7
+Oanh,Martin,2010-06-30,Truong THPT Le Loi,Junior,20.6
+Grace,Dinh,2009-11-29,Truong THPT Nguyen Hue,,13.6
+Ivy,Martinez,2010-05-14,Northwestern University,11,22.2
+Alex,Bui,,Truong THPT Vo Thi Sau,9,26.0
+Minh,Anderson,,Truong THPT Nguyen Hue,,6.5
+Uyen,Brown,2008-03-27,Truong THPT Ly Tu Trong,10,19.1
+Phong,Tran,2010-06-06,Truong THPT Hai Ba Trung,11,15.1
+Tina,Phung,,Truong THPT Le Loi,,8.3
+Thu,Ngo,2011-01-17,Truong THPT Nguyen Trai,9,40.2
+Emma,Taylor,2009-09-21,Yale University,Junior,41.2
+Rachel,Lopez,2009-03-26,,11,43.5
+Kelly,Le,2011-08-29,Stanford University,,5.7
+Maya,Ho,2011-09-18,Truong THPT Le Loi,9,24.0
+Brian,Wilson,2009-02-15,,12,30.6
+Duc,Dinh,2009-12-26,,,27.8
+Minh,Miller,2008-09-18,Truong THPT Vo Thi Sau,Junior,12.9
+Emma,Dinh,2009-01-29,,,38.8
+Binh,Phan,2010-03-18,,,2.3
+Thu,Le,2011-10-10,,,7.2
+Oanh,Miller,2007-11-21,Truong THPT Nguyen Du,10,49.9
+Olivia,Ngo,2009-06-30,University of California,Junior,15.2
+Hoa,Thomas,2008-11-07,University of California,,41.8
+Binh,Dang,2007-12-16,Truong THPT Ly Tu Trong,,24.9
+Sang,Gonzalez,2011-07-26,Truong THPT Nguyen Du,,0.4
+Alex,Phung,2010-05-05,Truong THPT Nguyen Trai,Freshman,28.1
+Olivia,Hernandez,2011-08-03,,,38.3
+Grace,Le,,,Senior,34.6
+Maya,Moore,2011-10-06,Truong THPT Nguyen Trai,Sophomore,20.1
+Grace,Dinh,2010-01-03,Truong THPT Vo Thi Sau,Sophomore,12.4
+Jack,Dong,2009-02-16,Truong THPT Le Loi,11,14.7
+Minh,Pham,,Truong THPT Quang Trung,Freshman,15.7
+Rachel,Phan,,Stanford University,Senior,29.9
+Quang,Gonzalez,2008-07-29,Princeton University,Sophomore,10.3
+Liam,Smith,2011-10-21,Truong THPT Nguyen Hue,,27.1
+Sang,Duong,2011-07-13,Stanford University,11,47.7
+Grace,Smith,2010-09-22,,9,27.9
+Quinn,Hernandez,,Truong THPT Tran Phu,Junior,35.7
+Sam,Gonzalez,2010-07-21,Truong THPT Nguyen Du,,15.0
+Yen,Wilson,2009-07-15,Harvard University,10,36.0
+Henry,Jackson,2011-04-14,Stanford University,12,8.6
+Alex,Martin,2010-05-28,Duke University,9,40.0
+Yen,Hernandez,2010-04-26,Truong THPT Nguyen Hue,Freshman,20.6
+Oanh,Wilson,2011-09-04,Truong THPT Vo Thi Sau,Junior,44.6
+Rachel,Hoang,2009-06-23,Truong THPT Nguyen Du,10,11.4
+Frank,Vo,2009-09-08,,11,19.5
+Nam,Hernandez,2009-04-23,Truong THPT Le Quy Don,11,37.8
+Noah,Anderson,2010-08-25,,,16.8
+An,Gonzalez,,,Freshman,23.1
+Linh,Martinez,,Truong THPT Tran Phu,Senior,5.6
+Ivy,Wilson,2010-11-10,Truong THPT Vo Thi Sau,,23.9
+Jack,Truong,,Northwestern University,Senior,0.1
+Quinn,Ly,,,10,39.2
+Maya,Nguyen,,,Senior,5.0
+Paul,Martin,2010-04-03,Truong THPT Ly Tu Trong,9,48.7
+Uyen,Tran,2009-05-23,Truong THPT Nguyen Hue,9,18.4
+Quinn,Smith,2010-08-02,,,43.5
+Linh,Gonzalez,,Truong THPT Nguyen Du,Sophomore,21.0
+Uyen,Lopez,2007-11-11,Truong THPT Le Loi,,4.1
+Sam,Dang,,Truong THPT Quang Trung,,30.2
+Grace,Bui,,Truong THPT Hai Ba Trung,9,36.6
+Sang,Hernandez,2010-07-19,Truong THPT Tran Phu,9,29.0
+Hoa,Johnson,2009-01-22,Truong THPT Nguyen Du,Sophomore,45.4
+Jack,Martin,2009-07-16,Stanford University,9,9.7
+Khanh,Jackson,2011-09-30,,12,4.4
+Catherine,Moore,2011-06-14,Truong THPT Le Loi,9,24.5
+David,Phung,,University of Chicago,,7.4
+Quinn,Phan,2008-09-02,University of California,9,26.0
+Catherine,Vo,2011-09-11,,11,2.4
+Jack,Garcia,2008-08-28,,Senior,45.8
+Binh,Do,2011-01-22,University of California,10,46.4
+David,Truong,2011-10-15,MIT,,25.7
+Olivia,Williams,2008-09-17,University of California,Sophomore,10.6
+Phong,Bui,2009-11-11,Stanford University,,42.8
+Quang,Dang,2009-03-24,Truong THPT Le Loi,,45.9
+Henry,Jones,2008-01-06,Duke University,11,34.4
+Duc,Jackson,2010-06-02,Columbia University,,11.3
+Ivy,Ly,2008-02-27,Truong THPT Le Loi,,11.3
+Minh,Pham,2009-09-20,Truong THPT Ly Tu Trong,,19.9
+Frank,Dang,2010-08-16,,Sophomore,35.3
+Phong,Garcia,2010-03-15,Stanford University,9,12.8
+An,Taylor,2008-07-04,Duke University,,34.6
+Catherine,Anderson,2011-07-30,Princeton University,,25.9
+Brian,Jones,,Truong THPT Nguyen Hue,10,9.5
+Quinn,Moore,,Truong THPT Nguyen Trai,,45.8
+Catherine,Tran,,Truong THPT Le Loi,Senior,13.5
+Thu,Ly,2010-12-01,Truong THPT Quang Trung,,36.4
+Emma,Thomas,2009-04-20,Truong THPT Tran Phu,,0.0
+Kelly,Ly,2009-04-23,Truong THPT Le Quy Don,Sophomore,7.2
+Khanh,Dang,2008-08-26,,11,42.2
+Henry,Phan,2011-04-21,,Sophomore,37.1
+Emma,Martinez,2011-07-03,Truong THPT Nguyen Hue,,48.9
+Viet,Gonzalez,2008-10-12,Truong THPT Nguyen Trai,,3.2
+Rachel,Vo,2010-08-09,Northwestern University,,35.7
+Brian,Ngo,,,Sophomore,14.4
+Tina,Jones,,Truong THPT Quang Trung,9,12.4
+Tina,Williams,2010-01-29,,Senior,23.1
+Maya,Jackson,2011-09-02,Northwestern University,,44.7
+Binh,Johnson,2009-12-03,Truong THPT Nguyen Hue,,21.6
+Giang,Rodriguez,,Princeton University,,8.1
+Quang,Ngo,2010-08-16,,Junior,22.1
+Binh,Do,2009-02-27,University of California,,41.5
+Catherine,Jackson,2009-12-07,University of California,Senior,26.8
+Binh,Truong,2010-04-22,Northwestern University,10,7.0
+Emma,Taylor,2011-04-09,Columbia University,,22.3
+Uyen,Miller,2010-02-07,Truong THPT Nguyen Trai,,9.3
+Noah,Brown,2010-06-21,,,44.3
+Catherine,Dinh,2009-08-03,Truong THPT Nguyen Trai,,36.6
+Emma,Vu,2010-12-10,,,46.1
+Emma,Pham,,,Senior,37.1
+Binh,Bui,,Truong THPT Hai Ba Trung,Senior,19.1
+Linh,Phung,2008-11-08,,Freshman,33.0
+Catherine,Dinh,,,11,32.3
+Frank,Rodriguez,2009-03-14,University of California,,34.1
+Yen,Jones,2007-11-24,,10,2.7
+Nam,Martin,2007-12-19,Truong THPT Vo Thi Sau,,22.3
+Tina,Phan,2011-01-18,Harvard University,11,11.8
+Yen,Duong,2011-02-01,,,39.9
+Xuan,Rodriguez,2010-07-22,Truong THPT Hai Ba Trung,Senior,19.0
+Minh,Phung,2009-01-11,,Sophomore,27.7
+Kelly,Dang,2011-06-18,Truong THPT Nguyen Trai,10,34.5
+Quang,Gonzalez,2009-01-02,Duke University,10,6.1
+Paul,Pham,2008-10-14,Truong THPT Nguyen Hue,9,32.5
+Xuan,Truong,2009-07-27,,9,20.3
+Sang,Lopez,2010-02-15,Columbia University,,28.0
+Maya,Brown,2011-02-18,Truong THPT Hai Ba Trung,Junior,12.0
+Uyen,Dang,2011-01-04,Stanford University,11,5.8
+Ivy,Garcia,,Truong THPT Nguyen Du,,43.4
+Tina,Ly,2008-12-16,,,45.0
+Uyen,Martinez,2008-05-09,Truong THPT Le Loi,Freshman,2.2
+Xuan,Garcia,2010-10-12,Truong THPT Quang Trung,Junior,31.9
+Thu,Lopez,2009-07-06,Northwestern University,11,13.1
+Catherine,Thomas,2008-02-13,University of California,10,41.6
+An,Vu,2008-11-02,Truong THPT Nguyen Hue,Sophomore,38.8
+Grace,Hoang,,Truong THPT Nguyen Du,,44.9
+Hoa,Phan,2010-04-03,Stanford University,9,38.6
+Alex,Ly,2009-10-11,Harvard University,10,38.1
+Khanh,Rodriguez,2008-02-27,University of California,Sophomore,20.3
+Oanh,Brown,2010-11-18,,,12.5
+David,Martin,2008-02-21,Truong THPT Hai Ba Trung,,24.9
+Giang,Rodriguez,2008-05-31,Truong THPT Tran Phu,,42.8
+Henry,Nguyen,2010-10-15,Truong THPT Le Quy Don,11,13.7
+Sam,Martin,2011-06-28,Truong THPT Nguyen Hue,,23.9
+Maya,Hoang,2011-10-13,,,0.7
+Xuan,Nguyen,2011-05-01,Columbia University,,12.8
+Quang,Hoang,2010-07-06,,10,9.4
+Hoa,Bui,2009-01-28,,Freshman,21.7
+Nam,Do,2009-02-22,MIT,,44.9
+Frank,Wilson,2008-02-17,Duke University,,48.9
+Ivy,Ngo,2009-03-26,Columbia University,,40.7
+Alex,Duong,2008-06-11,,Junior,33.9
+Kelly,Lopez,2008-05-18,Truong THPT Nguyen Trai,10,7.5
+Quang,Hoang,2011-07-22,Truong THPT Quang Trung,Senior,0.6
+Maya,Lopez,2010-03-05,,,18.5
+Rachel,Miller,2008-06-14,,Junior,34.7
+Maya,Jones,2008-09-24,,9,36.7
+David,Garcia,2011-01-05,University of Chicago,,37.4
+Quinn,Hernandez,2010-02-17,,Senior,12.5
+Xuan,Martin,,University of California,Junior,34.4
+Alex,Do,2010-12-10,,10,34.5
+Ivy,Lopez,2010-10-25,,,45.0
+Giang,Dong,2008-04-06,Truong THPT Vo Thi Sau,11,23.6
+Emma,Taylor,2010-08-03,Truong THPT Hai Ba Trung,,41.3
+Nam,Jones,2008-03-06,,,0.8
+Noah,Vu,2010-09-11,Yale University,10,0.9
+Yen,Rodriguez,2010-04-04,Harvard University,Sophomore,49.2
+Emma,Lopez,2010-09-30,Princeton University,11,12.3
+David,Dang,2007-12-09,,Freshman,7.4
+Binh,Anderson,2008-04-18,University of California,,24.7
+Thu,Jackson,2010-12-21,,9,26.6
+Phong,Rodriguez,2007-11-14,University of California,11,41.4
+Quang,Vo,2008-07-03,,Senior,47.7
+Noah,Anderson,2011-10-28,,9,45.8
+Brian,Anderson,2008-02-26,,Senior,43.4
+Grace,Thomas,2008-04-03,Stanford University,,18.8
+Chi,Tran,2011-01-14,MIT,,44.5
+Noah,Dinh,2010-02-24,Duke University,,8.9
+Khanh,Wilson,,,10,23.6
+Emma,Davis,2009-07-25,University of Chicago,,44.0
+Noah,Dinh,2011-09-10,Stanford University,11,46.4
+Sang,Brown,2008-10-12,Truong THPT Tran Phu,,23.1
+Frank,Anderson,2011-01-08,University of California,,34.1
+Nam,Miller,2007-11-10,Truong THPT Ly Tu Trong,11,2.5
+Hoa,Pham,2008-10-23,Truong THPT Le Loi,,3.6
+Maya,Garcia,,Truong THPT Nguyen Du,Junior,24.7
+Grace,Vo,2011-02-06,Truong THPT Ly Tu Trong,Senior,45.9
+Jack,Ho,2009-10-27,University of Chicago,Freshman,25.2
+Phong,Vo,2010-06-22,Truong THPT Hai Ba Trung,,37.2
+Em,Le,,Yale University,11,14.1
+Sang,Williams,2010-01-01,,,44.3
+Yen,Miller,2007-12-22,Truong THPT Nguyen Trai,10,38.2
+Ivy,Johnson,,Truong THPT Hai Ba Trung,,28.8
+Liam,Martin,2009-07-20,,Freshman,5.1
+Giang,Taylor,2008-06-14,,Sophomore,47.6
+Rachel,Dang,2009-04-10,Northwestern University,12,4.6
+Grace,Tran,2008-11-11,,,38.1
+Olivia,Hoang,2010-08-22,Duke University,Sophomore,49.3
+Thu,Miller,2009-05-20,Yale University,,36.8
+Noah,Dong,,,12,49.6
+An,Wilson,2010-10-16,,,20.9
+Oanh,Lopez,,Truong THPT Nguyen Trai,Sophomore,45.5
+Uyen,Nguyen,2010-12-12,Truong THPT Vo Thi Sau,,35.5
+Henry,Dang,2010-04-08,Yale University,Junior,20.7
+Oanh,Rodriguez,2009-10-19,Truong THPT Tran Phu,,21.8
+Paul,Moore,2008-01-24,Truong THPT Ly Tu Trong,10,3.5
+An,Williams,2009-08-17,,12,7.2
+Binh,Le,2008-01-16,Yale University,Freshman,34.7
+Oanh,Dinh,2008-04-16,,Freshman,31.2
+Sang,Martinez,2009-07-27,,12,16.5
+Ivy,Do,2009-10-21,,,21.6
+Kelly,Do,2009-04-13,Truong THPT Nguyen Hue,,2.5
+Minh,Rodriguez,2009-06-05,Truong THPT Quang Trung,Freshman,8.7
+Kelly,Dong,2009-06-26,Truong THPT Le Loi,,7.7
+Rachel,Dang,2009-12-23,University of Chicago,,34.4
+Tina,Hoang,2011-06-16,,12,5.6
+Minh,Pham,2009-07-17,,11,4.1
+Maya,Bui,2010-01-17,University of Chicago,,17.0
+Sang,Taylor,2009-08-09,Truong THPT Le Quy Don,12,20.5
+Viet,Nguyen,,Truong THPT Le Quy Don,,16.1
+Sang,Phan,2009-09-04,University of California,10,42.8
+Paul,Phan,2010-05-21,Northwestern University,,15.6
+Kelly,Ho,2008-05-29,Princeton University,Senior,46.8
+Yen,Ly,,Truong THPT Nguyen Trai,,31.3
+Minh,Dinh,,,Freshman,22.9
+Catherine,Johnson,2011-06-22,,11,8.2
+Olivia,Jones,2008-01-30,Truong THPT Le Loi,Senior,2.8
+Catherine,Miller,2009-04-27,Truong THPT Vo Thi Sau,9,34.7
+An,Truong,2011-10-13,Truong THPT Vo Thi Sau,12,5.1
+Sam,Smith,2010-07-17,Yale University,,12.1
+Yen,Johnson,2008-07-01,Yale University,Sophomore,41.5
+An,Dong,,University of California,Junior,10.4
+Sang,Dang,,Truong THPT Nguyen Trai,,15.0
+Em,Duong,2010-04-28,,,7.4
+Minh,Wilson,2011-02-01,Northwestern University,,17.6
+Uyen,Anderson,2011-09-14,,,12.9
+Nam,Martin,2010-04-25,Yale University,11,0.1
+Minh,Gonzalez,2007-12-19,,12,24.8
+Chi,Dang,2008-11-01,Truong THPT Quang Trung,,14.6
+Linh,Anderson,2011-05-18,Truong THPT Quang Trung,9,36.5
+Brian,Miller,2010-08-15,,10,16.1
+Nam,Williams,2008-11-29,Truong THPT Tran Phu,9,8.9
+Rachel,Taylor,,Truong THPT Le Quy Don,Sophomore,33.5
+An,Vo,,Truong THPT Le Loi,9,5.9
+Khanh,Ngo,,Truong THPT Hai Ba Trung,Senior,34.4
+Minh,Martin,2009-07-08,,Freshman,23.2
+Sam,Martinez,2009-06-16,Princeton University,Freshman,40.6
+David,Ho,2011-06-15,,Sophomore,47.7
+Frank,Hoang,2010-07-17,Duke University,,15.9
+David,Truong,2011-01-07,,,42.3
+Viet,Vo,2008-09-02,,Senior,46.1
+Paul,Miller,2009-11-05,Truong THPT Tran Phu,,37.5
+Rachel,Jones,2009-06-17,University of California,,45.5
+Sang,Wilson,2008-08-25,,Junior,12.5
+Quang,Bui,2010-03-04,,11,43.1
+Quang,Taylor,2009-08-07,Truong THPT Hai Ba Trung,Junior,48.8
+Sam,Le,2008-03-12,Truong THPT Ly Tu Trong,12,13.6
+Viet,Martinez,2008-01-03,,Freshman,20.3
+Jack,Nguyen,2009-09-21,Truong THPT Nguyen Du,10,9.6
+Liam,Jones,2009-06-28,Northwestern University,,24.5
+Binh,Nguyen,2009-06-12,,,17.8
+Giang,Davis,2008-06-08,University of Chicago,12,40.9
+Binh,Ngo,2009-11-14,Truong THPT Le Loi,12,37.0
+Linh,Dang,2008-06-11,Northwestern University,10,36.1
+Uyen,Phan,,Truong THPT Hai Ba Trung,Freshman,11.1
+Frank,Lopez,2008-05-31,,,2.0
+Tina,Pham,2009-01-12,Columbia University,10,26.8
+Rachel,Nguyen,2010-02-08,,,7.6
+Grace,Davis,2008-09-08,Truong THPT Nguyen Hue,12,18.3
+Yen,Tran,2010-12-30,,12,34.6
+Rachel,Williams,2008-11-02,,12,35.3
+Catherine,Do,2010-10-12,,9,1.0
+Olivia,Le,2008-10-29,Columbia University,Sophomore,46.3
+Giang,Duong,2008-01-09,Princeton University,11,13.4
+Brian,Miller,,Truong THPT Vo Thi Sau,,34.9
+Olivia,Vo,2009-03-16,University of California,,29.5
+Sang,Davis,2009-12-21,University of Chicago,,37.8
+Emma,Do,,,Junior,2.0
+Nam,Gonzalez,2009-11-11,Truong THPT Tran Phu,,41.9
+Thu,Dong,,Princeton University,11,37.8
+An,Miller,2010-05-17,Truong THPT Ly Tu Trong,Senior,19.8
+Henry,Truong,2010-12-11,Duke University,,28.2
+Binh,Phung,2010-04-14,Northwestern University,10,6.5
+Noah,Phan,2010-11-26,Truong THPT Nguyen Trai,Junior,21.7
+David,Dang,2011-03-08,University of Chicago,Freshman,35.9
+Kelly,Jackson,2008-12-27,Truong THPT Ly Tu Trong,Junior,34.9
+Jack,Miller,2007-12-15,,,39.1
+Nam,Truong,2009-12-23,MIT,,31.0
+Oanh,Le,,,,46.3
+Yen,Hoang,2010-04-29,Columbia University,,11.9
+Xuan,Dinh,2010-02-10,Truong THPT Le Loi,,31.0
+Em,Do,2008-01-20,,11,29.2
+Maya,Vu,2007-11-01,Truong THPT Le Loi,10,32.1
+Chi,Davis,2008-12-03,University of California,12,18.5
+Quang,Taylor,2010-08-16,,9,26.0
+Linh,Martin,2010-02-26,,Senior,12.2
+Duc,Garcia,2009-10-25,,11,5.4
+Tina,Vu,,,10,44.2
+Liam,Gonzalez,2008-01-21,,11,26.1
+Yen,Taylor,2008-05-25,Duke University,,35.6
+Yen,Phan,2009-09-13,Truong THPT Tran Phu,12,48.1
+Paul,Tran,2009-03-09,Truong THPT Le Quy Don,9,20.7
+Rachel,Vo,2010-09-22,Truong THPT Hai Ba Trung,11,5.3
+Xuan,Vo,2009-05-21,Truong THPT Nguyen Du,,46.6
+Viet,Davis,,Northwestern University,,9.3
+Phong,Duong,2008-06-27,Harvard University,Senior,24.0
+Binh,Brown,2008-02-15,Harvard University,10,29.6
+Grace,Anderson,2010-04-17,,,34.0
+Quinn,Phan,2011-07-24,University of Chicago,10,47.4
+Xuan,Vu,2010-03-08,,,46.4
+Rachel,Le,2011-03-07,Yale University,,39.4
+Yen,Jones,2008-07-17,Truong THPT Vo Thi Sau,Junior,44.3
+Linh,Pham,2009-01-18,Stanford University,Senior,42.6
+Thu,Duong,2008-09-09,Truong THPT Quang Trung,Sophomore,15.0
+Jack,Jones,2010-04-30,Northwestern University,Freshman,30.3
+Linh,Ho,2008-05-29,Columbia University,Freshman,29.1
+Nam,Thomas,2008-12-23,Truong THPT Hai Ba Trung,,29.6
+Binh,Jones,,Truong THPT Nguyen Hue,9,47.9
+Noah,Hernandez,2010-07-02,Truong THPT Le Loi,,27.5
+Emma,Phan,2009-12-25,,,43.1
+Uyen,Anderson,2008-01-15,Truong THPT Tran Phu,Sophomore,18.3
+Yen,Nguyen,2009-02-19,MIT,,33.8
+Tina,Dong,2011-10-17,Truong THPT Ly Tu Trong,11,4.4
+Oanh,Wilson,2009-05-02,Truong THPT Quang Trung,9,2.6
+David,Do,2008-10-08,University of California,,0.7
+Kelly,Rodriguez,2010-04-11,Princeton University,Senior,36.7
+Xuan,Jackson,2008-04-25,,Junior,31.7
+Hoa,Pham,,Columbia University,12,30.3
+Jack,Anderson,2009-06-11,Truong THPT Nguyen Trai,12,17.7
+David,Thomas,2010-09-28,Northwestern University,,7.1
+Olivia,Dong,2009-04-27,University of Chicago,,22.0
+Hoa,Brown,2009-03-08,Truong THPT Hai Ba Trung,9,4.0
+Phong,Martin,,,,45.0
+Khanh,Lopez,2008-11-10,Truong THPT Vo Thi Sau,,14.9
+Em,Rodriguez,2010-01-02,Duke University,Freshman,27.4
+Duc,Dang,2008-09-28,,9,10.3
+Binh,Dang,2008-07-07,Truong THPT Le Quy Don,,30.6
+Chi,Martinez,2010-03-12,Truong THPT Nguyen Trai,9,47.5
+Emma,Pham,,Truong THPT Quang Trung,,29.1
+Duc,Moore,2008-05-17,Truong THPT Vo Thi Sau,,8.4
+Brian,Smith,,MIT,,47.7
+Sam,Lopez,2008-10-17,Stanford University,,36.6
+Liam,Williams,2008-07-28,Harvard University,,34.2
+Jack,Lopez,2010-05-23,Truong THPT Tran Phu,,45.2
+Yen,Bui,2009-11-23,Harvard University,Sophomore,44.9
+David,Anderson,2011-08-26,,,1.6
+Hoa,Vo,2010-06-06,Truong THPT Ly Tu Trong,Sophomore,32.1
+Henry,Davis,2008-09-11,,,31.4
+Binh,Pham,2008-10-16,,Senior,28.6
+Emma,Martinez,,,,21.6
+Binh,Johnson,2009-09-12,Truong THPT Le Loi,,33.9
+Uyen,Bui,,,11,22.1
+Oanh,Ly,2011-10-21,University of California,,8.6
+Ivy,Ly,2010-10-10,,Senior,42.2
+Kelly,Moore,2010-04-17,Truong THPT Hai Ba Trung,Freshman,30.0
+Catherine,Ho,2011-10-10,Truong THPT Tran Phu,,34.1
+Phong,Dong,2008-01-14,,12,8.1
+Kelly,Thomas,,,,36.6
+Henry,Smith,,,12,9.6
+Brian,Tran,2008-01-12,Truong THPT Vo Thi Sau,,30.2
+Nam,Dong,,Truong THPT Quang Trung,Sophomore,7.6
+Hoa,Williams,2009-07-07,,9,34.6
+Maya,Johnson,2008-12-09,Harvard University,Senior,22.9
+Liam,Le,2011-08-26,,11,25.9
+Grace,Bui,2008-01-17,Northwestern University,9,14.0
+Paul,Jackson,2008-02-20,Truong THPT Hai Ba Trung,,4.2
+Quang,Anderson,2008-12-02,,,21.1
+Catherine,Martin,2008-04-22,,,3.2
+Viet,Anderson,,,11,4.9
+Yen,Moore,,University of Chicago,10,4.6
+Uyen,Williams,2010-09-19,,12,0.3
+Nam,Vo,2010-05-28,Yale University,Junior,42.3
+Yen,Tran,2010-04-13,Northwestern University,,35.6
+Kelly,Ly,2010-02-11,Truong THPT Quang Trung,12,23.3
+Catherine,Bui,2010-09-10,Stanford University,Freshman,24.5
+Minh,Ho,2011-04-03,,Junior,41.1
+Kelly,Lopez,2011-07-21,Columbia University,Freshman,46.2
+Em,Phung,2009-06-23,Truong THPT Nguyen Du,12,21.2
+Quinn,Jones,2008-11-18,,,11.9
+Yen,Wilson,2010-11-23,Columbia University,Sophomore,17.6
+Khanh,Martin,2010-01-04,,Senior,15.3
+Emma,Smith,2009-11-21,,,42.8
+Emma,Martinez,,Columbia University,Junior,48.1
+Catherine,Jackson,2011-03-01,,,0.3
+Frank,Phan,2010-08-27,,Sophomore,41.3
+An,Ho,2010-05-29,Truong THPT Ly Tu Trong,10,22.9
+Oanh,Nguyen,,Truong THPT Nguyen Du,,29.2
+An,Duong,2009-01-20,,Junior,19.1
+Liam,Anderson,2009-03-01,Columbia University,Sophomore,13.8
+Linh,Moore,2011-10-05,Truong THPT Nguyen Hue,,46.3
+Frank,Hernandez,2008-06-29,MIT,,7.5
+Maya,Phan,,,Senior,29.2
+Tina,Williams,2011-05-06,University of Chicago,,30.0
+Noah,Thomas,,Stanford University,9,39.1
+Giang,Jones,,Truong THPT Ly Tu Trong,,7.3
+Ivy,Garcia,,,,35.1
+Duc,Taylor,2011-01-24,Truong THPT Nguyen Hue,9,35.9
+Yen,Moore,,Truong THPT Ly Tu Trong,Freshman,43.9
+Em,Do,2010-07-12,Truong THPT Vo Thi Sau,10,36.2
+Paul,Ly,2010-12-23,Truong THPT Vo Thi Sau,11,29.8
+Sam,Dinh,2008-11-18,Truong THPT Nguyen Du,Freshman,37.0
+Viet,Ngo,2009-10-09,Truong THPT Hai Ba Trung,Junior,2.3
+Binh,Jackson,2011-04-25,Truong THPT Ly Tu Trong,10,16.7
+An,Garcia,2010-08-25,,Senior,6.5
+Duc,Rodriguez,2008-04-15,,10,10.4
+Phong,Anderson,2011-09-20,,9,26.5
+Jack,Martin,2007-11-17,Truong THPT Vo Thi Sau,,3.6
+Giang,Ngo,2009-07-21,Truong THPT Ly Tu Trong,,40.8
+Uyen,Phan,2011-07-09,Truong THPT Tran Phu,,37.1
+Henry,Johnson,,Truong THPT Le Quy Don,,40.6
+Chi,Anderson,2009-12-28,Columbia University,11,15.3
+Rachel,Tran,2011-05-03,Northwestern University,10,30.1
+Frank,Hoang,2010-03-23,Yale University,11,36.6
+Noah,Garcia,2011-05-18,Stanford University,,29.5
+Alex,Jones,2011-06-21,Truong THPT Quang Trung,,31.2
+Tina,Davis,2009-11-12,,12,32.9
+Tina,Dang,2010-07-03,,,4.4
+Maya,Dang,2009-04-14,Duke University,Freshman,15.1
+An,Le,2010-11-15,,,15.1
+Chi,Ngo,2009-01-19,Truong THPT Nguyen Du,Freshman,27.5
+Minh,Brown,,Truong THPT Quang Trung,Junior,2.5
+Xuan,Gonzalez,,,,28.2
+Linh,Duong,2010-05-04,Truong THPT Nguyen Du,Freshman,2.9
+Kelly,Jackson,2010-05-07,Princeton University,,43.1
+Frank,Dong,2008-07-01,Princeton University,Freshman,32.5
+Binh,Vo,2008-08-20,Stanford University,,37.4
+Noah,Pham,2007-12-05,Truong THPT Hai Ba Trung,Senior,36.4
+Nam,Hernandez,2008-12-02,Columbia University,Sophomore,39.1
+Rachel,Wilson,2010-04-24,University of Chicago,Freshman,47.2
+Nam,Taylor,2011-03-10,Stanford University,,30.3
+Brian,Vu,2011-06-17,,,26.7
+Xuan,Anderson,2011-10-07,,9,2.5
+Binh,Le,2010-10-17,Truong THPT Nguyen Trai,9,11.1
+An,Dong,2010-03-31,Princeton University,,40.4
+Chi,Miller,2010-03-25,Northwestern University,Sophomore,9.2
+Jack,Anderson,2009-03-22,,,36.6
+Oanh,Davis,2009-09-04,,,9.6
+Linh,Johnson,2009-06-10,,12,5.2
+Paul,Dong,2007-12-04,University of Chicago,Freshman,47.1
+Xuan,Dang,2011-06-07,,10,13.2
+Nam,Le,,Truong THPT Tran Phu,Senior,48.0
+Chi,Gonzalez,2007-12-27,Truong THPT Nguyen Du,,11.8
+Rachel,Phung,,Columbia University,,13.9
+Chi,Dong,,Yale University,10,16.5
+Paul,Ho,,,Freshman,35.9
+Viet,Martinez,,University of California,11,38.9
+Emma,Dinh,2011-01-16,,,6.3
+Noah,Gonzalez,2008-11-25,Columbia University,11,17.5
+Nam,Moore,,,12,2.5
+Hoa,Garcia,2008-12-13,Princeton University,Sophomore,37.3
+Ivy,Williams,2007-12-15,Truong THPT Tran Phu,,2.7
+Minh,Williams,2008-04-16,MIT,,40.0
+Thu,Jackson,2011-09-14,University of California,Sophomore,7.3
+Hoa,Tran,2008-07-25,Northwestern University,Junior,29.6
+Quang,Dong,2011-04-23,,9,17.7
+Maya,Phan,2011-02-25,,12,7.8
+An,Dong,2010-05-21,Truong THPT Le Quy Don,,25.8
+Maya,Ho,2008-09-18,,9,25.7
+Catherine,Ngo,,Princeton University,Senior,14.6
+Frank,Taylor,2009-11-09,Truong THPT Tran Phu,,12.3
+Viet,Hoang,2008-09-28,Truong THPT Vo Thi Sau,,14.0
+Hoa,Ngo,,Yale University,12,39.3
+Emma,Vo,2009-01-14,Truong THPT Nguyen Hue,Senior,40.6
+Em,Taylor,2008-07-06,Princeton University,Freshman,32.3
+Liam,Thomas,2008-08-03,Truong THPT Nguyen Du,Senior,30.2
+Chi,Johnson,2010-12-24,Truong THPT Vo Thi Sau,12,15.4
+Jack,Bui,2009-05-28,Harvard University,11,34.1
+Emma,Tran,2011-03-02,,,20.4
+Ivy,Ho,2010-05-23,,,13.7
+Yen,Davis,2010-11-03,,Freshman,3.8
+Rachel,Davis,2011-07-05,University of California,,49.9
+Noah,Do,2010-05-29,Truong THPT Hai Ba Trung,Senior,14.2
+Kelly,Davis,,,,19.5
+Duc,Anderson,2009-12-01,,11,20.2
+David,Pham,2008-11-16,Truong THPT Nguyen Hue,Freshman,33.9
+Paul,Phan,2008-06-16,,11,4.4
+Quang,Lopez,,,,31.1
+Minh,Hoang,2008-01-06,Truong THPT Le Loi,Freshman,19.5
+Uyen,Tran,2011-09-27,,Senior,16.6
+Oanh,Rodriguez,2009-10-03,Truong THPT Nguyen Du,Junior,6.1
+Grace,Vu,2008-03-05,,10,15.9
+Khanh,Vo,,,Sophomore,5.1
+Quinn,Moore,2009-04-12,,10,32.1
+Yen,Pham,2009-04-03,,Sophomore,35.8
+Viet,Thomas,2011-08-16,Stanford University,Sophomore,20.9
+Tina,Jackson,2011-10-14,Truong THPT Quang Trung,,41.7
+Viet,Dang,2008-11-17,University of Chicago,9,29.5
+Liam,Davis,2010-01-17,,Senior,32.0
+Tina,Jackson,2010-02-19,Truong THPT Le Quy Don,,2.8
+Giang,Martin,2008-11-23,Truong THPT Quang Trung,,33.9
+Thu,Smith,,Truong THPT Nguyen Hue,9,16.1
+David,Jones,2010-12-31,,,32.4
+Giang,Dang,2011-07-27,Truong THPT Quang Trung,,43.6
+Grace,Hernandez,2010-05-29,,Junior,43.3
+Duc,Lopez,2010-03-20,,10,26.2
+David,Martin,2011-08-24,Northwestern University,,17.3
+Catherine,Hernandez,2011-01-15,,,28.8
+Brian,Brown,,Truong THPT Nguyen Du,Freshman,0.4
+Emma,Ngo,2010-02-11,Stanford University,Freshman,6.8
+Brian,Williams,2008-11-27,Truong THPT Vo Thi Sau,,13.1
+Uyen,Truong,2009-10-07,,Junior,4.4
+Ivy,Thomas,2008-07-05,MIT,,11.1
+Uyen,Truong,,Truong THPT Vo Thi Sau,11,2.5
+Noah,Johnson,2008-10-01,Stanford University,12,7.1
+Duc,Ngo,2009-05-21,Duke University,,23.7
+Sang,Miller,2009-10-26,Truong THPT Le Quy Don,10,22.7
+Paul,Dinh,2011-09-14,Columbia University,,6.0
+Thu,Nguyen,2010-02-25,,,4.7
+Quang,Miller,,,12,41.3
+Uyen,Wilson,2010-08-26,Truong THPT Quang Trung,,5.1
+David,Martin,2010-12-13,,,23.6
+Linh,Smith,2011-02-05,,Junior,16.0
+Kelly,Vo,2008-12-31,,Senior,17.3
+Oanh,Anderson,2011-01-05,,10,28.6
+Kelly,Hernandez,,,Junior,45.7
+Henry,Rodriguez,2009-09-11,,,14.5
+Tina,Hoang,2009-06-13,Truong THPT Tran Phu,,30.6
+Em,Dang,2010-06-08,,12,36.4
+Khanh,Garcia,2010-04-08,Columbia University,12,28.2
+Em,Johnson,,Truong THPT Hai Ba Trung,,39.5
+Yen,Smith,,University of California,11,22.8
+Uyen,Phan,2011-06-06,Yale University,Senior,21.5
+Thu,Le,,,,8.9
+Viet,Dang,2008-06-18,Truong THPT Quang Trung,,27.6
+Uyen,Garcia,2011-07-12,,,15.5
+Thu,Martinez,2010-02-11,Yale University,,24.9
+Jack,Vo,2010-01-20,,11,21.5
+Oanh,Moore,2008-05-09,Truong THPT Le Loi,12,5.2
+Thu,Miller,,Stanford University,,9.6
+Viet,Hernandez,2010-12-28,Truong THPT Hai Ba Trung,,21.2
+Maya,Smith,2011-04-29,Truong THPT Quang Trung,,2.5
+Liam,Ngo,2008-05-18,University of California,Senior,36.8
+Paul,Pham,2010-10-15,Duke University,10,46.5
+Noah,Truong,2008-12-18,,12,39.2
+Khanh,Ho,2009-09-10,Stanford University,10,16.6
+Liam,Martinez,2008-06-18,Truong THPT Nguyen Trai,,9.7
+Giang,Thomas,,,12,11.9
+Emma,Thomas,,Truong THPT Nguyen Hue,,35.9
+Viet,Ngo,,Truong THPT Nguyen Du,Junior,34.8
+Yen,Dinh,2008-06-02,,11,26.4
+Ivy,Lopez,2011-03-05,Truong THPT Quang Trung,9,6.8
+Em,Tran,2010-09-15,Stanford University,,46.5
+Uyen,Duong,2009-12-19,Truong THPT Ly Tu Trong,12,38.2
+Henry,Ngo,,Harvard University,12,48.4
+Liam,Brown,2009-08-12,Princeton University,9,9.2
+Sang,Smith,2010-08-27,Truong THPT Nguyen Trai,,2.6
+Quang,Miller,2011-03-17,Yale University,Freshman,9.2
+Quang,Nguyen,,,12,49.8
+Thu,Dong,2010-07-31,University of Chicago,Sophomore,3.9
+Catherine,Dang,2011-06-22,Truong THPT Vo Thi Sau,,14.3
+Brian,Davis,,University of Chicago,,10.6
+Giang,Anderson,2010-05-26,Princeton University,Junior,0.2
+Yen,Williams,,,,40.2
+Jack,Miller,2010-06-24,Truong THPT Vo Thi Sau,Junior,11.3
+Hoa,Tran,2009-10-17,Yale University,,44.6
+Linh,Lopez,2010-01-18,Truong THPT Tran Phu,Sophomore,0.8
+Kelly,Dinh,2008-11-25,University of Chicago,Freshman,2.3
+Quang,Ho,2009-02-14,University of Chicago,12,11.9
+Duc,Dang,2008-07-28,,9,24.2
+Quinn,Johnson,2011-08-11,,Freshman,13.6
+Giang,Dinh,2007-11-23,Truong THPT Nguyen Du,Freshman,0.4
+Minh,Phan,2011-03-16,Truong THPT Nguyen Hue,,42.8
+Oanh,Brown,2010-03-13,MIT,9,10.5
+Yen,Anderson,2011-02-15,Truong THPT Tran Phu,11,29.6
+Hoa,Hoang,,Truong THPT Vo Thi Sau,,13.3
+Phong,Jones,,Harvard University,,21.1
+Maya,Phan,2009-10-03,Yale University,,1.8
+Jack,Vu,,Columbia University,Junior,34.8
+Minh,Tran,,Truong THPT Hai Ba Trung,Freshman,27.3
+Chi,Ngo,2009-03-31,Princeton University,Senior,9.5
+Viet,Bui,,Truong THPT Hai Ba Trung,9,19.5
+Duc,Smith,2010-10-15,,,42.7
+Brian,Lopez,2011-04-25,Truong THPT Vo Thi Sau,,49.1
+Catherine,Dinh,2008-05-27,Princeton University,,8.7
+Paul,Vu,2011-09-23,University of Chicago,Sophomore,10.6
+Yen,Rodriguez,2009-02-09,Columbia University,,44.1
+Quinn,Garcia,2009-10-31,Truong THPT Tran Phu,,19.7
+Nam,Vo,2010-05-26,Yale University,11,11.0
+Noah,Phan,2010-07-20,,11,40.3
+Uyen,Rodriguez,2010-07-23,Princeton University,9,19.5
+David,Ho,,Yale University,Sophomore,7.2
+Linh,Miller,2008-03-09,,Sophomore,35.3
+Sam,Dong,2009-09-03,Truong THPT Le Quy Don,,1.2
+David,Davis,2010-07-15,Duke University,Senior,17.9
+Giang,Dang,2010-08-24,Princeton University,Senior,42.3
+Catherine,Hernandez,2010-07-10,,Freshman,12.8
+Xuan,Garcia,2008-06-24,Truong THPT Le Quy Don,,17.5
+Jack,Tran,2008-03-06,Truong THPT Vo Thi Sau,,23.2
+Emma,Gonzalez,2010-06-27,Harvard University,Sophomore,3.4
+Kelly,Ho,2009-01-28,Truong THPT Tran Phu,,1.6
+Giang,Hernandez,2008-03-26,Truong THPT Nguyen Hue,,35.0
+Binh,Bui,2011-06-29,,,43.9
+Giang,Nguyen,2010-12-06,,,42.8
+Jack,Gonzalez,2011-10-18,,Freshman,9.2
+Brian,Taylor,,MIT,,8.7
+Giang,Williams,2009-02-09,Truong THPT Ly Tu Trong,12,45.2
+An,Vu,2010-02-26,Duke University,10,27.1
+Grace,Brown,,,Senior,35.5
+Hoa,Pham,,Columbia University,Senior,15.0
+Khanh,Ho,,Northwestern University,,15.8
+Grace,Dang,2011-04-11,University of Chicago,,43.9
+Xuan,Ngo,2009-09-21,University of Chicago,Sophomore,17.6
+Jack,Ho,2009-05-21,,,15.7
+Binh,Rodriguez,2008-02-24,,,48.7
+Viet,Miller,2011-02-09,,12,43.6
+Ivy,Davis,2009-11-12,,Senior,30.5
+Henry,Do,2010-05-03,Truong THPT Nguyen Trai,10,18.2
+Quinn,Brown,2008-06-02,,Senior,43.0
+Viet,Brown,2011-07-26,Truong THPT Nguyen Du,9,40.4
+Noah,Duong,2011-05-14,Truong THPT Hai Ba Trung,12,49.7
+Noah,Taylor,2011-08-21,,Junior,7.1
+Khanh,Davis,,Columbia University,Junior,37.4
+Quang,Le,,Truong THPT Ly Tu Trong,Freshman,19.4
+Paul,Lopez,2010-11-17,University of California,,7.2
+Noah,Anderson,2011-05-21,,9,47.6
+Giang,Dang,2010-02-08,Truong THPT Nguyen Trai,,42.9
+Khanh,Martin,2008-03-23,,11,0.5
+Henry,Rodriguez,2009-08-15,Columbia University,,6.2
+Noah,Jones,,University of California,Junior,9.7
+Grace,Anderson,2008-12-17,,12,6.8
+Duc,Thomas,2011-05-30,Truong THPT Nguyen Trai,,31.3
+Phong,Duong,2010-06-02,,,22.1
+Grace,Dong,2010-12-22,Columbia University,Senior,0.6
+Brian,Do,2008-07-29,University of California,Sophomore,41.1
+Emma,Bui,2011-04-05,Duke University,,19.7
+Alex,Ngo,2010-02-26,Truong THPT Ly Tu Trong,,48.0
+Alex,Miller,2011-01-01,,11,37.6
+Noah,Nguyen,2008-12-27,Columbia University,,34.9
+Khanh,Nguyen,2010-08-24,University of California,Freshman,1.9
+Xuan,Jones,2009-01-14,Stanford University,,2.6
+Giang,Le,2010-05-02,Princeton University,9,6.2
+Binh,Dong,,Truong THPT Le Loi,12,8.2
+Liam,Davis,2011-03-30,,,24.8
+Ivy,Vo,2008-07-03,Columbia University,11,3.0
+Quang,Johnson,2010-03-22,,12,19.9
+Minh,Ho,2008-07-02,Columbia University,,31.8
+Emma,Tran,,Truong THPT Le Quy Don,10,0.1
+Giang,Davis,2010-04-04,Truong THPT Nguyen Du,,37.7
+Ivy,Dang,2008-12-19,,12,30.1
+Binh,Davis,2009-06-17,MIT,,46.1
+Uyen,Hernandez,2009-12-28,Stanford University,Senior,6.2
+Frank,Johnson,2011-03-25,Truong THPT Vo Thi Sau,11,27.9
+Sam,Nguyen,2007-11-03,,Sophomore,44.0
+Frank,Bui,2010-11-16,,10,46.8
+Noah,Phan,2009-12-01,,,48.8
+Xuan,Miller,2011-03-04,,9,25.7
+Oanh,Ly,2011-06-21,,,35.6
+Nam,Thomas,2010-11-04,,11,36.5
+Yen,Gonzalez,2011-02-21,,,37.4
+Grace,Bui,2010-03-05,Truong THPT Hai Ba Trung,Sophomore,44.1
+Jack,Garcia,,Yale University,,28.5
+Quang,Nguyen,2008-07-18,,,39.7
+Binh,Ly,2009-09-26,Northwestern University,,10.5
+Xuan,Vu,2010-06-27,,10,23.1
+Phong,Martinez,2009-07-22,Yale University,Sophomore,30.2
+Duc,Anderson,2008-12-01,,,3.9
+Yen,Truong,2010-07-03,Truong THPT Le Quy Don,,14.1
+Kelly,Do,2007-11-25,Truong THPT Ly Tu Trong,Freshman,2.6
+Hoa,Brown,2009-03-09,Truong THPT Ly Tu Trong,9,35.9
+Grace,Dang,2010-01-24,Truong THPT Vo Thi Sau,,22.2
+Duc,Smith,,Truong THPT Nguyen Du,Junior,47.9
+Binh,Martinez,2010-08-15,University of California,,14.8
+Chi,Nguyen,,,Freshman,4.3
+Nam,Gonzalez,2011-02-08,Truong THPT Tran Phu,Senior,48.1
+Sam,Truong,2007-12-11,Truong THPT Le Loi,,10.9
+David,Wilson,2010-04-15,Northwestern University,Junior,41.2
+Yen,Phung,2011-02-05,Truong THPT Hai Ba Trung,10,31.5
+Yen,Ngo,2011-08-26,,10,48.7
+Grace,Phan,2010-05-02,MIT,,35.3
+Frank,Jones,2008-06-18,Northwestern University,11,0.5
+Tina,Ly,,MIT,,35.7
+Liam,Hernandez,2010-04-26,Truong THPT Vo Thi Sau,,13.8
+Yen,Davis,,Stanford University,11,35.9
+Jack,Gonzalez,2008-12-01,Stanford University,Sophomore,40.4
+Catherine,Brown,,Truong THPT Nguyen Du,Freshman,15.4
+Noah,Dinh,2010-03-26,Truong THPT Nguyen Hue,Senior,33.5
+Viet,Phan,2011-05-28,Truong THPT Nguyen Du,,30.9
+Phong,Martinez,,,,31.6
+Duc,Ngo,2008-07-27,Columbia University,9,31.1
+Henry,Tran,2008-06-17,,,0.2
+Alex,Do,2011-08-31,Truong THPT Ly Tu Trong,Junior,24.5
+Rachel,Wilson,2010-09-07,,,44.8
+Frank,Dinh,2009-01-31,Truong THPT Le Quy Don,,12.2
+Brian,Smith,2009-05-04,,,29.3
+Liam,Hoang,2011-05-07,,,9.4
+Grace,Rodriguez,2010-03-13,,Junior,34.7
+Tina,Dang,,,Senior,4.6
+Noah,Ly,2009-09-01,Northwestern University,Sophomore,36.9
+Kelly,Martinez,2010-08-09,Truong THPT Nguyen Trai,12,16.2
+Xuan,Ly,2009-03-02,Stanford University,Senior,38.3
+Brian,Phan,2008-07-21,Stanford University,,13.2
+Quang,Brown,2011-05-03,Northwestern University,Freshman,23.1
+Hoa,Dang,2008-06-06,University of Chicago,Sophomore,32.4
+Linh,Dong,2010-07-16,,9,25.6
+Tina,Dang,2008-03-10,,Sophomore,4.0
+Catherine,Duong,2011-07-16,Truong THPT Nguyen Trai,Senior,38.8
+Emma,Phan,2011-10-05,Princeton University,Sophomore,27.7
+Henry,Ly,,Truong THPT Le Quy Don,9,8.4
+Khanh,Pham,2009-12-06,Truong THPT Hai Ba Trung,,30.7
+Tina,Taylor,2008-01-24,Truong THPT Nguyen Du,Sophomore,19.7
+Tina,Rodriguez,2010-11-22,University of California,Senior,8.9
+Brian,Davis,2009-08-11,Duke University,Freshman,29.1
+Uyen,Garcia,2008-08-18,Truong THPT Le Loi,Junior,19.8
+Emma,Jackson,2009-03-02,,,1.5
+Olivia,Vo,2010-09-26,Truong THPT Tran Phu,Freshman,6.4
+Chi,Dinh,2008-03-06,Truong THPT Ly Tu Trong,,46.6
+Alex,Phung,2009-06-05,Truong THPT Nguyen Du,,25.5
+Kelly,Jackson,,Duke University,,15.9
+Em,Brown,2010-12-28,Duke University,,32.4
+Xuan,Hoang,2010-04-29,Northwestern University,,22.7
+Catherine,Ly,2009-07-16,University of California,,36.4
+Sang,Hoang,2010-10-19,Truong THPT Quang Trung,Sophomore,1.9
+Nam,Ho,2009-02-11,,,41.3
+Duc,Vu,2009-01-22,Stanford University,Sophomore,2.0
+Oanh,Wilson,2010-09-25,,,7.3
+Sam,Thomas,2007-12-10,,Junior,43.0
+Sang,Lopez,2009-06-01,Truong THPT Ly Tu Trong,,36.8
+Grace,Ngo,2011-03-24,,,42.4
+Tina,Nguyen,2009-01-11,Princeton University,,30.9
+Paul,Jackson,2008-12-15,Yale University,9,37.9
+Frank,Duong,2009-07-07,,Junior,1.7
+Liam,Hoang,2011-06-30,Truong THPT Nguyen Hue,Sophomore,1.2
+Thu,Garcia,2009-01-31,Harvard University,11,35.2
+Liam,Smith,2010-07-10,,Sophomore,37.3
+Em,Truong,2008-08-30,Truong THPT Hai Ba Trung,,8.4
+Grace,Hoang,,Columbia University,,43.5
+Brian,Davis,2008-10-23,University of Chicago,9,0.3
+Quinn,Hoang,2010-10-24,Truong THPT Nguyen Du,11,33.1
+Nam,Jackson,2008-02-28,Truong THPT Quang Trung,9,33.9
+Sam,Martinez,2009-12-02,Truong THPT Le Loi,Junior,10.6
+Liam,Thomas,2011-02-06,Truong THPT Le Loi,,35.6
+Yen,Martinez,2011-10-09,,,36.9
+Catherine,Pham,2009-02-09,Truong THPT Vo Thi Sau,Senior,30.5
+Xuan,Vu,2008-08-06,Harvard University,Freshman,36.1
+Binh,Martin,2011-02-01,Truong THPT Tran Phu,,4.3
+Hoa,Vu,2008-03-06,,11,41.7
+Catherine,Dang,2009-10-28,,Freshman,38.6
+Grace,Martinez,,,Senior,30.4
+Henry,Miller,,Truong THPT Le Quy Don,12,42.1
+Minh,Phan,2010-08-09,Duke University,Junior,8.2
+Viet,Martinez,2011-06-12,MIT,9,15.9
+Chi,Moore,,Yale University,Freshman,48.3
+Ivy,Martin,2008-08-27,Columbia University,11,47.9
+Paul,Phan,2007-11-25,Truong THPT Nguyen Trai,,38.8
+Grace,Jackson,2011-06-05,Truong THPT Le Quy Don,11,16.1
+Brian,Truong,2008-01-09,Truong THPT Hai Ba Trung,Junior,17.3
+Liam,Ngo,2011-09-06,Truong THPT Nguyen Du,10,25.8
+Jack,Ngo,2011-09-18,MIT,Sophomore,16.3
+David,Davis,2009-09-13,,Sophomore,37.3
+Em,Anderson,2010-07-04,Truong THPT Quang Trung,9,49.5
+Paul,Do,2011-04-05,University of California,,19.2
+Em,Ngo,2010-02-02,,,36.3
+Giang,Phan,2009-02-20,Truong THPT Le Loi,,14.3
+David,Miller,2009-01-20,,9,44.6
+Nam,Ly,2010-01-04,Columbia University,,21.6
+Sam,Miller,2010-06-08,Truong THPT Hai Ba Trung,,19.8
+Xuan,Ngo,2009-03-01,Truong THPT Quang Trung,,36.3
+Olivia,Jackson,2008-11-24,Truong THPT Le Quy Don,,14.3
+Hoa,Anderson,2010-05-03,,,16.0
+Uyen,Dang,,,12,4.5
+Henry,Do,2008-12-31,,9,49.0
+Liam,Martin,,,11,41.4
+Linh,Tran,2009-02-08,Princeton University,,12.8
+David,Lopez,,,Sophomore,13.4
+Brian,Phan,2008-02-26,,,48.1
+Henry,Duong,2011-08-14,Stanford University,10,29.9
+Noah,Miller,,Truong THPT Le Quy Don,,14.2
+Duc,Rodriguez,2008-09-09,,,1.7
+Noah,Williams,2010-11-08,Northwestern University,,32.7
+Alex,Bui,2010-09-27,,Freshman,41.3
+Olivia,Wilson,2009-03-14,Harvard University,,17.8
+Sang,Dong,2011-01-18,,Senior,4.5
+Chi,Brown,2008-02-07,Columbia University,12,4.6
+Liam,Martin,,,Senior,19.5
+Thu,Nguyen,,Truong THPT Nguyen Du,,13.4
+David,Ly,2008-04-12,,,45.6
+Hoa,Jackson,2008-11-30,Northwestern University,Sophomore,7.4
+Ivy,Dinh,,Truong THPT Nguyen Hue,Sophomore,12.5
+Khanh,Williams,2011-09-08,,Junior,49.6
+Quinn,Thomas,2010-07-16,,12,18.2
+Em,Johnson,2008-01-29,,12,3.1
+Alex,Thomas,2009-03-04,Stanford University,Freshman,25.8
+Grace,Vu,,Truong THPT Nguyen Hue,10,0.9
+Grace,Dang,,Princeton University,Junior,48.3
+Phong,Hernandez,2011-09-23,Truong THPT Hai Ba Trung,Sophomore,23.0
+Henry,Lopez,,,12,0.5
+Binh,Williams,2009-09-10,Harvard University,,36.9
+Frank,Wilson,2009-08-10,,,43.1
+Minh,Hernandez,2008-07-07,,,33.1
+Frank,Smith,2009-10-14,,9,10.0
+Minh,Vu,2010-11-12,Columbia University,11,8.6
+Giang,Do,2010-01-24,,,1.2
+Frank,Anderson,2008-08-04,,10,34.5
+Maya,Martin,2009-09-04,Stanford University,Sophomore,33.4
+Linh,Pham,2010-09-04,Truong THPT Nguyen Du,Freshman,25.4
+Quinn,Phung,2009-06-24,,12,34.9
+Sang,Phan,2009-11-03,,,18.6
+Giang,Rodriguez,,Truong THPT Nguyen Hue,,26.6
+Catherine,Wilson,2011-08-29,Stanford University,9,29.8
+Chi,Do,2010-01-11,Yale University,10,5.5
+Brian,Truong,2010-01-06,Columbia University,9,32.7
+Minh,Tran,2010-07-25,Duke University,9,42.1
+Chi,Ho,2010-03-12,Truong THPT Ly Tu Trong,10,41.3
+Phong,Nguyen,2009-12-12,,Freshman,13.1
+Maya,Hoang,2008-10-15,Stanford University,Senior,2.8
+Quinn,Brown,2010-09-12,Princeton University,,23.5
+Nam,Rodriguez,2008-11-13,,10,48.5
+Nam,Duong,2010-07-18,Northwestern University,Freshman,34.4
+Thu,Dinh,2009-05-06,Truong THPT Le Loi,,34.6
+Thu,Dang,2010-02-28,Truong THPT Vo Thi Sau,Freshman,4.4
+Tina,Jackson,2010-07-27,Truong THPT Le Quy Don,Junior,10.1
+Quang,Brown,2009-11-19,Princeton University,,41.8
+Liam,Jones,2009-04-27,Truong THPT Quang Trung,9,11.2
+Em,Moore,,Harvard University,,46.4
+Chi,Dang,2008-11-06,,Senior,25.8
+Hoa,Miller,2008-12-02,Truong THPT Nguyen Trai,,4.3
+Chi,Dinh,,,Junior,48.7
+Viet,Phan,2007-12-22,Truong THPT Ly Tu Trong,10,12.9
+Henry,Duong,2010-05-16,Truong THPT Ly Tu Trong,Sophomore,16.5
+Linh,Martinez,2011-06-18,Truong THPT Nguyen Trai,,11.2
+Viet,Truong,,Truong THPT Le Quy Don,,17.4
+Sam,Phung,2011-09-24,,11,39.8
+Paul,Thomas,2008-11-01,,Junior,10.7
+Quinn,Ngo,,Truong THPT Nguyen Hue,11,48.8
+Xuan,Hernandez,2010-09-16,Princeton University,10,46.4
+Hoa,Nguyen,2011-06-21,Northwestern University,Freshman,4.9
+Emma,Vu,2010-07-02,,11,39.8
+Khanh,Williams,,Truong THPT Hai Ba Trung,9,31.6
+Linh,Lopez,2009-09-20,,Senior,12.2
+David,Williams,2008-01-03,Truong THPT Ly Tu Trong,,6.8
+Duc,Rodriguez,2008-07-07,Stanford University,Junior,18.3
+Sang,Martinez,2009-10-17,Truong THPT Le Quy Don,,33.2
+David,Gonzalez,2009-03-09,Truong THPT Tran Phu,,12.9
+Kelly,Johnson,2011-04-28,Columbia University,Senior,1.7
+Olivia,Wilson,,Yale University,,14.8
+Thu,Phan,2009-07-22,University of California,9,30.2
+Nam,Davis,,,10,44.2
+Linh,Jackson,2011-04-05,,,1.5
+Kelly,Martin,,Truong THPT Nguyen Trai,,43.9
+Binh,Phung,2008-09-12,Truong THPT Le Quy Don,9,39.9
+Linh,Smith,2009-12-24,,9,37.4
+Alex,Ngo,2009-06-11,University of California,,0.4
+David,Vu,,,10,14.2
+Yen,Hernandez,2008-09-15,,9,44.9
+Xuan,Dong,2009-03-07,,,2.6
+Ivy,Vo,2009-07-11,,,7.1
+Liam,Hernandez,2008-11-18,,,48.9
+Binh,Dinh,,Truong THPT Le Quy Don,,39.7
+Tina,Tran,2008-07-24,,Junior,40.5
+Khanh,Vo,,Duke University,,0.6
+Yen,Dang,2011-04-06,Truong THPT Quang Trung,9,24.8
+Khanh,Johnson,2008-12-13,Truong THPT Tran Phu,Sophomore,46.9
+Oanh,Davis,2010-02-06,Truong THPT Nguyen Du,10,2.4
+Liam,Garcia,2011-02-05,Yale University,12,42.8
+Uyen,Le,,University of California,12,46.5
+Grace,Wilson,2010-06-28,,Freshman,13.9
+Linh,Garcia,2010-04-03,,10,40.8
+Thu,Pham,2009-10-09,Truong THPT Le Quy Don,,36.2
+Maya,Rodriguez,2011-09-06,Truong THPT Nguyen Trai,,35.2
+Phong,Jackson,,University of Chicago,,8.4
+Kelly,Phung,2009-03-14,,,49.8
+Thu,Dang,,Truong THPT Vo Thi Sau,,16.8
+Alex,Thomas,,Truong THPT Nguyen Hue,12,28.1
+Xuan,Nguyen,2009-05-19,Truong THPT Tran Phu,,15.1
+Olivia,Le,,Duke University,Sophomore,45.8
+Tina,Rodriguez,,,Senior,30.2
+Frank,Hoang,,Truong THPT Nguyen Trai,10,16.5
+Oanh,Nguyen,2011-07-02,,,37.0
+Emma,Dinh,2009-10-15,,,47.0
+Grace,Truong,2008-03-16,Truong THPT Quang Trung,12,8.5
+Xuan,Dang,2010-12-14,Truong THPT Vo Thi Sau,9,15.2
+Olivia,Martin,2009-08-26,Truong THPT Vo Thi Sau,Junior,0.2
+Phong,Hernandez,2009-01-29,Harvard University,Senior,40.0
+Frank,Williams,2010-10-11,Stanford University,Sophomore,48.9
+David,Smith,2009-05-06,,9,12.0
+Emma,Hernandez,2011-09-27,,11,29.0
+Noah,Rodriguez,2010-12-14,Harvard University,11,45.1
+Quang,Martin,2011-09-24,Truong THPT Le Quy Don,,10.3
+Frank,Dang,2009-08-19,Truong THPT Vo Thi Sau,Sophomore,9.0
+Liam,Ngo,,,,42.6
+Sang,Dong,,Truong THPT Le Quy Don,,40.7
+Xuan,Nguyen,2009-11-28,Duke University,Freshman,36.3
+Oanh,Brown,2008-12-11,Yale University,Junior,13.8
+Minh,Taylor,2008-05-24,,Freshman,3.8
+Em,Anderson,,Truong THPT Nguyen Hue,,44.0
+Thu,Le,,Truong THPT Le Loi,Sophomore,7.1
+Xuan,Lopez,2011-01-10,,10,43.6
+Brian,Dang,2009-08-31,,,26.5
+Jack,Ly,2009-07-02,,,20.3
+Kelly,Brown,2008-02-26,Princeton University,,39.9
+Em,Moore,2009-07-11,Princeton University,11,31.1
+Grace,Martin,2011-06-23,Northwestern University,,49.1
+Henry,Taylor,2009-06-18,,,1.4
+Giang,Dinh,2008-04-09,Truong THPT Le Quy Don,,36.6
+Duc,Nguyen,,MIT,10,46.1
+Quang,Ho,,Truong THPT Tran Phu,9,6.5
+Sang,Williams,2009-01-22,,,22.0
+Chi,Duong,2008-10-14,University of Chicago,,8.1
+Binh,Phan,2009-08-02,,,14.8
+Liam,Vu,2011-09-03,Truong THPT Tran Phu,Sophomore,44.2
+Khanh,Garcia,2008-01-22,,,32.5
+Ivy,Rodriguez,,Truong THPT Vo Thi Sau,Senior,38.7
+Tina,Lopez,2008-11-26,University of Chicago,,39.7
+Khanh,Dang,2011-01-22,University of Chicago,9,2.9
+Viet,Phung,2008-08-24,,,9.8
+Frank,Ngo,2011-04-03,Duke University,,43.4
+Jack,Jones,2011-01-21,Duke University,Freshman,32.8
+Phong,Williams,2011-08-17,Harvard University,Junior,26.0
+David,Thomas,2009-02-28,,,47.7
+Frank,Martinez,2008-02-23,,,2.3
+David,Duong,2010-03-19,Truong THPT Nguyen Trai,12,37.5
+Tina,Ngo,2011-02-14,Truong THPT Hai Ba Trung,9,32.7
+Catherine,Ho,2010-07-26,Truong THPT Nguyen Trai,Sophomore,36.4
+Quang,Wilson,2010-11-06,,Sophomore,34.0
+Binh,Williams,2011-05-12,,,29.7
+Rachel,Smith,2009-01-09,,,39.1
+Ivy,Ly,2011-08-28,University of Chicago,9,13.7
+Uyen,Ngo,2010-01-19,,Junior,18.7
+Phong,Martin,2009-03-04,MIT,12,44.5
+Phong,Duong,2011-05-21,,Junior,17.9
+Quinn,Nguyen,2009-11-21,Truong THPT Ly Tu Trong,10,30.0
+Minh,Nguyen,2009-01-10,Truong THPT Ly Tu Trong,Sophomore,40.8
+Noah,Phan,,Truong THPT Nguyen Du,Sophomore,24.8
+Liam,Dang,2008-05-19,University of Chicago,12,41.9
+Khanh,Pham,2010-06-07,,,12.8
+Uyen,Jones,2009-07-02,,10,16.5
+Chi,Thomas,2007-12-10,Truong THPT Nguyen Du,10,19.7
+Xuan,Bui,2010-05-03,Yale University,,49.0
+Chi,Nguyen,2010-06-03,Truong THPT Quang Trung,Senior,1.0
+Uyen,Nguyen,,Truong THPT Ly Tu Trong,9,9.5
+Quang,Vo,2009-02-20,MIT,,46.6
+Minh,Ngo,2008-11-04,MIT,,34.2
+Ivy,Dang,2008-09-28,,,49.4
+Chi,Pham,2010-02-19,Truong THPT Vo Thi Sau,,13.7
+Phong,Phung,,,,7.9
+Binh,Anderson,2007-12-28,Northwestern University,,32.8
+Em,Rodriguez,2009-11-13,Truong THPT Quang Trung,10,5.5
+Duc,Truong,2008-12-08,University of California,,2.1
+Emma,Dang,2011-09-06,Truong THPT Hai Ba Trung,Junior,47.3
+Phong,Hoang,2011-07-24,Truong THPT Le Quy Don,,29.6
+Catherine,Dang,2011-09-28,Stanford University,,27.1
+Ivy,Brown,,University of California,,46.8
+Phong,Bui,2009-10-24,Princeton University,9,40.7
+Henry,Anderson,,Columbia University,12,47.9
+Brian,Moore,2011-06-09,,,23.4
+Minh,Miller,,University of Chicago,,10.1
+Phong,Dang,2008-07-15,Yale University,Junior,28.4
+Chi,Thomas,2009-02-14,Truong THPT Ly Tu Trong,Sophomore,39.3
+Phong,Jones,,,Sophomore,18.8
+Emma,Nguyen,2010-11-21,,,38.8
+Viet,Bui,,,,48.0
+Giang,Dang,2008-03-05,Truong THPT Quang Trung,12,18.3
+Khanh,Wilson,2010-05-19,Stanford University,11,16.3
+Brian,Duong,2011-03-31,Truong THPT Nguyen Du,,22.9
+Chi,Vo,2007-12-13,MIT,9,2.9
+Brian,Ho,2008-09-06,Truong THPT Le Quy Don,Sophomore,33.4
+Henry,Gonzalez,,,9,37.2
+Olivia,Davis,2009-08-19,Truong THPT Ly Tu Trong,12,29.8
+Paul,Nguyen,2011-07-10,MIT,,31.8
+Catherine,Smith,2007-11-06,Truong THPT Le Loi,Freshman,25.3
+Rachel,Brown,,Truong THPT Le Quy Don,,41.3
+Tina,Dang,2010-11-23,,9,12.7
+Minh,Thomas,2010-08-18,,Junior,49.6
+David,Davis,2008-11-24,Truong THPT Nguyen Hue,,9.9
+Brian,Pham,2009-03-16,Columbia University,Sophomore,46.3
+Khanh,Lopez,2011-01-27,Harvard University,Junior,35.4
+Yen,Le,,,Freshman,24.6
+David,Do,2008-08-18,,9,48.1
+Tina,Rodriguez,2010-07-06,,11,46.2
+Rachel,Wilson,2008-12-01,Columbia University,,24.8
+Minh,Duong,2009-05-05,,10,5.6
+Frank,Phan,2011-08-22,,Senior,9.8
+Henry,Rodriguez,2009-07-18,University of California,Freshman,2.4
+Noah,Bui,2008-07-24,Truong THPT Hai Ba Trung,,38.3
+Emma,Davis,2010-02-08,Truong THPT Tran Phu,11,31.5
+Yen,Phung,,,,32.1
+Catherine,Ly,2011-02-16,Princeton University,10,47.6
+Grace,Ho,2010-06-22,MIT,Freshman,22.9
+Emma,Anderson,2009-05-16,Truong THPT Vo Thi Sau,10,2.0
+Quinn,Anderson,2010-09-09,,12,24.5
+Giang,Dang,2010-07-11,,10,16.0
+Xuan,Johnson,,,,35.0
+Oanh,Duong,2009-03-15,Truong THPT Nguyen Trai,Freshman,0.8
+Oanh,Martinez,2011-02-23,Duke University,Freshman,6.6
+Kelly,Vo,2011-09-25,Truong THPT Nguyen Du,,35.9
+Sam,Dong,,Truong THPT Nguyen Trai,9,47.7
+Uyen,Dinh,2010-03-22,Stanford University,Junior,15.9
+Liam,Hernandez,2008-02-14,Duke University,,32.0
+Chi,Rodriguez,2009-03-16,,Junior,43.6
+Olivia,Martin,2008-09-20,Yale University,,13.3
+Oanh,Phung,2010-12-08,Yale University,,42.3
+Phong,Hernandez,2011-05-20,Truong THPT Le Loi,,18.3
+Rachel,Miller,2011-02-12,Truong THPT Quang Trung,Senior,22.5
+Viet,Do,2010-10-09,,Sophomore,46.3
+Giang,Vo,2008-06-09,Harvard University,,5.7
+Alex,Nguyen,2010-05-08,Truong THPT Tran Phu,,47.8
+Frank,Rodriguez,2008-07-04,,Senior,27.3
+Sang,Anderson,,Truong THPT Vo Thi Sau,,5.3
+Binh,Lopez,2007-11-22,,Senior,31.1
+Frank,Wilson,,University of California,9,40.8
+Thu,Phung,,Stanford University,,31.9
+Xuan,Bui,2011-01-05,,,4.5
+Frank,Taylor,2009-01-18,Yale University,12,19.2
+Phong,Phan,2009-01-14,,11,8.9
+Catherine,Nguyen,,University of Chicago,Freshman,42.5
+Chi,Hoang,2008-06-06,University of California,,13.6
+Linh,Phung,2011-02-11,,Senior,13.5
+An,Smith,2011-06-03,University of Chicago,10,19.3
+Giang,Miller,,Truong THPT Nguyen Du,11,2.1
+Sang,Vo,2010-01-14,University of California,Junior,41.3
+Sam,Do,2009-08-06,,,13.5
+Frank,Do,2010-03-11,Truong THPT Nguyen Hue,Junior,10.8
+Linh,Garcia,2010-10-18,Truong THPT Nguyen Du,11,5.3
+Rachel,Wilson,2009-09-25,Yale University,10,29.3
+Jack,Wilson,2008-05-05,,,18.4
+Rachel,Martinez,2011-02-11,Truong THPT Nguyen Hue,10,21.8
+Sam,Williams,2009-02-12,Truong THPT Vo Thi Sau,,26.0
+Khanh,Rodriguez,,,,35.9
+Quinn,Vu,2008-10-10,University of California,9,30.8
+Noah,Phan,,Truong THPT Tran Phu,,10.2
+Em,Lopez,2009-12-28,Princeton University,Sophomore,42.1
+Jack,Vo,,,10,14.8
+Tina,Smith,,University of California,Sophomore,47.0
+David,Pham,,Princeton University,11,48.5
+Uyen,Gonzalez,2008-03-20,Truong THPT Vo Thi Sau,,39.7
+Paul,Do,2011-03-05,Truong THPT Ly Tu Trong,9,34.2
+Sam,Dang,2007-11-18,,Freshman,36.1
+Linh,Gonzalez,2009-04-20,MIT,Sophomore,15.8
+Quinn,Hoang,2009-07-25,,12,3.2
+Binh,Pham,2009-02-27,Truong THPT Hai Ba Trung,,27.4
+Kelly,Truong,2008-06-28,Truong THPT Le Quy Don,11,31.2
+Kelly,Martin,2010-04-12,Truong THPT Quang Trung,9,42.2
+Chi,Nguyen,2008-09-10,MIT,Senior,15.8
+Maya,Truong,2011-06-24,MIT,Sophomore,29.0
+Paul,Hernandez,2011-10-08,Truong THPT Hai Ba Trung,10,14.7
+Jack,Dinh,2009-03-31,,,25.2
+Chi,Martin,2008-03-29,Truong THPT Vo Thi Sau,,45.6
+An,Rodriguez,2008-08-27,,,0.7
+Phong,Vu,,Duke University,,27.5
+Minh,Phung,2009-05-07,Truong THPT Ly Tu Trong,,44.5
+Phong,Vu,2009-02-11,MIT,12,33.1
+Sang,Tran,2010-01-21,Princeton University,11,29.5
+Khanh,Wilson,2009-11-27,Northwestern University,11,20.1
+Sam,Jackson,,Harvard University,11,17.1
+Sam,Phan,2011-06-30,University of California,,5.7
+Linh,Davis,2011-08-14,,12,2.8
+Brian,Le,2011-04-18,Columbia University,12,2.5
+Hoa,Smith,2011-05-31,Truong THPT Ly Tu Trong,,31.1
+Phong,Pham,2008-08-20,Princeton University,,5.4
+Olivia,Taylor,2011-04-26,,,28.4
+Hoa,Gonzalez,2009-05-10,Princeton University,10,15.1
+Nam,Dinh,2009-09-14,Princeton University,,32.8
+Paul,Do,2010-09-23,Harvard University,,41.4
+Sang,Duong,2009-05-19,Yale University,12,29.7
+Frank,Moore,2008-05-30,Truong THPT Nguyen Trai,Freshman,8.1
+Khanh,Duong,,,10,45.5
+Olivia,Le,,Stanford University,,9.8
+Sang,Anderson,2010-01-26,Truong THPT Ly Tu Trong,,13.9
+Yen,Duong,2010-01-06,,10,42.9
+Frank,Phan,2009-08-20,Truong THPT Le Quy Don,,46.0
+Linh,Tran,2008-06-17,Truong THPT Nguyen Hue,11,28.9
+Minh,Dang,2011-04-22,,Senior,25.4
+Alex,Pham,2008-03-20,,9,20.8
+An,Williams,,Harvard University,,37.8
+Rachel,Hernandez,2009-07-02,Truong THPT Le Quy Don,,4.5
+Emma,Wilson,2007-11-13,,10,21.9
+Quang,Jones,2009-07-11,MIT,9,22.9
+Alex,Phung,2009-04-01,,,15.0
+Kelly,Brown,2011-05-24,University of Chicago,,3.5
+Maya,Rodriguez,2011-03-31,,,34.5
+Noah,Duong,2010-07-11,,Freshman,46.3
+Henry,Pham,2010-03-17,Stanford University,12,22.8
+Jack,Martin,2010-12-26,MIT,,6.7
+Phong,Do,2011-05-18,,Junior,36.1
+Brian,Phan,,,Sophomore,44.6
+Catherine,Hoang,2008-05-25,,12,2.6
+Phong,Vu,,MIT,,49.7
+Liam,Hernandez,2009-02-07,Truong THPT Tran Phu,,4.0
+Alex,Dang,2009-09-24,University of California,10,28.0
+Uyen,Ho,2008-12-24,Truong THPT Nguyen Trai,9,13.0
+Rachel,Brown,2010-09-10,Truong THPT Le Loi,Senior,19.0
+Uyen,Hoang,2010-09-03,,,9.2
+Chi,Pham,2010-04-12,University of California,,1.5
+Emma,Martin,2011-01-25,University of California,,30.6
+Ivy,Phan,2011-05-28,Harvard University,Senior,20.3
+Ivy,Phan,2008-08-13,Stanford University,9,25.1
+Noah,Miller,2009-08-04,Harvard University,Sophomore,39.9
+Noah,Vu,2010-04-15,Harvard University,10,42.8
+Duc,Truong,,,,17.2
+Yen,Moore,2011-01-25,,12,26.3
+Binh,Brown,2008-06-01,,Senior,8.9
+Brian,Tran,2009-08-05,Yale University,,35.8
+Khanh,Ly,,Columbia University,,24.6
+Catherine,Garcia,2011-07-29,Columbia University,,16.3
+Duc,Hernandez,2011-08-21,,12,24.9
+Jack,Duong,,University of California,11,18.9
+Giang,Dang,2010-05-16,Duke University,12,7.9
+An,Vo,,,9,9.6
+Xuan,Vo,,MIT,Senior,37.2
+Frank,Anderson,2011-01-26,,Freshman,31.4
+Binh,Vu,2010-04-19,Truong THPT Nguyen Trai,11,40.5
+Kelly,Moore,2008-01-19,Harvard University,11,32.0
+Maya,Vu,,Columbia University,,21.5
+Jack,Bui,2010-05-05,,,18.7
+Binh,Dinh,,Princeton University,9,37.8
+David,Rodriguez,2010-04-14,,Junior,17.4
+Uyen,Rodriguez,2010-03-04,University of California,,38.3
+Sang,Brown,2010-05-18,,,0.3
+Rachel,Hoang,2010-11-16,Truong THPT Nguyen Trai,Sophomore,43.3
+Xuan,Phung,2009-05-30,Truong THPT Nguyen Trai,Senior,36.0
+Giang,Dang,2009-08-13,Truong THPT Nguyen Hue,Junior,31.8
+Hoa,Gonzalez,2010-03-15,,9,29.5
+Noah,Duong,2009-10-18,,,2.8
+David,Jackson,2008-04-11,University of California,Junior,25.5
+Yen,Jones,2011-07-02,Truong THPT Nguyen Trai,11,7.7
+Ivy,Tran,2008-04-14,,12,23.9
+Linh,Hernandez,2009-03-29,,12,19.6
+Emma,Smith,,University of Chicago,Junior,11.5
+Quang,Smith,2008-07-14,,11,32.5
+Maya,Tran,2009-02-18,Truong THPT Hai Ba Trung,,7.8
+Noah,Dong,2009-03-17,Harvard University,,7.0
+Liam,Tran,2011-06-16,Truong THPT Nguyen Trai,11,6.7
+Ivy,Smith,2008-11-07,Duke University,Sophomore,32.1
+Tina,Phan,,,Junior,20.1
+Hoa,Le,2009-09-01,,11,28.4
+Noah,Vo,2008-12-08,Yale University,,36.4
+Grace,Brown,2009-04-08,Duke University,Junior,33.3
+Sang,Gonzalez,2009-11-10,Truong THPT Le Quy Don,Senior,11.6
+Viet,Brown,2008-06-18,Princeton University,Junior,25.5
+Kelly,Taylor,,Truong THPT Vo Thi Sau,9,27.8
+Olivia,Pham,2009-04-01,Yale University,Freshman,40.2
+Ivy,Vu,2007-12-08,Truong THPT Tran Phu,11,17.0
+Frank,Brown,2011-06-25,Northwestern University,,38.7
+Sang,Phung,2011-10-15,Harvard University,11,9.3
+Ivy,Pham,2009-03-26,,10,7.8
+Oanh,Nguyen,2009-10-05,Duke University,,46.2
+Alex,Ho,2010-11-13,,9,49.9
+Hoa,Pham,2011-01-03,,,19.5
+Binh,Lopez,,University of Chicago,Sophomore,27.1
+Duc,Dong,2011-03-05,Yale University,,43.4
+Grace,Lopez,2008-03-05,Truong THPT Nguyen Hue,,38.8
+Liam,Williams,2009-10-02,Truong THPT Nguyen Hue,Junior,9.4
+Jack,Dang,2009-07-05,Stanford University,9,39.5
+Liam,Ngo,2009-02-19,Truong THPT Quang Trung,Senior,24.6
+Emma,Hernandez,2011-03-30,Stanford University,,8.8
+Tina,Nguyen,2011-05-28,MIT,9,10.2
+Minh,Phung,2008-05-15,Truong THPT Ly Tu Trong,11,31.2
+Liam,Phan,2011-01-10,MIT,,4.1
+Yen,Smith,2009-09-01,Truong THPT Tran Phu,,30.8
+Hoa,Wilson,2010-10-16,Truong THPT Le Loi,11,22.3
+Quinn,Vu,2011-01-03,University of Chicago,11,26.0
+Henry,Hernandez,2008-05-01,Truong THPT Tran Phu,,27.0
+Duc,Brown,2008-11-30,Truong THPT Le Quy Don,,44.3
+Linh,Duong,2007-11-12,MIT,9,2.9
+Olivia,Hernandez,2008-10-01,Stanford University,,41.5
+Duc,Rodriguez,2011-08-08,,,37.3
+Duc,Miller,2010-10-26,Northwestern University,Junior,30.5
+Grace,Dong,2008-12-10,,10,19.1
+Phong,Pham,2009-10-23,Northwestern University,9,5.5
+Henry,Vo,2010-11-14,,Sophomore,3.3
+Khanh,Williams,2010-05-01,Truong THPT Vo Thi Sau,Sophomore,43.3
+Hoa,Dong,2008-08-22,,,12.6
+Olivia,Jones,,Harvard University,9,3.1
+Thu,Pham,2009-11-06,Truong THPT Nguyen Du,12,9.4
+Duc,Hernandez,2007-12-01,Truong THPT Nguyen Trai,,20.8
+Oanh,Le,2008-06-03,Princeton University,10,48.0
+Jack,Garcia,,Truong THPT Nguyen Trai,,35.0
+Phong,Williams,2008-02-04,Truong THPT Le Loi,Sophomore,46.1
+Nam,Jones,2011-07-15,,,47.2
+David,Ho,,,Freshman,41.0
+Nam,Johnson,2010-05-23,Truong THPT Nguyen Hue,,18.3
+Alex,Bui,2010-05-07,Columbia University,,33.0
+Noah,Le,2008-08-19,,Senior,49.5
+Oanh,Dong,2009-06-15,Harvard University,Senior,5.1
+Duc,Thomas,2009-05-18,,10,24.7
+Binh,Martin,2009-05-29,MIT,Freshman,41.1
+Brian,Ho,,University of Chicago,Freshman,20.0
+Minh,Wilson,2008-01-02,Columbia University,11,49.6
+Giang,Jones,,Truong THPT Le Loi,10,34.1
+Sang,Le,2011-08-24,Harvard University,,14.4
+Maya,Rodriguez,2009-02-02,Truong THPT Tran Phu,,12.4
+Chi,Tran,2010-10-06,Columbia University,Freshman,20.1
+Liam,Phan,2008-04-13,Truong THPT Ly Tu Trong,Junior,13.1
+Quang,Anderson,2009-08-04,Truong THPT Nguyen Trai,11,9.5
+Minh,Jones,2007-11-15,Stanford University,,42.9
+Thu,Wilson,,University of California,,17.1
+An,Gonzalez,2010-09-25,,Senior,41.9
+Nam,Phung,2009-09-26,MIT,12,17.8
+Kelly,Pham,,,,32.9
+Brian,Le,2010-07-27,University of California,Junior,2.3
+Thu,Smith,2009-07-01,Stanford University,10,5.8
+Kelly,Vo,,Truong THPT Tran Phu,,21.7
+Grace,Brown,2008-09-27,Truong THPT Le Loi,,13.7
+Viet,Miller,2009-08-24,Truong THPT Ly Tu Trong,,42.1
+David,Garcia,2010-01-19,Truong THPT Ly Tu Trong,10,12.4
+Hoa,Garcia,,University of California,,37.1
+Nam,Williams,2011-05-09,University of Chicago,,47.5
+Catherine,Vu,2008-08-30,,,47.6
+Maya,Taylor,2008-12-05,,10,36.1
+Catherine,Williams,2010-09-17,University of California,Junior,12.3
+Quinn,Tran,2008-02-25,Truong THPT Ly Tu Trong,,35.1
+Kelly,Davis,2009-09-12,Truong THPT Le Quy Don,,1.5
+Xuan,Miller,2011-05-08,Truong THPT Nguyen Du,,22.6
+Henry,Taylor,2009-09-14,Truong THPT Le Quy Don,,22.9
+Ivy,Dang,,,Junior,9.2
+Minh,Vu,2009-01-31,,12,8.3
+Grace,Dong,2007-11-07,University of Chicago,12,45.1
+Olivia,Taylor,2010-08-20,University of California,,1.2
+Noah,Dinh,2008-06-10,Duke University,,18.0
+Sang,Anderson,2009-09-14,Truong THPT Le Quy Don,,49.6
+Yen,Anderson,2011-02-28,University of California,,30.7
+Jack,Bui,2011-07-10,,,15.4
+Hoa,Miller,2009-04-21,MIT,Sophomore,3.3
+Grace,Pham,2009-08-17,,11,22.5
+Quinn,Miller,2011-08-21,University of Chicago,9,6.1
+Duc,Truong,2008-03-29,University of Chicago,Senior,31.4
+Minh,Anderson,2011-07-18,Truong THPT Le Quy Don,,38.6
+David,Jones,2009-09-29,Yale University,,43.1
+Hoa,Martinez,,,,6.2
+Linh,Smith,,Truong THPT Nguyen Du,Freshman,11.5
+Quinn,Thomas,2009-06-13,Truong THPT Hai Ba Trung,11,23.9
+Viet,Do,,Duke University,Freshman,19.9
+Catherine,Dong,2010-12-31,University of Chicago,Junior,28.8
+Kelly,Williams,2008-11-04,MIT,Sophomore,34.6
+Sang,Johnson,2011-02-07,MIT,10,43.4
+Noah,Martin,2008-02-08,Truong THPT Hai Ba Trung,Senior,15.2
+Khanh,Smith,2009-03-26,Truong THPT Nguyen Hue,Junior,22.3
+Kelly,Anderson,2010-01-14,Truong THPT Hai Ba Trung,9,18.4
+Viet,Hoang,2009-06-20,MIT,Senior,23.0
+Emma,Phan,2010-07-18,,,6.4
+Viet,Johnson,2010-03-16,,,11.4
+Jack,Garcia,,Truong THPT Nguyen Hue,10,20.9
+Minh,Brown,2011-04-20,Columbia University,Sophomore,1.8
+Frank,Smith,2008-02-06,Truong THPT Vo Thi Sau,Freshman,24.3
+Noah,Gonzalez,2008-08-13,,11,2.7
+Phong,Ho,2008-08-29,Truong THPT Nguyen Du,11,22.3
+Noah,Martinez,2011-09-07,Truong THPT Nguyen Du,10,20.8
+Viet,Dang,,Yale University,Junior,2.3
+Noah,Pham,2011-10-26,,,13.7
+Yen,Jackson,2011-06-04,Truong THPT Tran Phu,,23.0
+An,Tran,2009-12-30,Yale University,,25.2
+Rachel,Truong,2011-06-04,University of Chicago,Sophomore,12.5
+Duc,Davis,,,11,25.5
+Paul,Garcia,2009-12-26,,11,2.2
+Rachel,Brown,,University of California,Sophomore,22.1
+Olivia,Dinh,2010-07-06,Truong THPT Ly Tu Trong,,24.9
+Em,Brown,2010-05-03,Truong THPT Nguyen Du,,21.9
+Viet,Jackson,2009-11-21,Columbia University,9,1.0
+Hoa,Jackson,2010-04-15,,Freshman,33.6
+Minh,Smith,2008-05-14,Truong THPT Le Quy Don,10,35.4
+Duc,Rodriguez,2009-12-17,,Senior,1.9
+Olivia,Ly,2009-11-04,University of California,,30.4
+Kelly,Dong,2010-11-03,,12,22.6
+Ivy,Hoang,2010-11-13,,12,35.9
+Yen,Anderson,2011-05-08,Truong THPT Nguyen Trai,Senior,36.3
+Duc,Phan,2009-07-22,,,14.9
+Ivy,Tran,,Truong THPT Le Quy Don,,5.0
+Xuan,Martinez,,,,0.3
+Binh,Phan,2008-02-06,Truong THPT Nguyen Trai,10,41.5
+Olivia,Vu,,Truong THPT Nguyen Du,10,37.5
+Sang,Duong,,,Junior,13.1
+Chi,Pham,2007-12-01,Harvard University,11,34.1
+Viet,Vo,2011-06-20,,Freshman,23.0
+Duc,Dong,2010-10-26,Truong THPT Le Quy Don,12,6.6
+Duc,Do,2011-08-20,University of Chicago,,32.6
+Thu,Phung,2010-10-31,Truong THPT Nguyen Trai,Freshman,40.3
+Uyen,Moore,2009-12-15,Stanford University,Sophomore,17.8
+Xuan,Vo,,MIT,Freshman,12.8
+Quinn,Phung,,Truong THPT Hai Ba Trung,,3.1
+Liam,Vo,,Northwestern University,Senior,20.4
+Brian,Hernandez,2011-07-08,Truong THPT Ly Tu Trong,9,25.3
+Alex,Truong,2010-01-07,Duke University,,41.2
+Noah,Duong,,,9,41.9
+Jack,Le,,,,3.0
+Linh,Truong,2009-08-18,Yale University,,2.6
+Ivy,Johnson,2008-06-15,Truong THPT Tran Phu,Sophomore,27.9
+Quang,Martinez,,,9,6.9
+Nam,Le,,Duke University,Senior,11.9
+Ivy,Tran,2010-06-12,University of Chicago,,6.2
+David,Do,2008-03-18,Truong THPT Vo Thi Sau,11,17.4
+Grace,Hoang,2011-03-06,Truong THPT Hai Ba Trung,10,40.6
+Binh,Duong,2008-06-01,,Junior,45.3
+Binh,Jones,2010-03-16,,,38.6
+Minh,Gonzalez,2009-11-06,Truong THPT Le Loi,Freshman,28.1
+Thu,Wilson,2010-09-11,Northwestern University,,48.2
+An,Miller,2011-01-28,University of Chicago,Senior,7.3
+Viet,Ngo,2010-01-05,Truong THPT Vo Thi Sau,,47.1
+Noah,Dang,,Columbia University,,21.2
+Tina,Bui,2009-03-21,Truong THPT Le Loi,Junior,21.9
+Yen,Wilson,2010-09-16,Columbia University,9,29.7
+Viet,Brown,,Stanford University,12,8.6
+Sam,Tran,,Truong THPT Vo Thi Sau,10,40.7
+Noah,Dong,2009-03-24,Stanford University,,20.0
+Em,Martinez,2010-12-01,Truong THPT Quang Trung,10,6.4
+Olivia,Rodriguez,2010-05-02,Duke University,,33.2
+Khanh,Nguyen,2009-08-17,Truong THPT Le Quy Don,10,38.9
+Duc,Dang,2010-12-18,,,35.1
+Grace,Johnson,2009-09-21,Yale University,Sophomore,45.2
+Nam,Anderson,2009-02-15,,Freshman,23.2
+Khanh,Lopez,,Princeton University,,23.1
+Thu,Phan,2010-08-16,Truong THPT Tran Phu,10,18.0
+Yen,Dinh,,Duke University,Freshman,41.8
+Sam,Ngo,2008-09-04,University of California,,26.1
+Emma,Moore,2010-06-20,,Sophomore,38.3
+Oanh,Moore,,,,24.7
+Khanh,Ly,2010-03-06,,,22.5
+Binh,Thomas,2008-08-01,MIT,,10.1
+Rachel,Ho,2011-03-11,,Sophomore,3.4
+Quang,Ly,2009-04-11,,,20.2
+Hoa,Wilson,2008-11-07,Yale University,,32.9
+David,Pham,2009-01-20,Truong THPT Tran Phu,10,22.1
+Noah,Garcia,2009-06-12,,,38.9
+Catherine,Pham,2009-02-20,,,24.3
+Em,Phung,2009-08-17,University of California,Senior,26.5
+Khanh,Phan,2011-10-22,University of Chicago,Freshman,15.1
+Emma,Truong,2009-04-14,,,40.4
+Thu,Wilson,2009-12-27,MIT,12,3.7
+Duc,Duong,,University of Chicago,Senior,11.8
+Emma,Thomas,2008-03-09,,12,27.7
+Noah,Dang,2010-02-03,,Sophomore,38.0
+Em,Martinez,2010-05-06,,,30.8
+Em,Garcia,2009-06-07,,Senior,5.6
+Binh,Martin,2010-02-20,,,39.5
+Binh,Vu,2011-03-23,Truong THPT Nguyen Hue,,7.5
+Uyen,Miller,,Truong THPT Vo Thi Sau,,20.6
+Oanh,Le,2011-07-31,University of Chicago,10,6.7
+Uyen,Hoang,2009-02-26,,,27.9
+Khanh,Wilson,2011-02-26,Truong THPT Le Loi,,18.8
+Giang,Martin,,Truong THPT Le Quy Don,,47.2
+Duc,Anderson,2009-02-17,,12,8.0
+Chi,Phan,2010-03-08,MIT,9,29.5
+Uyen,Thomas,2008-12-04,Truong THPT Nguyen Du,,31.3
+Frank,Jackson,2008-01-31,Truong THPT Nguyen Hue,Sophomore,47.2
+Phong,Davis,2009-03-10,,12,36.9
+Grace,Le,2009-08-21,Truong THPT Le Loi,Freshman,27.8
+Xuan,Wilson,2011-10-30,Truong THPT Nguyen Du,,35.1
+Sang,Do,2008-07-19,University of California,,11.2
+Khanh,Anderson,2011-02-11,,12,11.3
+Noah,Moore,2008-02-16,,12,34.2
+Khanh,Davis,2009-11-14,,,31.2
+Catherine,Thomas,,Stanford University,12,49.1
+Maya,Dang,,Truong THPT Vo Thi Sau,,16.6
+Uyen,Jones,2011-10-08,Northwestern University,,24.5
+David,Ngo,2008-10-12,Harvard University,,3.7
+Nam,Anderson,2008-07-25,,9,19.4
+Yen,Taylor,2011-10-28,Northwestern University,,16.7
+Sam,Ly,,,,23.3
+Frank,Hoang,2009-12-05,Truong THPT Le Quy Don,Junior,0.1
+Emma,Dong,2008-04-15,Truong THPT Nguyen Trai,,43.1
+Phong,Williams,2009-12-05,,12,43.8
+Xuan,Pham,2008-01-11,,,12.0
+Linh,Duong,2011-04-30,Truong THPT Le Quy Don,,32.1
+Henry,Hernandez,2011-05-27,,,21.8
+Uyen,Smith,2007-11-02,,,42.4
+Tina,Johnson,2011-10-27,Yale University,,4.5
+Phong,Dinh,,Princeton University,,5.0
+Alex,Bui,2008-10-26,MIT,,37.0
+Hoa,Anderson,2008-04-21,Yale University,,32.2
+Catherine,Rodriguez,2011-07-25,,12,18.0
+Rachel,Moore,2008-05-13,Truong THPT Nguyen Trai,9,46.2
+Linh,Gonzalez,,Truong THPT Nguyen Hue,Freshman,23.5
+Jack,Miller,2008-09-29,Truong THPT Nguyen Hue,Junior,47.3
+Xuan,Vo,2011-06-19,,,20.0
+Jack,Williams,2009-05-20,,9,49.6
+Noah,Martinez,2008-11-17,Truong THPT Hai Ba Trung,,3.6
+Liam,Rodriguez,2008-10-03,Truong THPT Nguyen Du,,32.6
+Viet,Phan,2010-02-02,,9,14.7
+Henry,Truong,2011-08-28,Truong THPT Le Quy Don,Junior,26.3
+Olivia,Miller,2008-08-05,University of Chicago,,16.9
+Noah,Miller,,Stanford University,,42.2
+Kelly,Lopez,2008-11-29,,11,45.3
+Tina,Jones,2009-07-23,Princeton University,11,31.1
+Quinn,Bui,2011-01-08,Truong THPT Nguyen Hue,11,9.6
+Khanh,Miller,2008-07-22,Truong THPT Quang Trung,,44.4
+Brian,Vo,2009-04-24,University of Chicago,Junior,27.5
+Catherine,Phung,,,12,49.4
+Hoa,Rodriguez,2010-05-19,Truong THPT Tran Phu,Freshman,21.3
+Uyen,Bui,2009-11-24,,Junior,23.1
+Linh,Wilson,2010-10-28,,12,32.2
+Maya,Dong,2008-03-14,,11,46.0
+Chi,Gonzalez,2009-05-26,Truong THPT Tran Phu,Sophomore,33.0
+An,Thomas,2010-08-06,,,29.0
+Jack,Vu,2011-02-12,MIT,10,17.6
+Catherine,Bui,2010-05-05,,9,36.2
+Rachel,Phung,2008-02-17,Stanford University,,8.8
+Paul,Jones,2008-11-10,University of Chicago,Freshman,25.3
+David,Phan,2009-11-30,Truong THPT Nguyen Trai,,22.8
+Emma,Smith,,Truong THPT Ly Tu Trong,,16.8
+Oanh,Moore,2008-05-24,,11,39.9
+Sam,Brown,2010-03-26,Truong THPT Ly Tu Trong,12,6.5
+Alex,Brown,2007-11-22,MIT,10,13.3
+Em,Do,2009-01-18,Truong THPT Vo Thi Sau,,17.6
+Duc,Miller,2008-04-11,Truong THPT Nguyen Hue,9,37.8
+Sam,Dong,,,,5.3
+Noah,Dang,2009-05-16,Harvard University,,11.6
+Minh,Brown,2011-07-27,Truong THPT Le Loi,,39.5
+Paul,Dinh,,Truong THPT Vo Thi Sau,Sophomore,9.0
+Em,Thomas,2007-12-14,Truong THPT Vo Thi Sau,Junior,15.2
+Tina,Hoang,2009-01-28,,,27.1
+Thu,Anderson,2011-04-19,,11,12.6
+Henry,Brown,2007-11-03,,12,28.2
+Viet,Moore,2010-11-22,Truong THPT Quang Trung,,37.7
+Minh,Thomas,2009-05-26,,Sophomore,17.5
+Nam,Martin,2011-08-19,,Senior,28.7
+Noah,Jackson,2011-09-20,Truong THPT Vo Thi Sau,,18.0
+Tina,Dang,2011-10-21,Truong THPT Ly Tu Trong,Senior,19.8
+Chi,Smith,2008-07-17,,,20.6
+Uyen,Anderson,2010-10-22,Truong THPT Nguyen Du,,46.2
+Grace,Dang,,Yale University,12,11.2
+Oanh,Ho,2007-12-20,Truong THPT Quang Trung,Sophomore,14.4
+Khanh,Le,2008-02-01,Columbia University,11,48.7
+Tina,Ho,,Harvard University,,30.8
+Linh,Johnson,2009-03-16,Northwestern University,11,38.3
+Yen,Dang,,,,20.4
+Nam,Dang,2010-10-12,,,45.0
+Sam,Wilson,,Yale University,9,0.7
+Frank,Wilson,2010-07-11,,12,27.1
+Henry,Dang,2010-06-16,,,12.3
+Hoa,Phung,2008-08-31,,Junior,25.4
+Khanh,Thomas,,Duke University,Senior,31.2
+Duc,Vu,,Truong THPT Quang Trung,Senior,4.8
+Duc,Tran,2008-01-05,,,13.6
+Liam,Vo,,,,14.8
+David,Miller,2010-06-04,MIT,12,18.5
+David,Rodriguez,2009-02-28,Truong THPT Nguyen Trai,Freshman,43.9
+Grace,Davis,2007-12-01,,,40.8
+Brian,Rodriguez,,Northwestern University,,32.7
+Grace,Dong,2008-01-01,Truong THPT Quang Trung,Freshman,44.4
+Phong,Phung,2010-01-19,,,40.1
+Rachel,Ngo,2010-01-25,,,30.8
+Linh,Jones,2008-11-20,,9,36.0
+Frank,Smith,2009-06-14,Truong THPT Tran Phu,,36.0
+Olivia,Duong,2010-05-19,Harvard University,10,46.4
+David,Martinez,2011-09-27,Truong THPT Ly Tu Trong,,9.5
+Emma,Hoang,2011-02-26,Stanford University,Senior,23.6
+Viet,Ho,2011-03-22,Stanford University,,22.2
+An,Lopez,2010-02-01,Stanford University,Senior,36.5
+Frank,Martin,2008-01-10,,,42.2
+Khanh,Moore,2010-12-30,Truong THPT Nguyen Trai,,37.8
+Frank,Garcia,2009-03-01,,11,13.3
+Catherine,Jones,2009-03-18,Truong THPT Nguyen Trai,Junior,18.3
+Chi,Dong,2008-08-17,,,23.5
+Rachel,Johnson,,Truong THPT Le Loi,Junior,16.4
+Maya,Ngo,2008-02-21,Truong THPT Le Loi,11,15.6
+Duc,Davis,2009-03-01,,,40.3
+Linh,Truong,2009-06-06,Princeton University,9,34.9
+Quang,Nguyen,2009-06-30,,9,30.3
+Maya,Vu,2010-08-12,University of California,9,2.0
+Brian,Dang,,Truong THPT Tran Phu,,25.8
+Maya,Nguyen,2011-04-05,,,27.8
+Khanh,Rodriguez,2009-03-28,University of California,,8.9
+Liam,Ho,2009-10-10,Truong THPT Ly Tu Trong,12,5.8
+Linh,Hernandez,2010-07-11,Truong THPT Tran Phu,9,21.4
+Jack,Johnson,2009-10-02,,9,22.7
+Thu,Do,2008-10-23,Stanford University,Sophomore,27.4
+Maya,Hoang,2008-05-10,Truong THPT Nguyen Trai,,31.5
+Kelly,Rodriguez,,Northwestern University,Senior,15.4
+Alex,Ly,2011-09-11,,,32.0
+Giang,Dang,2008-11-02,MIT,,30.3
+Jack,Dang,,Truong THPT Le Loi,11,21.8
+Viet,Vu,2011-07-11,,,4.3
+Chi,Pham,2009-03-09,Duke University,,21.7
+Viet,Johnson,2008-07-16,,Sophomore,6.8
+Hoa,Nguyen,2011-09-22,University of California,10,14.2
+Uyen,Ho,,Truong THPT Nguyen Trai,10,43.0
+Giang,Brown,2011-04-28,Columbia University,9,4.7
+Chi,Martinez,2010-03-14,,12,20.5
+Alex,Ho,2009-08-14,Princeton University,,5.3
+Paul,Pham,2008-05-14,,Freshman,16.7
+Em,Lopez,2010-11-14,MIT,,6.3
+Emma,Truong,2011-08-23,Truong THPT Vo Thi Sau,12,11.5
+Yen,Vo,,,,20.1
+Kelly,Vo,2011-07-08,University of California,,2.5
+Em,Miller,2010-06-17,University of Chicago,,2.8
+Phong,Tran,2010-02-21,Truong THPT Nguyen Trai,,28.1
+David,Moore,2008-07-08,Truong THPT Nguyen Du,,27.4
+Quang,Phung,,,,6.2
+Thu,Tran,,,,4.0
+Ivy,Jones,,,Senior,44.1
+Sam,Vo,,Truong THPT Hai Ba Trung,Freshman,3.7
+Olivia,Duong,2011-10-23,Northwestern University,,35.1
+Yen,Tran,2008-02-12,Truong THPT Nguyen Du,9,48.5
+Emma,Rodriguez,2011-05-11,Truong THPT Le Loi,10,15.4
+Frank,Dong,,Truong THPT Le Loi,12,16.8
+Frank,Dang,2009-06-05,University of Chicago,,4.1
+Sam,Moore,2008-03-08,Princeton University,,9.9
+Emma,Moore,,Stanford University,12,34.8
+Noah,Smith,2008-06-07,,,40.0
+Xuan,Garcia,,Truong THPT Nguyen Trai,Sophomore,2.5
+Rachel,Smith,2008-10-28,,,35.6
+Paul,Lopez,2010-01-19,,Freshman,2.2
+Xuan,Thomas,2010-08-10,Truong THPT Quang Trung,,23.9
+Thu,Lopez,2009-07-21,,,42.0
+Liam,Smith,2009-10-08,Yale University,,36.9
+Catherine,Pham,2011-01-21,Columbia University,Sophomore,2.8
+Liam,Miller,2010-10-22,University of Chicago,11,0.4
+Chi,Thomas,2008-09-25,Truong THPT Nguyen Du,Sophomore,5.5
+Quinn,Brown,2009-06-24,Truong THPT Nguyen Hue,,17.8
+Chi,Williams,2011-05-14,,Junior,12.6
+Khanh,Dang,2008-02-25,University of Chicago,Freshman,36.1
+Binh,Dang,2010-12-25,Northwestern University,9,30.1
+Viet,Wilson,2010-08-24,Northwestern University,,25.6
+Quang,Le,2008-01-23,Truong THPT Le Loi,12,11.3
+Paul,Dong,2011-10-07,Truong THPT Le Loi,Freshman,6.5
+Phong,Rodriguez,,MIT,,27.9
+Binh,Jackson,2010-05-23,Columbia University,,7.6
+David,Ngo,2010-05-29,University of California,12,34.5
+An,Ly,2009-12-05,Truong THPT Nguyen Trai,,18.4
+Grace,Tran,2008-03-08,,10,45.5
+Quang,Dinh,2007-11-09,,Freshman,38.3
+Nam,Davis,2010-08-25,,9,27.5
+Olivia,Truong,2008-12-07,,,28.9
+Chi,Ho,2009-01-31,University of Chicago,Junior,45.9
+Henry,Wilson,2011-02-18,Truong THPT Vo Thi Sau,12,4.6
+Rachel,Dong,2011-06-09,,,47.5
+Grace,Tran,2009-01-01,Truong THPT Hai Ba Trung,,35.7
+Alex,Johnson,2010-05-02,Truong THPT Le Quy Don,12,48.7
+Quinn,Jackson,2011-01-19,,Junior,42.8
+Alex,Gonzalez,,Truong THPT Ly Tu Trong,12,21.9
+Grace,Martinez,2008-08-04,Truong THPT Nguyen Trai,Junior,22.0
+Rachel,Vu,2010-11-06,Northwestern University,Freshman,9.6
+Em,Jackson,2009-04-06,Truong THPT Hai Ba Trung,Senior,32.8
+Grace,Dong,2011-04-08,Harvard University,Junior,31.5
+Viet,Jones,2009-05-30,Yale University,Junior,32.3
+Em,Brown,2007-12-21,Yale University,,48.7
+Thu,Jones,2009-11-22,,9,37.6
+Quang,Brown,2010-08-24,Stanford University,,5.6
+Binh,Johnson,2010-05-11,,Sophomore,11.0
+Sam,Miller,2011-08-07,,10,39.2
+Paul,Phan,2008-01-21,Truong THPT Nguyen Trai,,29.1
+Rachel,Tran,2011-06-18,,Freshman,4.4
+Olivia,Jones,2010-08-25,Harvard University,Freshman,48.6
+Duc,Thomas,2010-11-14,Truong THPT Tran Phu,11,28.8
+Chi,Anderson,2010-07-11,,,23.4
+Linh,Duong,2008-03-20,Columbia University,9,23.4
+Quang,Dinh,2009-03-30,Truong THPT Vo Thi Sau,,10.7
+Frank,Le,2008-12-12,,,48.9
+Khanh,Williams,2010-07-05,,,15.0
+Liam,Bui,2009-10-20,,,2.6
+Thu,Pham,,Harvard University,,41.1
+Sang,Ho,,Truong THPT Nguyen Hue,10,49.5
+An,Dang,2009-03-29,Truong THPT Tran Phu,11,7.9
+Ivy,Brown,2011-06-29,Truong THPT Nguyen Trai,Junior,0.4
+Oanh,Martin,2010-03-11,University of California,12,43.1
+Henry,Le,2007-11-17,,,30.2
+Khanh,Phan,,Columbia University,Freshman,11.8
+Ivy,Rodriguez,2009-04-20,Truong THPT Nguyen Trai,Freshman,33.5
+Noah,Anderson,,,,31.7
+Uyen,Vo,2010-11-11,Columbia University,Sophomore,42.8
+Khanh,Tran,,Princeton University,,1.7
+Minh,Tran,2010-03-30,Princeton University,Junior,32.5
+Brian,Hernandez,2010-05-18,MIT,Junior,16.9
+Nam,Phan,2009-07-05,Harvard University,12,30.7
+Oanh,Dinh,2010-11-15,,,30.1
+Emma,Ngo,2010-12-04,Yale University,9,41.7
+Xuan,Davis,2009-04-13,,,18.8
+Maya,Thomas,2011-01-30,,Freshman,23.9
+Kelly,Davis,2008-09-04,Duke University,,14.1
+Chi,Taylor,2009-07-18,Truong THPT Ly Tu Trong,,32.6
+Paul,Rodriguez,2009-10-11,University of Chicago,,20.8
+Uyen,Bui,,Northwestern University,,47.0
+Quinn,Vo,,,11,13.8
+Rachel,Johnson,2009-02-13,Truong THPT Ly Tu Trong,9,0.5
+Olivia,Phan,2007-11-08,,Sophomore,30.3
+Xuan,Hoang,2010-04-19,Northwestern University,Sophomore,25.9
+Uyen,Martinez,,Truong THPT Ly Tu Trong,,4.5
+Khanh,Gonzalez,2008-09-01,Truong THPT Le Loi,Junior,22.8
+Paul,Smith,2009-04-24,Truong THPT Ly Tu Trong,,2.0
+Rachel,Vu,2011-02-15,Truong THPT Vo Thi Sau,Sophomore,33.1
+Alex,Vu,2008-11-25,MIT,Junior,40.6
+Olivia,Thomas,2010-07-30,Northwestern University,Freshman,43.1
+David,Davis,2010-07-08,Princeton University,Junior,34.2
+An,Pham,2007-11-18,Truong THPT Quang Trung,Senior,40.0
+Minh,Smith,2008-06-20,University of Chicago,12,14.8
+Noah,Garcia,2010-08-25,Truong THPT Le Loi,,15.9
+Uyen,Dang,2009-03-05,Truong THPT Nguyen Hue,10,12.8
+Quinn,Phung,2008-09-19,Truong THPT Le Quy Don,,33.5
+Giang,Taylor,2009-07-15,Truong THPT Ly Tu Trong,,7.1
+Ivy,Ngo,2007-11-26,,12,41.6
+Em,Davis,2011-07-21,Truong THPT Le Loi,,32.7
+Duc,Anderson,2010-09-13,Truong THPT Nguyen Hue,11,38.7
+Ivy,Jackson,,,Senior,36.3
+Maya,Garcia,2011-05-11,Columbia University,Freshman,3.4
+Giang,Brown,2008-06-17,,,36.2
+Nam,Truong,2010-09-14,,9,48.8
+Catherine,Dong,,,Freshman,18.2
+Em,Davis,2008-04-03,Stanford University,Senior,35.0
+Brian,Davis,,University of Chicago,,33.3
+Thu,Moore,2010-04-17,,,40.1
+Linh,Williams,,Northwestern University,9,23.4
+Xuan,Nguyen,2009-09-30,Yale University,Senior,49.0
+Giang,Martin,2011-05-05,Northwestern University,,17.8
+Binh,Davis,,Truong THPT Nguyen Hue,Sophomore,24.9
+Olivia,Nguyen,,University of California,,26.5
+Uyen,Nguyen,2008-11-23,Columbia University,,40.3
+Xuan,Jones,2011-08-10,,,46.8
+Kelly,Phung,2008-07-25,Princeton University,,22.9
+Hoa,Williams,2009-05-09,,9,3.5
+Henry,Vo,2011-06-18,Truong THPT Le Loi,11,7.4
+Khanh,Taylor,2009-03-12,Columbia University,,4.9
+An,Brown,2009-06-27,Truong THPT Hai Ba Trung,Freshman,10.3
+Hoa,Smith,2009-11-17,,,26.1
+Thu,Garcia,2009-10-02,Northwestern University,,6.8
+Olivia,Ngo,2008-11-07,Truong THPT Quang Trung,,44.9
+Paul,Ly,2011-07-28,,,32.6
+Yen,Davis,2008-03-02,Stanford University,,49.0
+Rachel,Hernandez,2008-06-27,MIT,,31.9
+Ivy,Vo,,Northwestern University,,30.2
+Em,Davis,,Truong THPT Nguyen Trai,Freshman,31.9
+Olivia,Davis,2009-07-08,Stanford University,11,23.6
+Henry,Phung,2008-02-05,Truong THPT Nguyen Du,,42.3
+Xuan,Dong,2008-07-08,,Junior,47.1
+Alex,Dong,,Truong THPT Vo Thi Sau,Senior,41.4
+Olivia,Taylor,2008-02-16,Duke University,Junior,45.6
+Grace,Phan,2010-07-19,,,2.2
+Phong,Nguyen,2010-08-04,Duke University,,10.6
+Henry,Truong,2009-05-11,University of Chicago,Sophomore,20.0
+David,Dang,,Truong THPT Le Quy Don,9,41.1
+Xuan,Garcia,,Truong THPT Le Quy Don,,42.4
+Khanh,Hoang,2008-08-20,University of California,12,15.9
+Quinn,Bui,2009-04-15,,11,38.4
+Duc,Ly,2011-08-16,,,23.3
+Uyen,Pham,2010-11-27,,Sophomore,32.3
+Sam,Hoang,2008-06-19,,Senior,23.4
+Frank,Dang,2008-05-23,University of Chicago,11,12.9
+Catherine,Smith,,,,8.8
+Phong,Dong,2010-01-14,MIT,11,23.1
+Uyen,Ho,2010-06-16,Northwestern University,,2.0
+Frank,Ngo,2010-09-18,University of California,9,17.8
+Paul,Vo,2008-05-06,,12,31.3

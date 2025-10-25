@@ -24,6 +24,9 @@ from app.schemas.users.user_schemas import UserInfo
 from app.config import settings
 from app.database import get_redis
 import traceback
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["auth-code"])
 
@@ -43,6 +46,7 @@ async def login_with_auth_code(
     try:
         # Authenticate user (same as regular login)
         user = await user_ops.authenticate_user(db, form_data.username, form_data.password)
+        logger.info(f"User: {user}")
         if not user:
             # Skip audit log for failed login to avoid the error
             pass
@@ -105,6 +109,7 @@ async def login_with_auth_code(
         # Create user info for response
         user_info = UserInfo(
             id=user_id,
+            public_id=user.public_id,
             email=user_email,
             role=user_role,
             last_login_at=user_last_login,
@@ -265,6 +270,7 @@ async def exchange_auth_code_for_tokens(
         # Create user info for response
         user_info = UserInfo(
             id=user_id,
+            public_id=user.public_id,
             email=user_email,
             role=user_role,
             last_login_at=user_last_login,

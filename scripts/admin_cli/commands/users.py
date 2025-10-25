@@ -420,3 +420,155 @@ async def change_role(email: str, role: str, force: bool):
             click.echo(f"✅ User '{email}' role changed from '{current_role_str}' to '{new_role_str}'!")
         except Exception as e:
             click.echo(f"❌ Error changing user role: {e}")
+
+
+@users_group.command()
+@click.option('--force', is_flag=True, help='Skip confirmation prompts')
+@click.option('--dry-run', is_flag=True, help='Show what would be deleted without making changes')
+@click.option('--exclude-enrolled', is_flag=True, help='Exclude students who are enrolled in courses')
+@async_command
+async def delete_all_students(force: bool, dry_run: bool, exclude_enrolled: bool):
+    """🗑️ Delete ALL students from the system.
+    
+    ⚠️  WARNING: This is a destructive operation that cannot be undone!
+    This will permanently delete all users with STUDENT role and their profiles.
+    
+    SAFETY: This command ONLY deletes users with STUDENT role.
+    Admins, staff, and instructors are NEVER deleted by this command.
+    
+    Use --dry-run to see what would be deleted without making changes.
+    Use --exclude-enrolled to skip students who are enrolled in courses.
+    """
+    async with AsyncSessionLocal() as db:
+        # Build query for students ONLY (explicitly exclude other roles for safety)
+        query = select(User).where(
+            User.role == UserRole.STUDENT  # ONLY students, never admins/staff/instructors
+        )
+        
+        # Optionally exclude enrolled students
+        if exclude_enrolled:
+            from app.models import Enrollment
+            enrolled_student_ids = select(Enrollment.student_id).distinct()
+            query = query.where(User.id.notin_(enrolled_student_ids))
+        
+        # Get all students with profiles loaded
+        query = query.options(selectinload(User.profile))
+        result = await db.execute(query)
+        students = result.scalars().all()
+        
+        if not students:
+            click.echo("✅ No students found to delete.")
+            return
+        
+        # Show summary
+        click.echo(f"\n⚠️  DANGER: Delete ALL Students")
+        click.echo("=" * 60)
+        click.echo(f"📊 Found {len(students)} students to delete")
+        click.echo("🔒 SAFETY: Only users with STUDENT role will be deleted")
+        click.echo("   ✅ Admins, staff, and instructors are SAFE")
+        
+        if exclude_enrolled:
+            click.echo("   (Excluding students enrolled in courses)")
+        
+        # Show some examples
+        click.echo(f"\n📋 Sample students to be deleted:")
+        for i, student in enumerate(students[:5]):  # Show first 5
+            if student.profile:
+                profile_name = f"{student.profile.first_name} {student.profile.last_name}"
+            else:
+                profile_name = "No profile"
+            click.echo(f"   {i+1}. {student.email} ({profile_name}) - Role: {role_to_string(student.role)}")
+        
+        if len(students) > 5:
+            click.echo(f"   ... and {len(students) - 5} more students")
+        
+        # Check for related data
+        from app.models import Enrollment, Course
+        enrollment_count = await db.scalar(
+            select(func.count()).select_from(Enrollment).where(
+                Enrollment.student_id.in_([s.id for s in students])
+            )
+        )
+        
+        click.echo(f"\n📊 Related data that will be affected:")
+        click.echo(f"   Course Enrollments: {enrollment_count}")
+        
+        if dry_run:
+            click.echo(f"\n🔍 DRY RUN: Would delete {len(students)} students")
+            click.echo("   No actual changes made.")
+            return
+        
+        # Final confirmation
+        if not force:
+            click.echo(f"\n🚨 FINAL WARNING:")
+            click.echo(f"   This will PERMANENTLY DELETE {len(students)} students!")
+            click.echo(f"   This action CANNOT be undone!")
+            click.echo(f"   Related enrollments will also be deleted!")
+            
+            if not click.confirm(f"\n🗑️  Are you absolutely sure you want to delete ALL students?"):
+                click.echo("❌ Operation cancelled.")
+                return
+            
+            # Double confirmation for safety
+            if not click.confirm("⚠️  Type 'yes' to confirm deletion of ALL students", default=False):
+                click.echo("❌ Operation cancelled.")
+                return
+        
+        try:
+            # Delete in batches for better performance
+            batch_size = 100
+            deleted_count = 0
+            
+            click.echo(f"\n🗑️  Deleting students in batches of {batch_size}...")
+            
+            for i in range(0, len(students), batch_size):
+                batch = students[i:i + batch_size]
+                
+                # Double-check: ensure we're only deleting students
+                non_students = [s for s in batch if s.role != UserRole.STUDENT]
+                if non_students:
+                    click.echo(f"❌ SAFETY ERROR: Found non-student users in batch!")
+                    for user in non_students:
+                        click.echo(f"   - {user.email} (Role: {role_to_string(user.role)})")
+                    click.echo("   Aborting deletion for safety!")
+                    return
+                
+                batch_user_ids = [s.id for s in batch]
+                
+                # Delete enrollments first (foreign key constraint)
+                if enrollment_count > 0:
+                    await db.execute(
+                        Enrollment.__table__.delete().where(
+                            Enrollment.student_id.in_(batch_user_ids)
+                        )
+                    )
+                
+                # Delete user profiles using direct SQL for better performance
+                from app.models import UserProfile
+                await db.execute(
+                    UserProfile.__table__.delete().where(
+                        UserProfile.user_id.in_(batch_user_ids)
+                    )
+                )
+                
+                # Delete users
+                await db.execute(
+                    User.__table__.delete().where(
+                        User.id.in_(batch_user_ids)
+                    )
+                )
+                
+                # Commit batch
+                await db.commit()
+                deleted_count += len(batch)
+                
+                click.echo(f"   ✅ Deleted batch {i//batch_size + 1}: {len(batch)} students")
+            
+            click.echo(f"\n🎉 Successfully deleted {deleted_count} students!")
+            click.echo(f"   Deleted {enrollment_count} course enrollments")
+            
+        except Exception as e:
+            await db.rollback()
+            click.echo(f"❌ Error during deletion: {e}")
+            click.echo(f"   Deleted {deleted_count} students before error occurred")
+            raise

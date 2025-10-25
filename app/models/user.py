@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Boolean, func, Enum as SQLAEnum, text
+from sqlalchemy import Column, String, DateTime, Boolean, func, Enum as SQLAEnum, text, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from enum import Enum
@@ -15,6 +15,7 @@ class User(BaseModel):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"), index=True)
+    public_id = Column(Integer, unique=True, nullable=False, server_default=text("nextval('users_public_id_seq')"), index=True, comment='Human-readable ID for support, URLs, etc.')
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     role = Column(SQLAEnum(UserRole), nullable=False, default=UserRole.STUDENT)
@@ -38,4 +39,4 @@ class User(BaseModel):
         return self.email.split("@")[0]  # Fallback to email username
 
     def __repr__(self):
-        return f"<User(id={self.id}, email='{self.email}', role={self.role})>"
+        return f"<User(id={self.id}, public_id={self.public_id}, email='{self.email}', role={self.role})>"
