@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Union
+from uuid import UUID
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from app.config import settings
@@ -41,7 +42,7 @@ def verify_access_token(token: str) -> Optional[dict]:
         return None
 
 
-def create_user_token(user_id: int, user_role: str, expires_delta: Optional[int] = None) -> str:
+def create_user_token(user_id: Union[UUID, str], user_role: str, expires_delta: Optional[int] = None) -> str:
     """Create a JWT token for a user."""
     token_data = {
         "sub": str(user_id),
@@ -65,11 +66,17 @@ def verify_user_token(token: str) -> Optional[dict]:
         return None
     
     try:
+        # Try to convert to UUID first, fallback to string
+        try:
+            user_id_value = UUID(user_id)
+        except (ValueError, TypeError):
+            user_id_value = user_id
+            
         return {
-            "user_id": int(user_id),
+            "user_id": user_id_value,
             "user_role": user_role,
             "issued_at": payload.get("iat"),
             "expires_at": payload.get("exp")
         }
-    except (ValueError, TypeError):
+    except Exception:
         return None

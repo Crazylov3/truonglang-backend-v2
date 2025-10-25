@@ -12,7 +12,8 @@ from app.models import Course, User, UserRole, Enrollment
 from app.core.operations import course as course_ops
 from ..utils import (
     async_command, display_course_info, display_table, 
-    validate_email, parse_date, validate_positive_number
+    validate_email, parse_date, validate_positive_number,
+    validate_uuid
 )
 
 
@@ -92,7 +93,7 @@ async def list_courses(limit: int, offset: int, search: str, creator_email: str,
                 )
                 
                 rows.append([
-                    course.id,
+                    str(course.id)[:8] + "...",  # Show first 8 chars of UUID
                     course.title[:30],
                     course.creator.email if course.creator else 'Unknown',
                     course.teacher_name or 'N/A',
@@ -113,9 +114,9 @@ async def list_courses(limit: int, offset: int, search: str, creator_email: str,
 
 
 @courses_group.command()
-@click.option('--course-id', type=int, prompt='Course ID', help='ID of the course')
+@click.option('--course-id', callback=validate_uuid, prompt='Course ID', help='UUID of the course')
 @async_command
-async def info(course_id: int):
+async def info(course_id):
     """Show detailed information about a specific course."""
     async with AsyncSessionLocal() as db:
         course = await db.get(Course, course_id)
@@ -172,12 +173,12 @@ async def info(course_id: int):
 @click.option('--creator-email', prompt='Creator email', callback=validate_email, help='Email of the course creator')
 @click.option('--description', help='Course description')
 @click.option('--teacher-name', help='Teacher name')
-@click.option('--location', help='Course location')
+@click.option('--branch-id', callback=validate_uuid, help='Branch UUID where course will be held')
 @click.option('--price', type=float, callback=validate_positive_number, help='Course price')
 @click.option('--start-date', callback=parse_date, help='Course start date (YYYY-MM-DD)')
 @async_command
 async def create(title: str, creator_email: str, description: str, teacher_name: str, 
-                location: str, price: float, start_date):
+                branch_id, price: float, start_date):
     """Create a new course."""
     async with AsyncSessionLocal() as db:
         # Find creator
@@ -200,8 +201,8 @@ async def create(title: str, creator_email: str, description: str, teacher_name:
             click.echo(f"   Description: {description[:50]}...")
         if teacher_name:
             click.echo(f"   Teacher: {teacher_name}")
-        if location:
-            click.echo(f"   Location: {location}")
+        if branch_id:
+            click.echo(f"   Branch ID: {str(branch_id)}")
         if price:
             click.echo(f"   Price: ${price}")
         if start_date:
@@ -216,8 +217,8 @@ async def create(title: str, creator_email: str, description: str, teacher_name:
                 title=title,
                 creator_id=creator.id,
                 description=description,
-                teacher_name=teacher_name or creator.profile.first_name + " " + creator.profile.last_name if creator.profile else None,
-                location=location,
+                teacher_name=teacher_name or (f"{creator.profile.first_name} {creator.profile.last_name}" if creator.profile else None),
+                branch_id=branch_id,
                 price=Decimal(str(price)) if price else None,
                 start_date=start_date
             )
@@ -234,10 +235,10 @@ async def create(title: str, creator_email: str, description: str, teacher_name:
 
 
 @courses_group.command()
-@click.option('--course-id', type=int, prompt='Course ID', help='ID of the course to delete')
+@click.option('--course-id', callback=validate_uuid, prompt='Course ID', help='UUID of the course to delete')
 @click.option('--force', is_flag=True, help='Skip confirmation prompts')
 @async_command
-async def delete(course_id: int, force: bool):
+async def delete(course_id, force: bool):
     """Delete a course from the system."""
     async with AsyncSessionLocal() as db:
         course = await db.get(Course, course_id)
@@ -272,10 +273,10 @@ async def delete(course_id: int, force: bool):
 
 
 @courses_group.command()
-@click.option('--course-id', type=int, prompt='Course ID', help='ID of the course')
+@click.option('--course-id', callback=validate_uuid, prompt='Course ID', help='UUID of the course')
 @click.option('--student-email', prompt='Student email', callback=validate_email, help='Email of the student to enroll')
 @async_command
-async def enroll_student(course_id: int, student_email: str):
+async def enroll_student(course_id, student_email: str):
     """Manually enroll a student in a course."""
     async with AsyncSessionLocal() as db:
         # Check course exists

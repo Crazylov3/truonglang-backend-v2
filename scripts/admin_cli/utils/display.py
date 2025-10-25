@@ -31,7 +31,8 @@ def display_user_info(user: User, detailed: bool = False):
     """Display user information."""
     from .common import role_to_string
     
-    click.echo(f"🆔 ID: {user.id}")
+    # Display UUID as string
+    click.echo(f"🆔 ID: {str(user.id)}")
     click.echo(f"📧 Email: {user.email}")
     click.echo(f"👤 Name: {get_user_display_name(user)}")
     click.echo(f"🎭 Role: {role_to_string(user.role)}")
@@ -52,15 +53,17 @@ def display_user_info(user: User, detailed: bool = False):
 
 def display_course_info(course: Course, detailed: bool = False):
     """Display course information."""
-    click.echo(f"🆔 ID: {course.id}")
+    click.echo(f"🆔 ID: {str(course.id)}")
     click.echo(f"📚 Title: {course.title}")
-    click.echo(f"👨‍🏫 Creator ID: {course.creator_id}")
+    click.echo(f"👨‍🏫 Creator ID: {str(course.creator_id)}")
     
     if detailed:
         if course.description:
             click.echo(f"📝 Description: {course.description[:100]}...")
-        if course.location:
-            click.echo(f"📍 Location: {course.location}")
+        if hasattr(course, 'branch') and course.branch:
+            click.echo(f"📍 Branch: {course.branch.name}")
+        elif hasattr(course, 'branch_id') and course.branch_id:
+            click.echo(f"📍 Branch ID: {str(course.branch_id)}")
         if course.teacher_name:
             click.echo(f"👩‍🏫 Teacher: {course.teacher_name}")
         if course.start_date:

@@ -13,9 +13,11 @@ class Course(BaseModel):
     title = Column(String(255), nullable=False, index=True)
     description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    location = Column(String(255), nullable=True)
     start_date = Column(DateTime(timezone=True), nullable=True)
     teacher_name = Column(String(255), nullable=True)
+    
+    # Branch information
+    branch_id = Column(UUID(as_uuid=True), ForeignKey("branches.id"), nullable=True, comment="Chi nhánh nơi tổ chức khóa học")
     
     # Pricing and media
     price = Column(DECIMAL(10, 2), nullable=True)
@@ -25,6 +27,8 @@ class Course(BaseModel):
     # Relationships
     creator = relationship("User", back_populates="created_courses", foreign_keys=[creator_id])
     enrollments = relationship("Enrollment", back_populates="course")
+    course_documents = relationship("CourseDocument", back_populates="course", cascade="all, delete-orphan")
+    branch = relationship("Branch", back_populates="courses")
 
     @property
     def enrolled_students_count(self):

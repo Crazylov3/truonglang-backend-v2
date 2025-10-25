@@ -13,7 +13,7 @@ from app.core.operations import user as user_ops
 from ..utils import (
     role_from_string, role_to_string, async_command,
     display_user_info, display_table, validate_email,
-    validate_password
+    validate_password, validate_uuid, validate_user_role
 )
 
 
@@ -149,7 +149,7 @@ async def list_users(role: str, limit: int, offset: int, search: str, format: st
             rows = []
             for user in users:
                 rows.append([
-                    user.id,
+                    str(user.id)[:8] + "...",  # Show first 8 chars of UUID
                     user.email,
                     user.profile.first_name if user.profile else '',
                     user.profile.last_name if user.profile else '',

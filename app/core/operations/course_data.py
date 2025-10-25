@@ -3,8 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from sqlalchemy.orm import joinedload
 
-from app.models.course import CourseDocument, Course
-from app.models.user import User
+from app.models.course import *
+from app.models.course_management import *
+from app.models.user import *
 from app.schemas.courses import (
     CourseDocumentCreate, 
     CourseDocumentUpdate,

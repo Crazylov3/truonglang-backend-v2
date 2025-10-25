@@ -3,6 +3,7 @@
 import re
 import click
 from typing import Optional
+from uuid import UUID
 
 
 def validate_email(ctx, param, value):
@@ -70,3 +71,28 @@ def validate_positive_number(ctx, param, value):
     if value is not None and value <= 0:
         raise click.BadParameter(f"{param.name} must be a positive number")
     return value
+
+
+def validate_uuid(ctx, param, value):
+    """Validate UUID format."""
+    if not value:
+        return value
+    
+    try:
+        # Try to parse as UUID
+        uuid_obj = UUID(value)
+        # Return the UUID object (not string) for consistency
+        return uuid_obj
+    except (ValueError, AttributeError):
+        raise click.BadParameter(f"Invalid UUID format: {value}")
+
+
+def validate_user_role(ctx, param, value):
+    """Validate user role."""
+    if not value:
+        return value
+    
+    valid_roles = ["student", "instructor", "staff", "admin"]
+    if value.lower() not in valid_roles:
+        raise click.BadParameter(f"Invalid role. Must be one of: {', '.join(valid_roles)}")
+    return value.lower()

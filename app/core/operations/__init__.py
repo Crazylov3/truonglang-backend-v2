@@ -13,6 +13,9 @@ from . import enrollment
 from . import payment
 from . import attendance
 from . import audit
+from . import branch
+from . import room
+from . import schedule
 
 __all__ = [
     "user",
@@ -21,5 +24,8 @@ __all__ = [
     "enrollment",
     "payment",
     "attendance",
-    "audit"
+    "audit",
+    "branch",
+    "room",
+    "schedule"
 ]

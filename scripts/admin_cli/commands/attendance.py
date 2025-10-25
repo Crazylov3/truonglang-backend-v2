@@ -14,7 +14,7 @@ from app.models import (
 )
 from ..utils import (
     async_command, display_table, validate_email,
-    format_datetime, display_stats
+    format_datetime, display_stats, validate_uuid
 )
 
 
@@ -261,7 +261,7 @@ async def records(student_email: str, days: int, format: str):
                 type_name = AttendanceType(record.type).name
                 
                 rows.append([
-                    record.id,
+                    str(record.id)[:8] + "...",  # Show first 8 chars of UUID
                     format_datetime(record.swiped_at),
                     student_name,
                     type_name,
@@ -274,7 +274,7 @@ async def records(student_email: str, days: int, format: str):
             )
         else:
             for record in records:
-                click.echo(f"\n🆔 Record ID: {record.id}")
+                click.echo(f"\n🆔 Record ID: {str(record.id)}")
                 click.echo(f"⏰ Time: {format_datetime(record.swiped_at)}")
                 if record.student:
                     click.echo(f"👤 Student: {record.student.email}")

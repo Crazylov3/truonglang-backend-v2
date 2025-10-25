@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Optional, Generic, TypeVar
 from datetime import datetime
+from uuid import UUID
 
 T = TypeVar('T')
 
@@ -60,10 +61,20 @@ class BaseTimestampedModel(BaseModel):
         from_attributes = True
 
 
+class BaseUUIDModel(BaseModel):
+    """Base model with UUID primary key."""
+    id: UUID
+    
+    class Config:
+        from_attributes = True
+
+
 __all__ = [
     "PaginatedResponse",
     "MessageResponse", 
     "ErrorResponse",
     "HealthResponse",
-    "BaseTimestampedModel"
+    "BaseTimestampedModel",
+    "BaseUUIDModel",
+    "UUID"
 ] 

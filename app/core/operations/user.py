@@ -1,6 +1,7 @@
 """User database operations."""
 
 from typing import Optional, List
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
@@ -24,7 +25,7 @@ async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
         return None
 
 
-async def get_user_by_id(db: AsyncSession, user_id: int) -> Optional[User]:
+async def get_user_by_id(db: AsyncSession, user_id: UUID) -> Optional[User]:
     """Get user by ID."""
     try:
         result = await db.execute(

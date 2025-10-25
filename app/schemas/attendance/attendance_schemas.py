@@ -1,7 +1,9 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime, date
+from uuid import UUID
 from app.models.attendance import CardStatus, AttendanceType
+from app.schemas.common import BaseUUIDModel
 
 
 class AttendanceCardBase(BaseModel):
@@ -45,7 +47,7 @@ class BulkCardCreateResponse(BaseModel):
 
 
 class CardAssignmentBase(BaseModel):
-    student_id: int = Field(..., description="ID of the student")
+    student_id: UUID = Field(..., description="ID of the student")
     card_uid: str = Field(..., description="UID of the card to assign")
 
 
@@ -53,8 +55,7 @@ class CardAssignmentCreate(CardAssignmentBase):
     pass
 
 
-class CardAssignmentResponse(CardAssignmentBase):
-    id: int
+class CardAssignmentResponse(CardAssignmentBase, BaseUUIDModel):
     assigned_at: datetime
     revoked_at: Optional[datetime] = None
     
@@ -68,7 +69,7 @@ class CardAssignmentsResponse(BaseModel):
 
 
 class AttendanceRecordBase(BaseModel):
-    student_id: int = Field(..., description="ID of the student")
+    student_id: UUID = Field(..., description="ID of the student")
     type: AttendanceType = Field(..., description="Type of attendance record")
     card_uid_used: str = Field(..., description="UID of the card used")
 
@@ -77,8 +78,7 @@ class AttendanceRecordCreate(AttendanceRecordBase):
     pass
 
 
-class AttendanceRecordResponse(AttendanceRecordBase):
-    id: int
+class AttendanceRecordResponse(AttendanceRecordBase, BaseUUIDModel):
     swiped_at: datetime
     
     class Config:
@@ -104,7 +104,7 @@ class BulkAttendanceRecordResponse(BaseModel):
 
 
 class AttendanceSummaryResponse(BaseModel):
-    student_id: int
+    student_id: UUID
     check_ins: int
     check_outs: int
     total_records: int
@@ -132,8 +132,8 @@ class CardStatusUpdateRequest(BaseModel):
 class AttendanceFilterRequest(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
-    student_id: Optional[int] = None
-    course_id: Optional[int] = None
+    student_id: Optional[UUID] = None
+    course_id: Optional[UUID] = None
     attendance_type: Optional[AttendanceType] = None
     limit: int = Field(100, ge=1, le=1000)
     offset: int = Field(0, ge=0)

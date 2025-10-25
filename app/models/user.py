@@ -26,7 +26,7 @@ class User(BaseModel):
     # Relationships
     profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     created_courses = relationship("Course", back_populates="creator", foreign_keys="Course.creator_id")
-    enrollments = relationship("Enrollment", back_populates="student")
+    enrollments = relationship("Enrollment", back_populates="student", foreign_keys="[Enrollment.student_id]")
     
     # Audit logging relationship
     audit_logs = relationship("AuditLog", back_populates="user")

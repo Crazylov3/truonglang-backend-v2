@@ -1,7 +1,9 @@
 import os
+from uuid import UUID
 from fastapi import Depends, HTTPException, status, Query, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
+from app.core.validators import validate_uuid
 
 from app.config import settings
 from app.database import get_db
@@ -150,11 +152,12 @@ async def search_users(
 @router.get("/{user_id}", response_model=UserInfo)
 @authentication_required(allowed_role=UserRole.STAFF)
 async def get_user_by_id(
-    user_id: int = Path(..., description="User ID"),
+    user_id: str = Path(..., description="User ID"),
     db: AsyncSession = Depends(get_db)
 ):
     """Get user by ID (staff/admin only)."""
-    user = await user_ops.get_user_by_id(db, user_id)
+    user_uuid = validate_uuid(user_id)
+    user = await user_ops.get_user_by_id(db, user_uuid)
 
     if not user:
         raise HTTPException(
@@ -185,12 +188,13 @@ async def get_user_by_id(
 @csrf_protect
 async def update_user_profile_by_id(
     profile_update: UserProfileUpdate,
-    user_id: int = Path(..., description="User ID"),
+    user_id: str = Path(..., description="User ID"),
     db: AsyncSession = Depends(get_db)
 ):
     """Update user profile by ID (staff/admin only)."""
     # Check if user exists
-    user = await user_ops.get_user_by_id(db, user_id)
+    user_uuid = validate_uuid(user_id)
+    user = await user_ops.get_user_by_id(db, user_uuid)
 
     if not user:
         raise HTTPException(
@@ -245,11 +249,12 @@ async def update_user_profile_by_id(
 @csrf_protect
 async def update_user_role(
     role_update: UserRoleUpdateRequest,
-    user_id: int = Path(..., description="User ID"),
+    user_id: str = Path(..., description="User ID"),
     db: AsyncSession = Depends(get_db)
 ):
     """Update user role (admin only)."""
-    user = await user_ops.get_user_by_id(db, user_id)
+    user_uuid = validate_uuid(user_id)
+    user = await user_ops.get_user_by_id(db, user_uuid)
 
     if not user:
         raise HTTPException(
@@ -258,7 +263,7 @@ async def update_user_role(
         )
 
     # Use the new update_user_role_by_id function
-    success = await user_ops.update_user_role_by_id(db, user_id, role_update.new_role)
+    success = await user_ops.update_user_role_by_id(db, user_uuid, role_update.new_role)
 
     if not success:
         raise HTTPException(
@@ -267,7 +272,7 @@ async def update_user_role(
         )
 
     return UserRoleUpdateResponse(
-        id=user_id,
+        id=user_uuid,
         email=user.email,
         role=role_update.new_role,
         message=f"User role updated successfully to {role_update.new_role}"
@@ -278,11 +283,12 @@ async def update_user_role(
 @authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def delete_user(
-    user_id: int = Path(..., description="User ID"),
+    user_id: str = Path(..., description="User ID"),
     db: AsyncSession = Depends(get_db)
 ):
     """Delete user (admin only)."""
-    user = await user_ops.get_user_by_id(db, user_id)
+    user_uuid = validate_uuid(user_id)
+    user = await user_ops.get_user_by_id(db, user_uuid)
 
     if not user:
         raise HTTPException(
@@ -291,7 +297,7 @@ async def delete_user(
         )
 
     # Use the new delete_user_by_id function
-    success = await user_ops.delete_user_by_id(db, user_id)
+    success = await user_ops.delete_user_by_id(db, user_uuid)
 
     if not success:
         raise HTTPException(

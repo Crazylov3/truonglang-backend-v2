@@ -12,7 +12,7 @@ from app.config import settings
 from app.core.email import email_service
 
 
-@router.post("/reset-password", response_model=UserPasswordResetResponse)
+@router.post("/reset-password", response_model=UserPasswordResetResponse, operation_id="reset_password")
 @csrf_protect
 async def reset_password(
     user_data: UserPasswordReset,
@@ -40,7 +40,7 @@ async def reset_password(
     return UserPasswordResetResponse(message="If the email exists, a password reset email has been sent.")
 
 
-@router.post("/reset-password/verify-email", response_model=UserPasswordResetVerifyEmailResponse)
+@router.post("/reset-password/verify-email", response_model=UserPasswordResetVerifyEmailResponse, operation_id="verify_email_and_reset_password")
 @csrf_protect
 async def verify_email_and_reset_password(
     user_data: UserPasswordResetVerifyEmail,

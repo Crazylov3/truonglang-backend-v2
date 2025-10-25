@@ -4,7 +4,8 @@ from typing import Optional, List
 from pydantic import BaseModel, Field
 from decimal import Decimal
 from datetime import datetime
-from app.schemas.common import PaginatedResponse
+from uuid import UUID
+from app.schemas.common import PaginatedResponse, BaseUUIDModel
 
 
 # Payment Period Schemas
@@ -14,13 +15,12 @@ class PaymentPeriodCreate(BaseModel):
 
 
 
-class PaymentPeriodResponse(BaseModel):
+class PaymentPeriodResponse(BaseUUIDModel):
     """Schema for payment period response."""
-    id: int = Field(..., description="Payment period ID")
-    course_id: int = Field(..., description="Course ID")
+    course_id: UUID = Field(..., description="Course ID")
     amount: float = Field(..., description="Payment amount")
     created_at: datetime = Field(..., description="Creation timestamp")
-    created_by: int = Field(..., description="Created by user ID")
+    created_by: UUID = Field(..., description="Created by user ID")
     created_by_name: Optional[str] = Field(None, description="Created by user name")
 
     class Config:
@@ -36,8 +36,10 @@ class PaymentPeriodsResponse(PaginatedResponse[PaymentPeriodResponse]):
 # Invoice Schemas
 class InvoiceResponse(BaseModel):
     """Schema for invoice response."""
-    invoice_id: int = Field(..., description="Invoice ID")
-    student_id: int = Field(..., description="Student ID")
+    invoice_id: UUID = Field(..., description="Invoice ID")
+    enrollment_id: UUID = Field(..., description="Enrollment ID")
+    payment_period_id: UUID = Field(..., description="Payment period ID")
+    student_id: UUID = Field(..., description="Student ID")
     student_email: str = Field(..., description="Student email")
     student_name: str = Field(..., description="Student full name")
     amount_due: float = Field(..., description="Amount due")
@@ -50,8 +52,8 @@ class InvoiceResponse(BaseModel):
 
 class StudentInvoiceResponse(BaseModel):
     """Schema for student's invoice response."""
-    invoice_id: int = Field(..., description="Invoice ID")
-    course_id: int = Field(..., description="Course ID")
+    invoice_id: UUID = Field(..., description="Invoice ID")
+    course_id: UUID = Field(..., description="Course ID")
     course_title: str = Field(..., description="Course title")
     amount_due: float = Field(..., description="Amount due")
     total_paid: float = Field(..., description="Total amount paid")
@@ -85,10 +87,9 @@ class PaymentCreate(BaseModel):
 
 
 
-class PaymentResponse(BaseModel):
+class PaymentResponse(BaseUUIDModel):
     """Schema for payment response."""
-    id: int = Field(..., description="Payment ID")
-    invoice_id: int = Field(..., description="Invoice ID")
+    invoice_id: UUID = Field(..., description="Invoice ID")
     amount: float = Field(..., description="Payment amount")
     status: str = Field(..., description="Payment status")
     provider_reference: Optional[str] = Field(None, description="Payment provider reference")

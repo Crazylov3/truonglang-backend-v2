@@ -2,9 +2,11 @@ from fastapi import Depends, HTTPException, status, Query, Path
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
+from uuid import UUID
 from math import ceil
 import os
 from app.database import get_db
+from app.core.validators import validate_uuid
 from app.schemas.courses.course_schemas import (
     EnrollmentResponse,
     UnEnrollmentResponse,
@@ -23,26 +25,40 @@ from .courses import router, logger
 async def get_courses(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
-    creator_id: Optional[int] = Query(None, description="Filter by creator ID"),
+    creator_id: Optional[str] = Query(None, description="Filter by creator ID (UUID)"),
+    branch_id: Optional[str] = Query(None, description="Filter by branch ID"),
+    room_id: Optional[str] = Query(None, description="Filter by room ID (shows courses scheduled in this room)"),
+    title: Optional[str] = Query(None, description="Search by course title (partial match)"),
+    teacher_name: Optional[str] = Query(None, description="Search by teacher name (partial match)"),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get paginated list of courses."""
+    """Get paginated list of courses with advanced filtering."""
+    # Validate and convert UUIDs
+    creator_uuid = validate_uuid(creator_id) if creator_id else None
+    branch_uuid = validate_uuid(branch_id) if branch_id else None
+    room_uuid = validate_uuid(room_id) if room_id else None
+    
     courses, total = await course_ops.list_courses(
         db=db,
         page=page,
         per_page=per_page,
-        creator_id=creator_id
+        creator_id=creator_uuid,
+        branch_id=branch_uuid,
+        room_id=room_uuid,
+        title=title,
+        teacher_name=teacher_name
     )
 
     courses = [PublicViewCourseDetail(
         id=course.id,
         title=course.title,
         description=course.description,
-        location=course.location,
         start_date=course.start_date,
         teacher_name=course.teacher_name,
         price=course.price,
-        preview_picture_path=course.preview_picture_path
+        preview_picture_path=course.preview_picture_path,
+        branch_id=course.branch_id,
+        branch_name=course.branch.name if course.branch else None
     ) for course in courses]
     
     return PublicViewCoursesDetail.create(
@@ -58,33 +74,52 @@ async def get_courses(
 async def get_enrolled_courses(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
+    branch_id: Optional[str] = Query(None, description="Filter by branch ID"),
+    room_id: Optional[str] = Query(None, description="Filter by room ID (shows courses scheduled in this room)"),
+    title: Optional[str] = Query(None, description="Search by course title (partial match)"),
+    teacher_name: Optional[str] = Query(None, description="Search by teacher name (partial match)"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get enrolled courses for a student."""
-    courses, total = await course_ops.list_enrolled_courses(db, current_user.id, page, per_page)
+    """Get enrolled courses for a student with filtering options."""
+    # Validate and convert UUIDs
+    branch_uuid = validate_uuid(branch_id) if branch_id else None
+    room_uuid = validate_uuid(room_id) if room_id else None
+    
+    courses, total = await course_ops.list_enrolled_courses(
+        db, 
+        current_user.id, 
+        page, 
+        per_page,
+        branch_id=branch_uuid,
+        room_id=room_uuid,
+        title=title,
+        teacher_name=teacher_name
+    )
     
     # Convert Course objects to PublicViewCourseDetail objects
     course_details = [PublicViewCourseDetail(
         id=course.id,
         title=course.title,
         description=course.description,
-        location=course.location,
         start_date=course.start_date,
         teacher_name=course.teacher_name,
         price=course.price,
-        preview_picture_path=course.preview_picture_path
+        preview_picture_path=course.preview_picture_path,
+        branch_id=course.branch_id,
+        branch_name=course.branch.name if course.branch else None
     ) for course in courses]
     
     return PublicViewCoursesDetail.create(items=course_details, total=total, page=page, per_page=per_page)
 
 @router.get("/{course_id}", response_model=PublicViewCourseDetail)
 async def get_course(
-    course_id: int = Path(..., description="Course ID"),
+    course_id: str = Path(..., description="Course ID"),
     db: AsyncSession = Depends(get_db)
 ):
     """Get a specific course by ID."""
-    course = await course_ops.get_course_by_id(db, course_id)
+    course_uuid = validate_uuid(course_id)
+    course = await course_ops.get_course_by_id(db, course_uuid)
     
     if not course:
         raise HTTPException(
@@ -96,21 +131,23 @@ async def get_course(
         id=course.id,
         title=course.title,
         description=course.description,
-        location=course.location,
         start_date=course.start_date,
         teacher_name=course.teacher_name,
         price=course.price,
-        preview_picture_path=course.preview_picture_path
+        preview_picture_path=course.preview_picture_path,
+        branch_id=course.branch_id,
+        branch_name=course.branch.name if course.branch else None
     ) 
 
 
 @router.get("/{course_id}/preview")
 async def get_course_preview_image(
-    course_id: int = Path(..., description="Course ID"),
+    course_id: str = Path(..., description="Course ID"),
     db: AsyncSession = Depends(get_db)
 ):
     """Get course preview image."""
-    course = await course_ops.get_course_by_id(db, course_id)
+    course_uuid = validate_uuid(course_id)
+    course = await course_ops.get_course_by_id(db, course_uuid)
     
     if not course:
         raise HTTPException(
@@ -145,13 +182,14 @@ async def get_course_preview_image(
 @authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def enroll_in_course(
-    course_id: int = Path(..., description="Course ID"),
+    course_id: str = Path(..., description="Course ID"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Enroll in a course (Students only)."""
     # Check if course exists
-    course = await course_ops.get_course_by_id(db, course_id)
+    course_uuid = validate_uuid(course_id)
+    course = await course_ops.get_course_by_id(db, course_uuid)
     if not course:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -159,7 +197,7 @@ async def enroll_in_course(
         )
     
     # Check if already enrolled
-    if await enrollment_ops.check_enrollment_exists(db, current_user.id, course_id):
+    if await enrollment_ops.check_enrollment_exists(db, current_user.id, course_uuid):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Already enrolled in this course"
@@ -169,7 +207,7 @@ async def enroll_in_course(
     enrollment = await enrollment_ops.create_enrollment(
         db=db,
         student_id=current_user.id,
-        course_id=course_id
+        course_id=course_uuid
     )
     
     if not enrollment:
@@ -187,19 +225,20 @@ async def enroll_in_course(
 @authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def unenroll_from_course(
-    course_id: int = Path(..., description="Course ID"),
+    course_id: str = Path(..., description="Course ID"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Unenroll from a course (Students only)."""
-    enrollment = await enrollment_ops.get_enrollment(db, current_user.id, course_id)
+    course_uuid = validate_uuid(course_id)
+    enrollment = await enrollment_ops.get_enrollment(db, current_user.id, course_uuid)
     if not enrollment:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Enrollment not found"
         )
     
-    await enrollment_ops.deactivate_enrollment(db, current_user.id, course_id)
+    await enrollment_ops.deactivate_enrollment(db, current_user.id, course_uuid)
     return UnEnrollmentResponse(
         message="Unenrolled from course successfully"
     )

@@ -4,6 +4,8 @@ from typing import Optional, Dict, Any, List
 from datetime import datetime, date
 from pydantic import BaseModel, Field
 from enum import IntEnum
+from uuid import UUID
+from app.schemas.common import BaseUUIDModel
 
 
 class AuditAction(IntEnum):
@@ -49,10 +51,9 @@ class AuditSeverity(IntEnum):
     SECURITY = 5
 
 
-class AuditLogResponse(BaseModel):
+class AuditLogResponse(BaseUUIDModel):
     """Response model for audit log entries."""
-    id: int
-    user_id: Optional[int] = None
+    user_id: Optional[UUID] = None
     user_email: Optional[str] = None
     user_role: Optional[int] = None
     action: int  # AuditAction enum value
@@ -129,7 +130,7 @@ class AuditLogResponse(BaseModel):
 
 class AuditLogFilter(BaseModel):
     """Filter model for querying audit logs."""
-    user_id: Optional[int] = None
+    user_id: Optional[UUID] = None
     action: Optional[AuditAction] = None
     resource_type: Optional[AuditResource] = None
     severity: Optional[AuditSeverity] = None

@@ -11,6 +11,14 @@ from app.models.user import UserRole
 from app.core.deps import get_current_user
 
 
+USER_ROLE_MAP = {
+    UserRole.STUDENT: 1,
+    UserRole.INSTRUCTOR: 2,
+    UserRole.STAFF: 3,
+    UserRole.ADMIN: 4,
+}
+
+
 def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
     """
     Decorator to require authentication and optionally specific roles.
@@ -54,7 +62,7 @@ def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
                         )
                 
                 # Check role requirements if specified
-                if user_role.value < allowed_role.value:
+                if USER_ROLE_MAP[user_role] < USER_ROLE_MAP[allowed_role]:
                     raise HTTPException(
                         status_code=status.HTTP_403_FORBIDDEN,
                         detail=f"Access denied. Minimum required role: {allowed_role.name.lower()} (level {allowed_role.value}). Your role: {user_role.name.lower()} (level {user_role.value})"

@@ -1,8 +1,9 @@
 from pydantic import BaseModel, EmailStr, validator, Field
 from typing import Optional, List
 from datetime import datetime, date
+from uuid import UUID
 from app.models.user import UserRole
-from app.schemas.common import PaginatedResponse
+from app.schemas.common import PaginatedResponse, BaseUUIDModel
 
 
 class UserProfile(BaseModel):
@@ -10,9 +11,11 @@ class UserProfile(BaseModel):
     last_name: Optional[str] = Field(None, max_length=100)
     date_of_birth: Optional[date] = None
     avatar: Optional[str] = None
+    current_school: Optional[str] = Field(None, max_length=255)
+    current_grade: Optional[str] = Field(None, max_length=50)
+    default_discount_percentage: Optional[float] = Field(0.0, ge=0, le=100)
 
-class UserInfo(BaseModel):
-    id: int
+class UserInfo(BaseUUIDModel):
     email: EmailStr
     role: UserRole
     last_login_at: Optional[datetime] = None
@@ -35,8 +38,7 @@ class UserRoleUpdateRequest(BaseModel):
     new_role: UserRole
 
 
-class UserRoleUpdateResponse(BaseModel):
-    id: int
+class UserRoleUpdateResponse(BaseUUIDModel):
     email: EmailStr
     role: UserRole
     message: str

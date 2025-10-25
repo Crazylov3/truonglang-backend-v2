@@ -25,6 +25,7 @@ class Branch(BaseModel):
     
     # Relationships
     rooms = relationship("Room", back_populates="branch")
+    courses = relationship("Course", back_populates="branch")
     
     def __repr__(self):
         return f"<Branch(id={self.id}, name='{self.name}')>"

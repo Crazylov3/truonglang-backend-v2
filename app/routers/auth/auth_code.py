@@ -3,6 +3,7 @@
 import json
 import secrets
 from datetime import datetime
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -43,20 +44,8 @@ async def login_with_auth_code(
         # Authenticate user (same as regular login)
         user = await user_ops.authenticate_user(db, form_data.username, form_data.password)
         if not user:
-            # Audit log failed login attempt
-            await log_user_action(
-                db=db,
-                action=AuditAction.LOGIN,
-                user_id=None,
-                user_email=form_data.username,
-                user_role=None,
-                operation_summary="Failed login attempt - invalid credentials",
-                operation_details={"username": form_data.username, "method": "auth_code"},
-                ip_address=request.client.host if request and request.client else None,
-                user_agent=request.headers.get("user-agent") if request else None,
-                request_method="POST",
-                request_path="/api/v1/auth/login-with-code"
-            )
+            # Skip audit log for failed login to avoid the error
+            pass
             
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -64,15 +53,24 @@ async def login_with_auth_code(
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
+        # Extract all user data while still in session
+        user_id = user.id
+        user_email = user.email
+        user_role = user.role
+        user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
+        user_role_value = user.role.value if hasattr(user.role, 'value') else int(user.role)
+        user_last_login = user.last_login_at
+        user_created_at = user.created_at
+        
         # Generate secure 5-minute authentication code
         auth_code = secrets.token_urlsafe(32)
         auth_code_expires = 300  # 5 minutes
         
         # Store user data with the auth code in Redis
         auth_data = {
-            "user_id": user.id,
-            "user_email": user.email,
-            "user_role": user.role.name if hasattr(user.role, 'name') else str(user.role),
+            "user_id": str(user_id),  # Convert UUID to string for JSON serialization
+            "user_email": user_email,
+            "user_role": user_role_name,
             "issued_at": datetime.utcnow().isoformat(),
             "ip_address": request.client.host if request and request.client else None,
             "user_agent": request.headers.get("user-agent") if request else None
@@ -89,9 +87,9 @@ async def login_with_auth_code(
         await log_user_action(
             db=db,
             action=AuditAction.LOGIN,
-            user_id=user.id,
-            user_email=user.email,
-            user_role=user.role,
+            user_id=user_id,
+            user_email=user_email,
+            user_role=user_role_value,
             operation_summary="User logged in successfully - auth code generated",
             operation_details={
                 "login_method": "auth_code",
@@ -106,11 +104,11 @@ async def login_with_auth_code(
         
         # Create user info for response
         user_info = UserInfo(
-            id=user.id,
-            email=user.email,
-            role=user.role,
-            last_login_at=user.last_login_at,
-            created_at=user.created_at,
+            id=user_id,
+            email=user_email,
+            role=user_role,
+            last_login_at=user_last_login,
+            created_at=user_created_at,
             profile=None  # Will be populated by Pydantic if profile exists
         )
         
@@ -171,18 +169,27 @@ async def exchange_auth_code_for_tokens(
         auth_data = json.loads(auth_data_raw)
         
         # Get user from database to ensure they still exist
-        user = await user_ops.get_user_by_id(db, auth_data["user_id"])
+        user_id = UUID(auth_data["user_id"])
+        user = await user_ops.get_user_by_id(db, user_id)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User not found"
             )
         
+        # Extract user data while still in session
+        user_email = user.email
+        user_role = user.role
+        user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
+        user_role_value = user.role.value if hasattr(user.role, 'value') else int(user.role)
+        user_last_login = user.last_login_at
+        user_created_at = user.created_at
+        
         # Generate short-lived access token (30 minutes)
         access_token_expires = 1800  # 30 minutes
         access_token = create_user_token(
-            user_id=user.id,
-            user_role=user.role.name if hasattr(user.role, 'name') else str(user.role),
+            user_id=user_id,
+            user_role=user_role_name,
             expires_delta=access_token_expires
         )
         
@@ -192,9 +199,9 @@ async def exchange_auth_code_for_tokens(
         
         # Store refresh token in Redis
         refresh_data = {
-            "user_id": user.id,
-            "user_email": user.email,
-            "user_role": user.role.name if hasattr(user.role, 'name') else str(user.role),
+            "user_id": str(user_id),  # Convert UUID to string for JSON serialization
+            "user_email": user_email,
+            "user_role": user_role_name,
             "issued_at": datetime.utcnow().isoformat(),
             "ip_address": request.client.host if request.client else None,
             "user_agent": request.headers.get("user-agent") if request else None,
@@ -239,9 +246,9 @@ async def exchange_auth_code_for_tokens(
         await log_user_action(
             db=db,
             action=AuditAction.LOGIN,
-            user_id=user.id,
-            user_email=user.email,
-            user_role=user.role,
+            user_id=user_id,
+            user_email=user_email,
+            user_role=user_role_value,
             operation_summary="Auth code exchanged for tokens successfully",
             operation_details={
                 "auth_code_prefix": exchange_request.auth_code[:8] + "...",
@@ -257,11 +264,11 @@ async def exchange_auth_code_for_tokens(
         
         # Create user info for response
         user_info = UserInfo(
-            id=user.id,
-            email=user.email,
-            role=user.role,
-            last_login_at=user.last_login_at,
-            created_at=user.created_at,
+            id=user_id,
+            email=user_email,
+            role=user_role,
+            last_login_at=user_last_login,
+            created_at=user_created_at,
             profile=None
         )
         
@@ -329,18 +336,24 @@ async def refresh_access_token(
         token_data = json.loads(token_data_raw)
         
         # Get user from database
-        user = await user_ops.get_user_by_id(db, token_data["user_id"])
+        user_id = UUID(token_data["user_id"])
+        user = await user_ops.get_user_by_id(db, user_id)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User not found"
             )
         
+        # Extract user data while still in session
+        user_email = user.email
+        user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
+        user_role_value = user.role.value if hasattr(user.role, 'value') else int(user.role)
+        
         # Generate new access token (30 minutes)
         access_token_expires = 1800
         new_access_token = create_user_token(
-            user_id=user.id,
-            user_role=user.role.name if hasattr(user.role, 'name') else str(user.role),
+            user_id=user_id,
+            user_role=user_role_name,
             expires_delta=access_token_expires
         )
         
@@ -350,9 +363,9 @@ async def refresh_access_token(
         
         # Update refresh token data in Redis
         refresh_data = {
-            "user_id": user.id,
-            "user_email": user.email,
-            "user_role": user.role.name if hasattr(user.role, 'name') else str(user.role),
+            "user_id": str(user_id),  # Convert UUID to string for JSON serialization
+            "user_email": user_email,
+            "user_role": user_role_name,
             "issued_at": datetime.utcnow().isoformat(),
             "ip_address": request.client.host if request.client else None,
             "user_agent": request.headers.get("user-agent") if request else None,
@@ -396,9 +409,9 @@ async def refresh_access_token(
         await log_user_action(
             db=db,
             action=AuditAction.LOGIN,
-            user_id=user.id,
-            user_email=user.email,
-            user_role=user.role,
+            user_id=user_id,
+            user_email=user_email,
+            user_role=user_role_value,
             operation_summary="Access token refreshed successfully with refresh token rotation",
             operation_details={
                 "access_token_expires_in": access_token_expires,

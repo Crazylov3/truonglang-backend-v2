@@ -53,7 +53,7 @@ class CourseDocument(BaseModel):
     is_active = Column(Boolean, default=True, nullable=False, index=True)
     
     # Relationships
-    course = relationship("Course", foreign_keys=[course_id])
+    course = relationship("Course", foreign_keys=[course_id], back_populates="course_documents")
     uploader = relationship("User", foreign_keys=[uploaded_by])
     
     def __repr__(self):

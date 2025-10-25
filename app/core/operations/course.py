@@ -1,27 +1,32 @@
 """Course database operations."""
 
 from typing import Optional, List, Tuple
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, delete
+from sqlalchemy import select, func, delete, or_
 from sqlalchemy.sql import case
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from decimal import Decimal
 from datetime import datetime
-from app.models.course import Course, CourseEditPermission
-from app.models.user import User, UserRole
-from app.models.enrollment import Enrollment
+from app.models.course import *
+from app.models.course_management import *
+from app.models.user import *
+from app.models.enrollment import *
+from app.models.location import CourseSchedule
 
 
 async def create_course(
     db: AsyncSession,
     title: str,
     description: Optional[str],
-    creator_id: int,
+    creator_id: UUID,
     price: Optional[Decimal] = None,
-    location: Optional[str] = None,
     start_date: Optional[datetime] = None,
-    teacher_name: Optional[str] = None
+    teacher_name: Optional[str] = None,
+    branch_id: Optional[UUID] = None,
+    group_chat_link: Optional[str] = None,
+    preview_picture_path: Optional[str] = None
 ) -> Course:
     """Create a new course."""
     try:
@@ -30,9 +35,11 @@ async def create_course(
             description=description,
             creator_id=creator_id,
             price=price,
-            location=location,
             start_date=start_date,
-            teacher_name=teacher_name
+            teacher_name=teacher_name,
+            branch_id=branch_id,
+            group_chat_link=group_chat_link,
+            preview_picture_path=preview_picture_path
         )
         
         db.add(new_course)
@@ -44,6 +51,7 @@ async def create_course(
             select(Course)
             .options(selectinload(Course.enrollments))
             .options(selectinload(Course.course_documents))
+            .options(selectinload(Course.branch))
             .where(Course.id == new_course.id)
         )
         course_with_enrollments = result.scalar_one()
@@ -57,8 +65,8 @@ async def create_course(
 
 async def check_enrollment(
     db: AsyncSession,
-    student_id: int,
-    course_id: int
+    student_id: UUID,
+    course_id: UUID
 ) -> Optional[Enrollment]:
     """Check if a student is enrolled in a course."""
     result = await db.execute(
@@ -74,8 +82,8 @@ async def check_enrollment(
 
 async def check_instructor_permission(
     db: AsyncSession,
-    instructor_id: int,
-    course_id: int
+    instructor_id: UUID,
+    course_id: UUID
 ) -> bool:
     """Check if an instructor has permission to manage a course."""
     # Check if instructor is the course creator
@@ -95,7 +103,7 @@ async def check_instructor_permission(
     return permission is not None
 
     
-async def grant_edit_permission(db: AsyncSession, course_id: int, instructor_id: int, granted_by: int) -> bool:
+async def grant_edit_permission(db: AsyncSession, course_id: UUID, instructor_id: UUID, granted_by: UUID) -> bool:
     """Grant edit permission to an instructor for a course."""
     try:
         new_permission = CourseEditPermission(course_id=course_id, instructor_id=instructor_id, granted_by=granted_by)
@@ -106,7 +114,7 @@ async def grant_edit_permission(db: AsyncSession, course_id: int, instructor_id:
         await db.rollback()
         raise e
     
-async def revoke_edit_permission(db: AsyncSession, course_id: int, instructor_id: int) -> bool:
+async def revoke_edit_permission(db: AsyncSession, course_id: UUID, instructor_id: UUID) -> bool:
     """Revoke edit permission from an instructor for a course."""
     try:
         result = await db.execute(select(CourseEditPermission).where(CourseEditPermission.course_id == course_id, CourseEditPermission.instructor_id == instructor_id))
@@ -121,13 +129,14 @@ async def revoke_edit_permission(db: AsyncSession, course_id: int, instructor_id
         raise e
 
 
-async def get_course_by_id(db: AsyncSession, course_id: int) -> Optional[Course]:
+async def get_course_by_id(db: AsyncSession, course_id: UUID) -> Optional[Course]:
     """Get course by ID with relationships."""
     try:
         result = await db.execute(
             select(Course).options(
                 selectinload(Course.creator),
-                selectinload(Course.enrollments)
+                selectinload(Course.enrollments),
+                selectinload(Course.branch)
             ).where(Course.id == course_id)
         )
         return result.scalar_one_or_none()
@@ -137,14 +146,15 @@ async def get_course_by_id(db: AsyncSession, course_id: int) -> Optional[Course]
 
 async def update_course(
     db: AsyncSession,
-    course_id: int,
+    course_id: UUID,
     title: Optional[str] = None,
     description: Optional[str] = None,
     price: Optional[Decimal] = None,
-    location: Optional[str] = None,
     start_date: Optional[datetime] = None,
     teacher_name: Optional[str] = None,
-    preview_picture_path: Optional[str] = None
+    preview_picture_path: Optional[str] = None,
+    branch_id: Optional[UUID] = None,
+    group_chat_link: Optional[str] = None
 ) -> Optional[Course]:
     """Update a course."""
     try:
@@ -161,21 +171,26 @@ async def update_course(
             course.description = description
         if price is not None:
             course.price = price
-        if location is not None:
-            course.location = location
         if start_date is not None:
             course.start_date = start_date
         if teacher_name is not None:
             course.teacher_name = teacher_name
         if preview_picture_path is not None:
             course.preview_picture_path = preview_picture_path
+        if branch_id is not None:
+            course.branch_id = branch_id
+        if group_chat_link is not None:
+            course.group_chat_link = group_chat_link
         
         await db.commit()
         await db.refresh(course)
         
         # Reload the course with relationships
         result = await db.execute(
-            select(Course).options(selectinload(Course.enrollments)).where(Course.id == course_id)
+            select(Course).options(
+                selectinload(Course.enrollments),
+                selectinload(Course.branch)
+            ).where(Course.id == course_id)
         )
         course_with_enrollments = result.scalar_one()
         
@@ -186,7 +201,7 @@ async def update_course(
         return None
 
 
-async def delete_course(db: AsyncSession, course_id: int) -> bool:
+async def delete_course(db: AsyncSession, course_id: UUID) -> bool:
     """Delete a course."""
     try:
         result = await db.execute(select(Course).where(Course.id == course_id))
@@ -208,7 +223,7 @@ async def delete_course(db: AsyncSession, course_id: int) -> bool:
         await db.rollback()
         return False
 
-async def filter_courses_by_edit_permission(db: AsyncSession, instructor_id: int) -> List[Course]:
+async def filter_courses_by_edit_permission(db: AsyncSession, instructor_id: UUID) -> List[UUID]:
     """Filter courses by edit permission. Using CourseEditPermission"""
     try:
         result = await db.execute(select(CourseEditPermission).where(CourseEditPermission.instructor_id == instructor_id))
@@ -222,8 +237,8 @@ async def filter_courses_by_edit_permission(db: AsyncSession, instructor_id: int
 
 async def check_course_editable_permission(
     db: AsyncSession,
-    course_id: int,
-    user_id: int,
+    course_id: UUID,
+    user_id: UUID,
     user_role: UserRole
 ) -> bool:
     """Check if user can create payment periods for a course."""
@@ -243,24 +258,50 @@ async def list_courses(
     db: AsyncSession,
     page: int = 1,
     per_page: int = 20,
-    creator_id: Optional[int] = None,
-    instructor_id: Optional[int] = None,
-    all_courses: bool = False
+    creator_id: Optional[UUID] = None,
+    instructor_id: Optional[UUID] = None,
+    all_courses: bool = False,
+    branch_id: Optional[UUID] = None,
+    room_id: Optional[UUID] = None,
+    title: Optional[str] = None,
+    teacher_name: Optional[str] = None
 ) -> Tuple[List[Course], int]:
     """List courses with pagination."""
     try:
         # Build query with preloaded relationships
         query = select(Course).options(
             selectinload(Course.creator),
-            selectinload(Course.enrollments)
+            selectinload(Course.enrollments),
+            selectinload(Course.branch)
         )
         
+        # Apply filters
         if not all_courses:
           if creator_id:  
               query = query.where(Course.creator_id == creator_id)
           
           if instructor_id:
               query = query.where(Course.id.in_(await filter_courses_by_edit_permission(db, instructor_id)))
+        
+        # Filter by branch
+        if branch_id:
+            query = query.where(Course.branch_id == branch_id)
+        
+        # Filter by room (via schedules)
+        if room_id:
+            # Subquery to get course IDs that have schedules in the specified room
+            room_course_ids = select(CourseSchedule.course_id).where(
+                CourseSchedule.room_id == room_id
+            ).distinct()
+            query = query.where(Course.id.in_(room_course_ids))
+        
+        # Filter by title (case-insensitive partial match)
+        if title:
+            query = query.where(Course.title.ilike(f"%{title}%"))
+        
+        # Filter by teacher name (case-insensitive partial match)
+        if teacher_name:
+            query = query.where(Course.teacher_name.ilike(f"%{teacher_name}%"))
           
         # Get total count
         count_query = select(func.count()).select_from(query.subquery())
@@ -279,7 +320,16 @@ async def list_courses(
     except SQLAlchemyError:
         return [], 0
 
-async def list_enrolled_courses(db: AsyncSession, student_id: int, page: int = 1, per_page: int = 20) -> Tuple[List[Course], int]:
+async def list_enrolled_courses(
+    db: AsyncSession, 
+    student_id: UUID, 
+    page: int = 1, 
+    per_page: int = 20,
+    branch_id: Optional[UUID] = None,
+    room_id: Optional[UUID] = None,
+    title: Optional[str] = None,
+    teacher_name: Optional[str] = None
+) -> Tuple[List[Course], int]:
     """List enrolled courses for a student."""
     try:
         # Get enrollment course IDs for the student
@@ -298,18 +348,44 @@ async def list_enrolled_courses(db: AsyncSession, student_id: int, page: int = 1
         total_result = await db.execute(count_query)
         total = total_result.scalar()
 
-        # Query courses with pagination and load relationships
-        offset = (page - 1) * per_page
+        # Build base query with enrolled courses
         query = (
             select(Course)
             .options(
                 selectinload(Course.creator),
-                selectinload(Course.enrollments)
+                selectinload(Course.enrollments),
+                selectinload(Course.branch)
             )
             .where(Course.id.in_(course_ids))
-            .offset(offset)
-            .limit(per_page)
         )
+        
+        # Apply additional filters
+        if branch_id:
+            query = query.where(Course.branch_id == branch_id)
+        
+        # Filter by room (via schedules)
+        if room_id:
+            room_course_ids = select(CourseSchedule.course_id).where(
+                CourseSchedule.room_id == room_id
+            ).distinct()
+            query = query.where(Course.id.in_(room_course_ids))
+        
+        # Filter by title (case-insensitive partial match)
+        if title:
+            query = query.where(Course.title.ilike(f"%{title}%"))
+        
+        # Filter by teacher name (case-insensitive partial match)
+        if teacher_name:
+            query = query.where(Course.teacher_name.ilike(f"%{teacher_name}%"))
+        
+        # Update total count with filters
+        count_query = select(func.count()).select_from(query.subquery())
+        total_result = await db.execute(count_query)
+        total = total_result.scalar()
+        
+        # Apply pagination
+        offset = (page - 1) * per_page
+        query = query.offset(offset).limit(per_page)
         
         result = await db.execute(query)
         courses = result.scalars().all()
@@ -321,7 +397,7 @@ async def list_enrolled_courses(db: AsyncSession, student_id: int, page: int = 1
 
 async def get_course_students(
     db: AsyncSession,
-    course_id: int,
+    course_id: UUID,
     page: int = 1,
     per_page: int = 10
 ) -> Tuple[List[dict], int]:
@@ -410,7 +486,7 @@ async def get_course_students(
         return [], 0
 
 
-async def check_course_ownership(db: AsyncSession, course_id: int, user_id: int) -> bool:
+async def check_course_ownership(db: AsyncSession, course_id: UUID, user_id: UUID) -> bool:
     """Check if user is the creator of the course."""
     try:
         result = await db.execute(
@@ -422,7 +498,7 @@ async def check_course_ownership(db: AsyncSession, course_id: int, user_id: int)
         return False
 
 
-async def get_course_title(db: AsyncSession, course_id: int) -> Optional[str]:
+async def get_course_title(db: AsyncSession, course_id: UUID) -> Optional[str]:
     """Get course title by ID."""
     try:
         result = await db.execute(
@@ -434,8 +510,8 @@ async def get_course_title(db: AsyncSession, course_id: int) -> Optional[str]:
 
 async def get_course_student_detail(
     db: AsyncSession,
-    course_id: int,
-    student_id: int
+    course_id: UUID,
+    student_id: UUID
 ) -> Optional[dict]:
     """Get detailed information about a student in a course including invoices and payments."""
     try:

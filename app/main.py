@@ -23,6 +23,9 @@ from app.routers.enrollments import enrollments
 from app.routers.payments import payments
 from app.routers.attendance import attendance
 from app.routers.audit import audit
+from app.routers.branches import router as branches_router
+from app.routers.rooms import router as rooms_router
+from app.routers.schedules import router as schedules_router
 from app.core.middleware.audit_middleware import AuditMiddleware
 from app.core.middleware.security_headers import SecurityHeadersMiddleware
 from app.core.middleware.request_validation import RequestValidationMiddleware
@@ -95,9 +98,9 @@ app.add_middleware(
 # Add rate limiting middleware
 app.add_middleware(
     RateLimitMiddleware,
-    requests_per_minute=60,
+    requests_per_minute=600,
     requests_per_hour=1000,
-    burst_size=10,
+    burst_size=100,
 )
 
 # Add CORS middleware
@@ -259,6 +262,9 @@ app.include_router(enrollments.router, prefix="/api/v1")
 app.include_router(payments.router, prefix="/api/v1")
 app.include_router(attendance.router, prefix="/api/v1")
 app.include_router(audit.router, prefix="/api/v1")
+app.include_router(branches_router)
+app.include_router(rooms_router)
+app.include_router(schedules_router)
 
 # Middleware for request logging and monitoring
 @app.middleware("http")
