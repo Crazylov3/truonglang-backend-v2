@@ -56,7 +56,7 @@ async def bulk_create_attendance_cards_endpoint(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return result
@@ -71,7 +71,7 @@ async def bulk_create_attendance_cards_endpoint(
             operation_details={"error": str(e)},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -117,7 +117,7 @@ async def bulk_create_attendance_cards_from_csv(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return result
@@ -132,7 +132,7 @@ async def bulk_create_attendance_cards_from_csv(
             operation_details={"error": str(e), "file_name": file.filename},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -194,7 +194,7 @@ async def update_attendance_card_status_endpoint(
             operation_summary=f"Updated card {card_uid} status from {old_status} to {status_update.status}",
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return card
@@ -209,7 +209,7 @@ async def update_attendance_card_status_endpoint(
             operation_details={"error": str(e)},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -238,7 +238,7 @@ async def bulk_assign_cards_for_class_endpoint(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return result
@@ -253,7 +253,7 @@ async def bulk_assign_cards_for_class_endpoint(
             operation_details={"error": str(e)},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -300,7 +300,7 @@ async def bulk_assign_cards_from_csv(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return result
@@ -315,7 +315,7 @@ async def bulk_assign_cards_from_csv(
             operation_details={"error": str(e), "file_name": file.filename},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -354,7 +354,7 @@ async def bulk_revoke_card_assignments_endpoint(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return {"message": f"Revoked {revoked_count} card assignments", "revoked_count": revoked_count}
@@ -369,7 +369,7 @@ async def bulk_revoke_card_assignments_endpoint(
             operation_details={"error": str(e), "student_ids": student_ids},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -401,7 +401,7 @@ async def bulk_import_attendance_records_endpoint(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return result
@@ -416,7 +416,7 @@ async def bulk_import_attendance_records_endpoint(
             operation_details={"error": str(e)},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 
@@ -464,7 +464,7 @@ async def bulk_import_attendance_records_from_csv(
             },
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
         return result
@@ -479,7 +479,7 @@ async def bulk_import_attendance_records_from_csv(
             operation_details={"error": str(e), "file_name": file.filename},
             user_id=current_user.id,
             user_email=current_user.email,
-            user_role=current_user.role
+            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
 

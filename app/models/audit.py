@@ -57,7 +57,7 @@ class AuditLog(BaseModel):
     # User information
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)  # NULL for unauthenticated actions
     user_email = Column(String(255), nullable=True)  # Store email for historical reference
-    user_role = Column(Integer, nullable=True)  # Store role for historical reference
+    user_role = Column(String(50), nullable=True)  # Store role for historical reference
     
     # Action details
     action = Column(Integer, nullable=False)  # AuditAction enum

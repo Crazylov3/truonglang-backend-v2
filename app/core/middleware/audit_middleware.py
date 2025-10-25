@@ -49,7 +49,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
             user = request.state.user
             user_id = user.id
             user_email = user.email
-            user_role = user.role
+            user_role = user.role.value if hasattr(user.role, 'value') else str(user.role)
         
         # Get request details
         ip_address = self._get_client_ip(request)
@@ -178,7 +178,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
 class DatabaseAuditMiddleware:
     """Context manager for logging database operations."""
     
-    def __init__(self, db, user_id: Optional[int] = None, user_email: Optional[str] = None, user_role: Optional[int] = None):
+    def __init__(self, db, user_id: Optional[int] = None, user_email: Optional[str] = None, user_role: Optional[str] = None):
         self.db = db
         self.user_id = user_id
         self.user_email = user_email
@@ -233,7 +233,7 @@ async def audit_user_action(
     action: AuditAction,
     user_id: int,
     user_email: str,
-    user_role: int,
+    user_role: str,
     operation_summary: str = "",
     operation_details: Optional[Dict[str, Any]] = None,
     ip_address: Optional[str] = None,
@@ -280,7 +280,7 @@ async def audit_database_operation(
     changed_fields: Optional[List[str]] = None,
     user_id: Optional[int] = None,
     user_email: Optional[str] = None,
-    user_role: Optional[int] = None,
+    user_role: Optional[str] = None,
     operation_summary: str = "",
     operation_details: Optional[Dict[str, Any]] = None,
     session_id: Optional[str] = None,

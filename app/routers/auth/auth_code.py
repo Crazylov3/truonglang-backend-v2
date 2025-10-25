@@ -56,9 +56,9 @@ async def login_with_auth_code(
         # Extract all user data while still in session
         user_id = user.id
         user_email = user.email
-        user_role = user.role
+        user_role = user.role.value if hasattr(user.role, 'value') else str(user.role)
         user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
-        user_role_value = user.role.value if hasattr(user.role, 'value') else int(user.role)
+        user_role_value = user.role.value if hasattr(user.role, 'value') else str(user.role)
         user_last_login = user.last_login_at
         user_created_at = user.created_at
         
@@ -179,9 +179,9 @@ async def exchange_auth_code_for_tokens(
         
         # Extract user data while still in session
         user_email = user.email
-        user_role = user.role
+        user_role = user.role.value if hasattr(user.role, 'value') else str(user.role)
         user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
-        user_role_value = user.role.value if hasattr(user.role, 'value') else int(user.role)
+        user_role_value = user.role.value if hasattr(user.role, 'value') else str(user.role)
         user_last_login = user.last_login_at
         user_created_at = user.created_at
         
@@ -347,7 +347,7 @@ async def refresh_access_token(
         # Extract user data while still in session
         user_email = user.email
         user_role_name = user.role.name if hasattr(user.role, 'name') else str(user.role)
-        user_role_value = user.role.value if hasattr(user.role, 'value') else int(user.role)
+        user_role_value = user.role.value if hasattr(user.role, 'value') else str(user.role)
         
         # Generate new access token (30 minutes)
         access_token_expires = 1800

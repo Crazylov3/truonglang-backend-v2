@@ -55,7 +55,7 @@ class AuditLogResponse(BaseUUIDModel):
     """Response model for audit log entries."""
     user_id: Optional[UUID] = None
     user_email: Optional[str] = None
-    user_role: Optional[int] = None
+    user_role: Optional[str] = None
     action: int  # AuditAction enum value
     resource_type: int  # AuditResource enum value
     resource_id: Optional[str] = None
