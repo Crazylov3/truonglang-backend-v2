@@ -75,6 +75,7 @@ class CourseUpdate(CourseCreate):
 
 
 class CourseStudent(BaseUUIDModel):
+    public_id: int
     email: str
     full_name: str 
     enrolled_at: datetime

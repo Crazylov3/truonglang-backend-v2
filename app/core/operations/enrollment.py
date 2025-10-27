@@ -2,6 +2,7 @@
 
 import traceback
 from typing import Optional, List, Tuple
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
 from sqlalchemy.orm import selectinload
@@ -15,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 async def create_enrollment(
     db: AsyncSession,
-    student_id: int,
-    course_id: int
+    student_id: UUID,
+    course_id: UUID
 ) -> Optional[Enrollment]:
     """Create a new enrollment."""
     try:
@@ -58,8 +59,8 @@ async def create_enrollment(
 
 async def get_enrollment(
     db: AsyncSession,
-    student_id: int,
-    course_id: int
+    student_id: UUID,
+    course_id: UUID
 ) -> Optional[Enrollment]:
     """Get enrollment by student and course."""
     try:
@@ -78,8 +79,8 @@ async def get_enrollment(
 
 async def deactivate_enrollment(
     db: AsyncSession,
-    student_id: int,
-    course_id: int
+    student_id: UUID,
+    course_id: UUID
 ) -> bool:
     """Deactivate an enrollment (unenroll)."""
     try:
@@ -108,7 +109,7 @@ async def deactivate_enrollment(
 
 async def get_user_enrollments(
     db: AsyncSession,
-    student_id: int,
+    student_id: UUID,
     active_only: bool = True,
     page: int = 1,
     per_page: int = 10
@@ -151,7 +152,7 @@ async def get_user_enrollments(
 
 async def get_course_enrollments(
     db: AsyncSession,
-    course_id: int,
+    course_id: UUID,
     active_only: bool = True,
     page: int = 1,
     per_page: int = 10
@@ -194,8 +195,8 @@ async def get_course_enrollments(
 
 async def check_enrollment_exists(
     db: AsyncSession,
-    student_id: int,
-    course_id: int,
+    student_id: UUID,
+    course_id: UUID,
     active_only: bool = True
 ) -> bool:
     """Check if enrollment exists."""

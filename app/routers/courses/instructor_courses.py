@@ -1,6 +1,5 @@
 from fastapi import Depends, HTTPException, status, Path, Query, Response
 import os
-from uuid import UUID
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
@@ -65,7 +64,7 @@ async def get_courses(
     for course in courses:
         # Check if user has permission to see group_chat_link
         # Staff/Admin always see it, Instructors only if they have edit permission
-        can_see_group_chat = current_user.role >= UserRole.STAFF or course.id in editable_course_ids
+        can_see_group_chat = current_user.role == UserRole.STAFF or current_user.role == UserRole.ADMIN or course.id in editable_course_ids
         
         course_data = InstructorViewCourseDetail(
             id=course.id,
@@ -275,7 +274,7 @@ async def update_course(
     
     # Check if user can see group_chat_link
     # Staff/Admin always see it, Instructors only if they have edit permission
-    can_see_group_chat = current_user.role >= UserRole.STAFF or can_edit
+    can_see_group_chat = current_user.role == UserRole.STAFF or current_user.role == UserRole.ADMIN or can_edit
     
     return InstructorViewCourseDetail(
         id=updated_course.id,
@@ -325,11 +324,16 @@ async def delete_course(
 async def get_course_students(
     course_id: str = Path(..., description="Course ID"),
     page: int = Query(1, ge=1, description="Page number"),
-    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
+    per_page: int = Query(10, ge=1, le=10000, description="Items per page"),
+    student_id: Optional[str] = Query(None, description="Filter by student ID"),
+    first_name: Optional[str] = Query(None, description="Filter by first name (partial match)"),
+    last_name: Optional[str] = Query(None, description="Filter by last name (partial match)"),
+    email: Optional[str] = Query(None, description="Filter by email (partial match)"),
+    owe_money: Optional[bool] = Query(None, description="Filter by payment status (True = owes money, False = paid)"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get students enrolled in a course with pagination."""
+    """Get students enrolled in a course with pagination and filtering."""
     course_uuid = validate_uuid(course_id)
     course = await course_ops.get_course_by_id(db, course_uuid)
     if not course:
@@ -350,9 +354,17 @@ async def get_course_students(
             detail="Not enough permissions to view course students"
         )
     
+    # Validate and convert student_id if provided
+    student_uuid = validate_uuid(student_id) if student_id else None
+    
     students_data, total = await course_ops.get_course_students(
         db=db,
         course_id=course_uuid,
+        student_id=student_uuid,
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        owe_money=owe_money,
         page=page,
         per_page=per_page
     )
@@ -360,6 +372,7 @@ async def get_course_students(
     students = [
         CourseStudent(
             id=student_data['id'],
+            public_id=student_data['public_id'],
             email=student_data['email'],
             full_name=student_data['full_name'],
             enrolled_at=student_data['enrolled_at'],

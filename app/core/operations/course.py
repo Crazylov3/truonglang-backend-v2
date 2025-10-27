@@ -12,8 +12,12 @@ from datetime import datetime
 from app.models.course import *
 from app.models.course_management import *
 from app.models.user import *
+from app.models.user_profile import *
 from app.models.enrollment import *
 from app.models.location import CourseSchedule
+from app.models.payment import *
+from app.models.invoice import *
+
 
 
 async def create_course(
@@ -398,30 +402,20 @@ async def list_enrolled_courses(
 async def get_course_students(
     db: AsyncSession,
     course_id: UUID,
+    student_id: Optional[UUID] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
+    email: Optional[str] = None,
+    owe_money: Optional[bool] = None,
     page: int = 1,
     per_page: int = 10
 ) -> Tuple[List[dict], int]:
-    """Get students enrolled in a course with pagination, sorted by students who owe money first.
+    """Get students enrolled in a course with pagination and filtering, sorted by students who owe money first.
     
     Returns students with owe_money=True first (those with unpaid invoices for this course),
     followed by students with owe_money=False (all invoices paid or no invoices).
     """
     try:
-        # Import payment models for the query
-        from app.models.payment import Invoice, Payment, PaymentStatus
-        
-        # Count total students
-        count_query = (
-            select(Enrollment.id)
-            .where(Enrollment.course_id == course_id)
-            .where(Enrollment.is_active == True)
-        )
-        count_result = await db.execute(count_query)
-        total = len(count_result.all())
-        
-        # Get enrolled students with profiles and payment status (paginated)
-        offset = (page - 1) * per_page
-        
         # Subquery to check if student has unpaid invoices (owes money)
         unpaid_subquery = (
             select(Enrollment.student_id)
@@ -442,6 +436,49 @@ async def get_course_students(
             )
         ).subquery()
         
+        # Build base query for counting
+        base_query = (
+            select(User.id)
+            .join(Enrollment, User.id == Enrollment.student_id)
+            .where(Enrollment.course_id == course_id)
+            .where(Enrollment.is_active == True)
+        )
+        
+        # Apply filters
+        if student_id:
+            base_query = base_query.where(User.id == student_id)
+        
+        if email:
+            base_query = base_query.where(User.email.ilike(f"%{email}%"))
+        
+        # Join with profile if needed for name filters
+        if first_name or last_name or owe_money is not None:
+            base_query = base_query.join(UserProfile, User.id == UserProfile.user_id)
+            
+            if first_name:
+                base_query = base_query.where(UserProfile.first_name.ilike(f"%{first_name}%"))
+            
+            if last_name:
+                base_query = base_query.where(UserProfile.last_name.ilike(f"%{last_name}%"))
+        
+        # Apply owe_money filter to base query
+        if owe_money is not None:
+            if owe_money:
+                # Only count students who owe money
+                base_query = base_query.where(User.id.in_(select(unpaid_subquery.c.student_id)))
+            else:
+                # Only count students who don't owe money
+                base_query = base_query.where(~User.id.in_(select(unpaid_subquery.c.student_id)))
+        
+        # Get total count with filters
+        count_query = select(func.count()).select_from(base_query.subquery())
+        count_result = await db.execute(count_query)
+        total = count_result.scalar() or 0
+        
+        # Get enrolled students with profiles and payment status (paginated)
+        offset = (page - 1) * per_page
+        
+        # Build the main query to fetch students with all data
         query = (
             select(
                 User, 
@@ -456,16 +493,41 @@ async def get_course_students(
             .options(selectinload(User.profile))
             .where(Enrollment.course_id == course_id)
             .where(Enrollment.is_active == True)
-            .order_by(
-                case(
-                    (User.id.in_(select(unpaid_subquery.c.student_id)), 0),
-                    else_=1
-                ),  # Students who owe money first (0), then students who paid (1)
-                User.email  # Secondary sort by email
-            )
-            .offset(offset)
-            .limit(per_page)
         )
+        
+        # Apply the same filters to the main query
+        if student_id:
+            query = query.where(User.id == student_id)
+        
+        if email:
+            query = query.where(User.email.ilike(f"%{email}%"))
+        
+        if first_name or last_name or owe_money is not None:
+            query = query.join(UserProfile, User.id == UserProfile.user_id)
+            
+            if first_name:
+                query = query.where(UserProfile.first_name.ilike(f"%{first_name}%"))
+            
+            if last_name:
+                query = query.where(UserProfile.last_name.ilike(f"%{last_name}%"))
+        
+        # Apply owe_money filter
+        if owe_money is not None:
+            if owe_money:
+                # Only show students who owe money
+                query = query.where(User.id.in_(select(unpaid_subquery.c.student_id)))
+            else:
+                # Only show students who don't owe money (paid or no invoices)
+                query = query.where(~User.id.in_(select(unpaid_subquery.c.student_id)))
+        
+        # Order by owe_money status (those who owe first), then by email
+        query = query.order_by(
+            case(
+                (User.id.in_(select(unpaid_subquery.c.student_id)), 0),
+                else_=1
+            ),  # Students who owe money first (0), then students who paid (1)
+            User.email  # Secondary sort by email
+        ).offset(offset).limit(per_page)
         
         result = await db.execute(query)
         students_data = result.all()
@@ -474,6 +536,7 @@ async def get_course_students(
         for student, enrolled_at, _, has_unpaid in students_data:
             students.append({
                 'id': student.id,
+                'public_id': student.public_id,
                 'email': student.email,
                 'full_name': student.full_name,
                 'enrolled_at': enrolled_at,

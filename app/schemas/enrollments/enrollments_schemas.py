@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Dict
 from uuid import UUID
 from app.schemas.common import PaginatedResponse, BaseUUIDModel
 
@@ -20,3 +20,16 @@ class Enrollment(BaseUUIDModel):
 
 class Enrollments(PaginatedResponse[Enrollment]):
     pass
+
+
+class BulkEnrollmentRequest(BaseModel):
+    """Request schema for bulk enrollment of students."""
+    student_identifiers: List[str] = Field(..., description="List of student identifiers (UUID, email, or public_id)")
+
+
+class BulkEnrollmentResponse(BaseModel):
+    """Response schema for bulk enrollment operations."""
+    success_count: int = Field(..., description="Number of successfully enrolled students")
+    failure_count: int = Field(..., description="Number of failed enrollments")
+    successful: List[Dict] = Field(..., description="List of successful enrollments with student details")
+    failed: List[Dict] = Field(..., description="List of failed enrollments with error reasons")
