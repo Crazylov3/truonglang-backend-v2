@@ -10,10 +10,12 @@ from app.core.operations import enrollment as enrollment_ops
 from app.core.operations import user as user_ops
 from app.core.operations import course as course_ops
 from app.schemas.courses.course_schemas import EnrollmentResponse
-from app.schemas.enrollments.enrollments_schemas import BulkEnrollmentRequest, BulkEnrollmentResponse
+from app.schemas.enrollments.enrollments_schemas import BulkEnrollmentRequest, BulkEnrollmentResponse, Enrollment, Enrollments
 from .enrollments import router, logger
 from uuid import UUID
 import csv
+import io
+from typing import Tuple
 
 
 @router.post("/admin/course/{course_id}/enroll", response_model=EnrollmentResponse, status_code=status.HTTP_201_CREATED)
@@ -288,4 +290,78 @@ async def admin_bulk_enroll_students_csv(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error processing CSV file: {str(e)}"
         )
+
+
+@router.get("/admin/student/{student_id}/enrollments", response_model=Enrollments, status_code=status.HTTP_200_OK)
+@authentication_required(allowed_role=UserRole.STAFF)
+async def get_student_enrollments(
+    student_id: str = Path(..., description="Student ID (UUID, email, or public_id)"),
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(20, ge=1, le=100, description="Items per page"),
+    active_only: bool = Query(True, description="Show only active enrollments"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get enrollments for a specific student by student ID, email, or public_id.
+    
+    Accessible by STAFF and ADMIN roles.
+    """
+    
+    # Find student by identifier
+    student = None
+    try:
+        # Try as UUID first
+        try:
+            student_uuid = UUID(student_id)
+            student = await user_ops.get_user_by_id(db, student_uuid)
+        except (ValueError, TypeError, AttributeError):
+            # Not a valid UUID, try public_id
+            try:
+                public_id = int(student_id)
+                student = await user_ops.get_user_by_public_id(db, public_id)
+            except (ValueError, TypeError):
+                # Assume it's an email
+                student = await user_ops.get_user_by_email(db, student_id)
+    except Exception as e:
+        logger.error(f"Error finding student: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error while searching for student"
+        )
+    
+    if not student:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found"
+        )
+    
+    # Get enrollments
+    enrollments, total = await enrollment_ops.get_user_enrollments(
+        db=db,
+        student_id=student.id,
+        active_only=active_only,
+        page=page,
+        per_page=per_page
+    )
+    
+    enrollment_list = [
+        Enrollment(
+            id=enrollment.id,
+            student_id=enrollment.student_id,
+            course_id=enrollment.course_id,
+            enrolled_at=enrollment.enrolled_at,
+            is_active=enrollment.is_active,
+            discount_percentage=float(enrollment.discount_percentage) if enrollment.discount_percentage else 0.0,
+            discount_reason=enrollment.discount_reason,
+            discount_approved_by=enrollment.discount_approved_by
+        )
+        for enrollment in enrollments
+    ]
+    
+    return Enrollments.create(
+        items=enrollment_list,
+        total=total,
+        page=page,
+        per_page=per_page
+    )
 
