@@ -15,8 +15,8 @@ from app.schemas.courses.course_schemas import (
 )
 from app.core.operations import course as course_ops
 from app.core.operations import enrollment as enrollment_ops
-from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.decorators import csrf_protect
+from app.core.deps import get_current_user, require_role
 from app.models.user import User, UserRole
 from .courses import router, logger
 
@@ -69,7 +69,6 @@ async def get_courses(
     )
 
 @router.get('/enrolled-courses', response_model=PublicViewCoursesDetail)
-@authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def get_enrolled_courses(
     page: int = Query(1, ge=1, description="Page number"),
@@ -78,7 +77,7 @@ async def get_enrolled_courses(
     room_id: Optional[str] = Query(None, description="Filter by room ID (shows courses scheduled in this room)"),
     title: Optional[str] = Query(None, description="Search by course title (partial match)"),
     teacher_name: Optional[str] = Query(None, description="Search by teacher name (partial match)"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get enrolled courses for a student with filtering options."""
@@ -179,11 +178,10 @@ async def get_course_preview_image(
 
 
 @router.post("/{course_id}/enroll", response_model=EnrollmentResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def enroll_in_course(
     course_id: str = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Enroll in a course (Students only)."""
@@ -222,11 +220,10 @@ async def enroll_in_course(
 
 
 @router.post("/{course_id}/unenroll", response_model=UnEnrollmentResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def unenroll_from_course(
     course_id: str = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Unenroll from a course (Students only)."""

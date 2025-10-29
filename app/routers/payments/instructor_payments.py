@@ -14,19 +14,19 @@ from app.schemas.payments import (
 from app.core.operations import payment as payment_ops
 from app.core.operations import course as course_ops
 from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.models.user import User, UserRole
 from .payments import router
 
 
 # Payment Period Endpoints (for Instructors/Staff)
 @router.post("/courses/{course_id}/payment-periods", response_model=PaymentPeriodCreateResponse)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def create_payment_period(
     payment_period_create: PaymentPeriodCreate,
     course_id: int = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Create a payment period for a course (Instructors/Staff/Admin only)."""
@@ -74,12 +74,11 @@ async def create_payment_period(
 
 
 @router.get("/courses/{course_id}/payment-periods", response_model=PaymentPeriodsResponse)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_course_payment_periods(
     course_id: int = Path(..., description="Course ID"),
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get payment periods for a course (Instructors/Staff/Admin only)."""
@@ -129,13 +128,12 @@ async def get_course_payment_periods(
 
 
 @router.get("/courses/{course_id}/payment-periods/{period_id}/invoices", response_model=InvoicesResponse)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_payment_period_invoices(
     course_id: int = Path(..., description="Course ID"),
     period_id: int = Path(..., description="Payment period ID"),
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(50, ge=1, le=100, description="Items per page"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get invoices for a payment period - shows which students paid/unpaid (Instructors/Staff/Admin only)."""

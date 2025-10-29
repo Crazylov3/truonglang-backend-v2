@@ -3,13 +3,15 @@ from typing import Optional, List
 from datetime import datetime, date
 from uuid import UUID
 from app.models.attendance import CardStatus, AttendanceType
-from app.schemas.common import BaseUUIDModel
+from app.schemas.common import BaseUUIDModel, PaginatedResponse
 
 
 class AttendanceCardBase(BaseModel):
     card_uid: str = Field(..., description="Unique ID from the card (RFID/NFC UID, Barcode)")
     status: CardStatus = Field(CardStatus.INACTIVE, description="Current status of the card")
     notes: Optional[str] = Field(None, description="Additional notes about the card")
+    branch_id: UUID = Field(..., description="Branch this card belongs to")
+    card_uuid: Optional[UUID] = Field(None, description="Optional NFC UUID; may be NULL until synced")
 
 
 class AttendanceCardCreate(AttendanceCardBase):
@@ -19,10 +21,13 @@ class AttendanceCardCreate(AttendanceCardBase):
 class AttendanceCardUpdate(BaseModel):
     status: Optional[CardStatus] = None
     notes: Optional[str] = None
+    branch_id: Optional[UUID] = None
+    card_uuid: Optional[UUID] = None
 
 
 class AttendanceCardResponse(AttendanceCardBase):
     issued_at: datetime
+    assigned_to_public_id: Optional[int] = Field(None, description="Public ID of the user currently assigned to this card")
     
     class Config:
         from_attributes = True
@@ -31,6 +36,10 @@ class AttendanceCardResponse(AttendanceCardBase):
 class AttendanceCardsResponse(BaseModel):
     cards: List[AttendanceCardResponse]
     total: int
+
+
+# Paginated list alias (consistent with UsersListResponse)
+AttendanceCardsListResponse = PaginatedResponse[AttendanceCardResponse]
 
 
 # Bulk Card Creation Schemas
@@ -53,6 +62,11 @@ class CardAssignmentBase(BaseModel):
 
 class CardAssignmentCreate(CardAssignmentBase):
     pass
+
+
+class CardAssignmentUpdate(BaseModel):
+    card_uid: Optional[str] = None
+    revoked: Optional[bool] = None
 
 
 class CardAssignmentResponse(CardAssignmentBase, BaseUUIDModel):

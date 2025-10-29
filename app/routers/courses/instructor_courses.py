@@ -4,8 +4,8 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.user import User, UserRole
-from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.deps import require_role
+from app.core.decorators import csrf_protect
 from app.core.validators import validate_uuid
 from app.schemas.courses.course_schemas import (
     CourseCreate,
@@ -29,7 +29,6 @@ from datetime import datetime
 
 
 @router.get("/instructor/courses", response_model=InstructorViewCoursesDetail)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_courses(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
@@ -37,7 +36,7 @@ async def get_courses(
     room_id: Optional[str] = Query(None, description="Filter by room ID (shows courses scheduled in this room)"),
     title: Optional[str] = Query(None, description="Search by course title (partial match)"),
     teacher_name: Optional[str] = Query(None, description="Search by teacher name (partial match)"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get paginated list of courses with advanced filtering."""
@@ -94,11 +93,10 @@ async def get_courses(
 
 
 @router.post("/instructor/create-course", response_model=CourseCreateResponse, status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def create_course(
     course_data: CourseCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Create a new course."""
@@ -154,10 +152,9 @@ async def create_course(
         )
 
 @router.get("/instructor/course/{course_id}", response_model=InstructorViewCourseDetail)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_course(
     course_id: str = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get a specific course by ID."""
@@ -203,12 +200,11 @@ async def get_course(
 
 
 @router.put("/instructor/course/{course_id}", response_model=InstructorViewCourseDetail)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def update_course(
     course_update: CourseUpdate,
     course_id: str = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Update a course."""
@@ -292,11 +288,10 @@ async def update_course(
     )
 
 @router.delete("/instructor/course/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def delete_course(
     course_id: str = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Delete a course."""
@@ -320,7 +315,6 @@ async def delete_course(
 
 
 @router.get("/instructor/course/{course_id}/students", response_model=CourseStudents)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_course_students(
     course_id: str = Path(..., description="Course ID"),
     page: int = Query(1, ge=1, description="Page number"),
@@ -330,7 +324,7 @@ async def get_course_students(
     last_name: Optional[str] = Query(None, description="Filter by last name (partial match)"),
     email: Optional[str] = Query(None, description="Filter by email (partial match)"),
     owe_money: Optional[bool] = Query(None, description="Filter by payment status (True = owes money, False = paid)"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get students enrolled in a course with pagination and filtering."""
@@ -389,11 +383,10 @@ async def get_course_students(
     )
 
 @router.get("/instructor/course/{course_id}/students-payment-detail/{student_id}", response_model=CourseStudentPaymentDetail)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_course_student_detail(
     course_id: str = Path(..., description="Course ID"),
     student_id: str = Path(..., description="Student ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get detailed information about a student in a course."""

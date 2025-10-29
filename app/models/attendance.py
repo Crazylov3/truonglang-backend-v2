@@ -21,15 +21,19 @@ class AttendanceCard(BaseModel):
     __tablename__ = "attendance_cards"
     
     card_uid = Column(String(255), primary_key=True, comment="Unique ID from the card (RFID/NFC UID, Barcode). This is the physical identifier.")
+    card_uuid = Column(UUID(as_uuid=True), nullable=True, comment="Optional NFC UUID; may be NULL while systems are not synced")
+    branch_id = Column(UUID(as_uuid=True), ForeignKey("branches.id"), nullable=False, comment="Branch this card belongs to - determines building access")
     status = Column(SQLAEnum(CardStatus), nullable=False, default=CardStatus.INACTIVE)
     issued_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     notes = Column(Text, nullable=True)
     
     # Relationships
+    branch = relationship("Branch", foreign_keys=[branch_id])
     card_assignments = relationship("CardAssignment", back_populates="card")
     
     def __repr__(self):
-        return f"<AttendanceCard(card_uid='{self.card_uid}', status={self.status})>"
+        d = self.__dict__
+        return f"<AttendanceCard(card_uid='{d.get('card_uid')}', status={d.get('status')})>"
 
 
 class CardAssignment(BaseModel):
@@ -52,7 +56,8 @@ class CardAssignment(BaseModel):
     )
     
     def __repr__(self):
-        return f"<CardAssignment(id={self.id}, student_id={self.student_id}, card_uid='{self.card_uid}')>"
+        d = self.__dict__
+        return f"<CardAssignment(id={d.get('id')}, student_id={d.get('student_id')}, card_uid='{d.get('card_uid')}')>"
 
 
 class AttendanceRecord(BaseModel):
@@ -68,4 +73,5 @@ class AttendanceRecord(BaseModel):
     student = relationship("User", foreign_keys=[student_id])
     
     def __repr__(self):
-        return f"<AttendanceRecord(id={self.id}, student_id={self.student_id}, type={self.type}, swiped_at={self.swiped_at})>"
+        d = self.__dict__
+        return f"<AttendanceRecord(id={d.get('id')}, student_id={d.get('student_id')}, type={d.get('type')}, swiped_at={d.get('swiped_at')})>"

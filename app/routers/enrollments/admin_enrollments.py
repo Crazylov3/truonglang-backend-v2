@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 from app.database import get_db
 from app.core.deps import get_current_user
-from app.core.decorators import authentication_required, csrf_protect
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.core.validators import validate_uuid
 from app.models.user import User, UserRole
 from app.core.operations import enrollment as enrollment_ops
@@ -19,14 +20,13 @@ from typing import Tuple
 
 
 @router.post("/admin/course/{course_id}/enroll", response_model=EnrollmentResponse, status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def admin_enroll_student(
     course_id: str = Path(..., description="Course ID"),
     student_id: Optional[str] = Query(None, description="Student UUID"),
     email: Optional[str] = Query(None, description="Student email"),
     public_id: Optional[int] = Query(None, description="Student public ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Admin endpoint to manually enroll a student in a course by student ID, email, or public ID."""
@@ -188,12 +188,11 @@ async def _process_enrollments(course_uuid, identifiers, db):
 
 
 @router.post("/admin/course/{course_id}/bulk-enroll", response_model=BulkEnrollmentResponse, status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def admin_bulk_enroll_students(
     course_id: str = Path(..., description="Course ID"),
     bulk_request: BulkEnrollmentRequest = Body(...),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Admin endpoint to bulk enroll multiple students in a course by student IDs, emails, or public IDs.
@@ -227,12 +226,11 @@ async def admin_bulk_enroll_students(
 
 
 @router.post("/admin/course/{course_id}/bulk-enroll-csv", response_model=BulkEnrollmentResponse, status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def admin_bulk_enroll_students_csv(
     course_id: str = Path(..., description="Course ID"),
     csv_file: UploadFile = File(..., description="CSV file with student identifiers (one per line or comma-separated in first column)"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Admin endpoint to bulk enroll multiple students in a course from a CSV file.
@@ -301,13 +299,12 @@ async def admin_bulk_enroll_students_csv(
 
 
 @router.get("/admin/student/{student_id}/enrollments", response_model=Enrollments, status_code=status.HTTP_200_OK)
-@authentication_required(allowed_role=UserRole.STAFF)
 async def get_student_enrollments(
     student_id: str = Path(..., description="Student ID (UUID, email, or public_id)"),
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
     active_only: bool = Query(True, description="Show only active enrollments"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get enrollments for a specific student by student ID, email, or public_id.
@@ -375,14 +372,13 @@ async def get_student_enrollments(
 
 
 @router.delete("/admin/course/{course_id}/unenroll", response_model=EnrollmentResponse, status_code=status.HTTP_200_OK)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def admin_unenroll_student(
     course_id: str = Path(..., description="Course ID"),
     student_id: Optional[str] = Query(None, description="Student UUID"),
     email: Optional[str] = Query(None, description="Student email"),
     public_id: Optional[int] = Query(None, description="Student public ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Admin endpoint to unenroll a student from a course by student ID, email, or public ID."""
@@ -544,12 +540,11 @@ async def _process_unenrollments(course_uuid, identifiers, db):
 
 
 @router.post("/admin/course/{course_id}/bulk-unenroll", response_model=BulkEnrollmentResponse, status_code=status.HTTP_200_OK)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def admin_bulk_unenroll_students(
     course_id: str = Path(..., description="Course ID"),
     bulk_request: BulkEnrollmentRequest = Body(...),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Admin endpoint to bulk unenroll multiple students from a course by student IDs, emails, or public IDs.

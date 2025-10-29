@@ -15,6 +15,9 @@ from app.models.user_profile import UserProfile
 from app.core.security import get_password_hash, verify_password
 import uuid
 from sqlalchemy import or_, and_
+from app.models import Enrollment
+from app.models.payment import *
+from app.models.invoice import *
 
 logger = logging.getLogger(__name__)
 
@@ -272,21 +275,32 @@ async def delete_user(db: AsyncSession, email: str) -> bool:
         # Delete dependent rows for NOT NULL FKs before deleting the user
         # 1) Delete enrollments and their invoices/payments
         try:
-            from app.models import Enrollment
-            from app.models.payment import Invoice, Payment
+            # Load all enrollments for the user
             enrollments_result = await db.execute(
-                select(Enrollment).options(
-                    selectinload(Enrollment.invoices).selectinload(
-                        Invoice.payments)
-                ).where(Enrollment.student_id == user.id)
+                select(Enrollment).where(Enrollment.student_id == user.id)
             )
             enrollments = enrollments_result.scalars().all()
             for enrollment in enrollments:
-                # Delete payments for each invoice
-                for invoice in list(enrollment.invoices or []):
-                    for payment in list(invoice.payments or []):
+                # For each enrollment, load invoices
+                invoices_result = await db.execute(
+                    select(Invoice).where(Invoice.enrollment_id == enrollment.id)
+                )
+                invoices = invoices_result.scalars().all()
+                for invoice in invoices:
+                    # For each invoice, delete payments
+                    payments_result = await db.execute(
+                        select(Invoice).join(Invoice.payments).where(Invoice.id == invoice.id)
+                    )
+                    # Better: directly load payments
+                    from app.models.payment import Payment
+                    payments_q = await db.execute(
+                        select(Payment).where(Payment.invoice_id == invoice.id)
+                    )
+                    payments = payments_q.scalars().all()
+                    for payment in payments:
                         await db.delete(payment)
                     await db.delete(invoice)
+                # Finally, delete the enrollment
                 await db.delete(enrollment)
         except Exception:
             # Log and continue to rollback in outer except if needed
@@ -307,7 +321,7 @@ async def delete_user(db: AsyncSession, email: str) -> bool:
         return False
 
 
-async def delete_user_by_id(db: AsyncSession, user_id: int) -> bool:
+async def delete_user_by_id(db: AsyncSession, user_id: UUID) -> bool:
     """Delete user by ID and their profile."""
     try:
         result = await db.execute(
@@ -320,21 +334,43 @@ async def delete_user_by_id(db: AsyncSession, user_id: int) -> bool:
             return False
 
         # Delete dependent rows for NOT NULL FKs before deleting the user
+        # 0) Delete attendance records and card assignments
+        try:
+            from app.models.attendance import AttendanceRecord, CardAssignment
+            assignments_result = await db.execute(
+                select(CardAssignment).where(CardAssignment.student_id == user.id)
+            )
+            for assignment in assignments_result.scalars().all():
+                await db.delete(assignment)
+
+            records_result = await db.execute(
+                select(AttendanceRecord).where(AttendanceRecord.student_id == user.id)
+            )
+            for record in records_result.scalars().all():
+                await db.delete(record)
+        except Exception:
+            logger.error("Error deleting user attendance data", exc_info=True)
+
         # 1) Delete enrollments and their invoices/payments
         try:
-            from app.models import Enrollment
-            from app.models.payment import Invoice, Payment
             enrollments_result = await db.execute(
-                select(Enrollment).options(
-                    selectinload(Enrollment.invoices).selectinload(
-                        Invoice.payments)
-                ).where(Enrollment.student_id == user.id)
+                select(Enrollment).where(Enrollment.student_id == user.id)
             )
             enrollments = enrollments_result.scalars().all()
             for enrollment in enrollments:
-                # Delete payments for each invoice
-                for invoice in list(enrollment.invoices or []):
-                    for payment in list(invoice.payments or []):
+                # For each enrollment, load invoices
+                invoices_result = await db.execute(
+                    select(Invoice).where(Invoice.enrollment_id == enrollment.id)
+                )
+                invoices = invoices_result.scalars().all()
+                for invoice in invoices:
+                    # Delete payments for invoice
+                    from app.models.payment import Payment
+                    payments_q = await db.execute(
+                        select(Payment).where(Payment.invoice_id == invoice.id)
+                    )
+                    payments = payments_q.scalars().all()
+                    for payment in payments:
                         await db.delete(payment)
                     await db.delete(invoice)
                 await db.delete(enrollment)

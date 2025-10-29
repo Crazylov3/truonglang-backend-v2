@@ -26,13 +26,13 @@ from app.schemas.users.user_schemas import (
     UserUpdateResponse
 )
 from app.schemas.common import PaginatedResponse
-from app.core.decorators import authentication_required, csrf_protect
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.core.media.io_helper import save_image_to_disk, from_base64_to_image, async_save_image_to_disk
 from app.core.operations import user as user_ops
 from .users import router, logger
 
 @router.get("/", response_model=UsersListResponse)
-@authentication_required(allowed_role=UserRole.STAFF)
 async def get_all_users(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(10, ge=1, le=1000000, description="Items per page"),
@@ -44,6 +44,7 @@ async def get_all_users(
     current_school: Optional[str] = Query(None, description="Search by current school (partial match)"),
     current_grade: Optional[str] = Query(None, description="Search by current grade (partial match)"),
     default_discount_percentage: Optional[float] = Query(None, description="Filter by users with discount percentage greater than this value"),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get all users with advanced filtering and search (staff/admin only)."""
@@ -110,8 +111,8 @@ async def get_all_users(
 
 
 @router.get("/total", response_model=TotalUsersResponse)
-@authentication_required(allowed_role=UserRole.STAFF)
 async def get_total_users(
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get total users count and breakdown by role (staff/admin only)."""
@@ -131,10 +132,9 @@ async def get_total_users(
 
 
 @router.get("/admin/avatar/{user_id}")
-@authentication_required(allowed_role=UserRole.STAFF)
 async def get_user_avatar(
     user_id: str = Path(..., description="User ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db),
 ):
     """Get user avatar image (staff/admin only)."""
@@ -177,9 +177,9 @@ async def get_user_avatar(
 
 
 @router.get("/{user_id}", response_model=UserInfo)
-@authentication_required(allowed_role=UserRole.STAFF)
 async def get_user_by_id(
     user_id: str = Path(..., description="User ID"),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get user by ID (staff/admin only)."""
@@ -215,11 +215,11 @@ async def get_user_by_id(
 
 
 @router.put("/{user_id}/profile", response_model=UserProfile)
-@authentication_required(allowed_role=UserRole.STAFF)
 @csrf_protect
 async def update_user_profile_by_id(
     profile_update: UserProfileUpdate,
     user_id: str = Path(..., description="User ID"),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
     """Update user profile by ID (staff/admin only)."""
@@ -276,12 +276,11 @@ async def update_user_profile_by_id(
 
 
 @router.put("/{user_id}/role", response_model=UserRoleUpdateResponse)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def update_user_role(
     role_update: UserRoleUpdateRequest,
     user_id: str = Path(..., description="User ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Update user role (admin only)."""
@@ -319,10 +318,10 @@ async def update_user_role(
 
 
 @router.delete("/{user_id}", response_model=DeleteUserResponse)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def delete_user(
     user_id: str = Path(..., description="User ID"),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Delete user (admin only)."""
@@ -351,11 +350,10 @@ async def delete_user(
 
 # Temporal User Management APIs
 @router.post("/temporal", response_model=TemporalUserResponse)
-@authentication_required(allowed_role=UserRole.STAFF)
 @csrf_protect
 async def create_temporal_user(
     user_data: TemporalUserCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db),
 ):
     """Create a single temporal user (student) with auto-generated credentials."""
@@ -404,11 +402,10 @@ async def create_temporal_user(
 
 
 @router.post("/temporal/bulk", response_model=TemporalUserBulkCreate)
-@authentication_required(allowed_role=UserRole.STAFF)
 @csrf_protect
 async def bulk_create_temporal_users(
     file: UploadFile = File(..., description="CSV file with student data"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db),
 ):
     """Create multiple temporal users from CSV file upload."""    
@@ -483,12 +480,11 @@ async def bulk_create_temporal_users(
 
 
 @router.put("/manipulation/{user_id}", response_model=UserUpdateResponse)
-@authentication_required(allowed_role=UserRole.STAFF)
 @csrf_protect
 async def update_user(
     user_id: str = Path(..., description="User ID"),
     user_data: UserUpdate = ...,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db),
 ):
     """Update user information and profile (partial update) (Admin/Staff only)."""

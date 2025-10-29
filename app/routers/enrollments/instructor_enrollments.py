@@ -6,13 +6,13 @@ from app.models.user import User
 from app.core.deps import get_current_user
 from app.core.operations import enrollment as enrollment_ops
 from app.schemas.enrollments import Enrollments, Enrollment
-from app.core.decorators import authentication_required
+from app.core.deps import require_role
 from app.models.user import UserRole
 
 @router.get("/instructor/enrollments/{course_id}", response_model=Enrollments)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def get_enrollments_by_course_id(
     course_id: int,
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get enrollments by course ID for instructor."""

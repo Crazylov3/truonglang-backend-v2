@@ -10,7 +10,8 @@ from app.database import get_db
 from app.models.user import User, UserRole
 from app.models.location import DayOfWeek
 from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.core.validators import validate_uuid
 from app.core.operations import schedule as schedule_ops
 from app.core.operations import course as course_ops
@@ -34,12 +35,11 @@ router = APIRouter(
 
 
 @router.post("/course/{course_id}", response_model=List[CourseScheduleResponse], status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def create_course_schedule(
     course_id: str = Path(..., description="Course ID"),
     schedule_data: CourseScheduleCreate = Body(..., description="Schedule data"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -99,12 +99,11 @@ async def create_course_schedule(
 
 
 @router.post("/course/{course_id}/bulk", response_model=List[CourseScheduleResponse], status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def bulk_create_schedules(
     course_id: str = Path(..., description="Course ID"),
     schedules: List[CourseScheduleCreate] = Body(..., description="List of schedules"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -170,10 +169,9 @@ async def bulk_create_schedules(
 
 
 @router.get("/course/{course_id}", response_model=CourseSchedulesResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_course_schedules(
     course_id: str = Path(..., description="Course ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -226,11 +224,10 @@ async def get_course_schedules(
 
 
 @router.get("/week", response_model=WeekScheduleResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_week_schedule(
     branch_id: Optional[str] = Query(None, description="Filter by branch"),
     room_id: Optional[str] = Query(None, description="Filter by room"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -304,10 +301,9 @@ async def get_week_schedule(
 
 
 @router.get("/{schedule_id}", response_model=CourseScheduleResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_schedule(
     schedule_id: str = Path(..., description="Schedule ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get schedule details by ID."""
@@ -354,12 +350,11 @@ async def get_schedule(
 
 
 @router.put("/{schedule_id}", response_model=CourseScheduleResponse)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def update_schedule(
     schedule_id: str = Path(..., description="Schedule ID"),
     schedule_update: CourseScheduleUpdate = Body(...),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -432,11 +427,10 @@ async def update_schedule(
 
 
 @router.delete("/{schedule_id}", status_code=status.HTTP_204_NO_CONTENT)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 @csrf_protect
 async def delete_schedule(
     schedule_id: str = Path(..., description="Schedule ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -479,11 +473,10 @@ async def delete_schedule(
 
 
 @router.get("/room/{room_id}/availability", response_model=List[CourseScheduleResponse])
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def check_room_availability(
     room_id: str = Path(..., description="Room ID"),
     day_of_week: Optional[DayOfWeek] = Query(None, description="Filter by day"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
     db: AsyncSession = Depends(get_db)
 ):
     """

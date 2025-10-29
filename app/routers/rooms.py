@@ -8,7 +8,8 @@ from uuid import UUID
 from app.database import get_db
 from app.models.user import User, UserRole
 from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.core.validators import validate_uuid
 from app.core.operations import room as room_ops
 from app.schemas.location.room_schemas import (
@@ -32,11 +33,10 @@ router = APIRouter(
 
 
 @router.post("/", response_model=CreateRoomResponse, status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def create_room(
     room_data: RoomCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Create a new room. Requires STAFF role or higher."""
@@ -67,11 +67,10 @@ async def create_room(
 
 
 @router.get("/", response_model=RoomListResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def list_rooms(
     branch_id: Optional[str] = Query(None, description="Filter by branch ID"),
     search: Optional[str] = Query(None, description="Search by room number"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """List all rooms with optional filtering. Available to all authenticated users."""
@@ -102,10 +101,9 @@ async def list_rooms(
 
 
 @router.get("/{room_id}", response_model=RoomDetailResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_room(
     room_id: str = Path(..., description="Room ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get room details by ID. Available to all authenticated users."""
@@ -132,12 +130,11 @@ async def get_room(
 
 
 @router.put("/{room_id}", response_model=UpdateRoomResponse)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def update_room(
     room_update: RoomUpdate,
     room_id: str = Path(..., description="Room ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Update room details. Requires STAFF role or higher."""
@@ -175,11 +172,10 @@ async def update_room(
 
 
 @router.delete("/{room_id}", status_code=status.HTTP_204_NO_CONTENT)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def delete_room(
     room_id: str = Path(..., description="Room ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Delete a room. Requires ADMIN role. Cannot delete if room has scheduled courses."""

@@ -8,7 +8,8 @@ from uuid import UUID
 from app.database import get_db
 from app.models.user import User, UserRole
 from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.core.validators import validate_uuid
 from app.core.operations import branch as branch_ops
 from app.schemas.location.branch_schemas import (
@@ -30,11 +31,10 @@ router = APIRouter(
 
 
 @router.post("/", response_model=BranchResponse, status_code=status.HTTP_201_CREATED)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def create_branch(
     branch_data: BranchCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Create a new branch. Requires STAFF role or higher."""
@@ -67,10 +67,9 @@ async def create_branch(
 
 
 @router.get("/", response_model=BranchListResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def list_branches(
     search: Optional[str] = Query(None, description="Search by name or address"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """List all branches. Available to all authenticated users."""
@@ -96,10 +95,9 @@ async def list_branches(
 
 
 @router.get("/{branch_id}", response_model=BranchDetailResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_branch(
     branch_id: str = Path(..., description="Branch ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get branch details by ID. Available to all authenticated users."""
@@ -126,12 +124,11 @@ async def get_branch(
 
 
 @router.put("/{branch_id}", response_model=BranchResponse)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def update_branch(
     branch_update: BranchUpdate,
     branch_id: str = Path(..., description="Branch ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Update branch details. Requires STAFF role or higher."""
@@ -173,11 +170,10 @@ async def update_branch(
 
 
 @router.delete("/{branch_id}", status_code=status.HTTP_204_NO_CONTENT)
-@authentication_required(allowed_role=UserRole.ADMIN)
 @csrf_protect
 async def delete_branch(
     branch_id: str = Path(..., description="Branch ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: AsyncSession = Depends(get_db)
 ):
     """Delete a branch. Requires ADMIN role. Cannot delete if branch has rooms or courses."""

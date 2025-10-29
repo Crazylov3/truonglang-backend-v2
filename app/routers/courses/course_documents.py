@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, UploadFile, File, Form, Query, HTTPExcep
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.deps import get_db, get_current_user
-from app.core.decorators.auth import authentication_required
+from app.models.user import User
+from app.core.deps import get_db, get_current_user, require_role
+from app.core.decorators import csrf_protect
 from app.core.operations import course_data as course_data_ops
 from app.core.operations import course as course_ops
 from app.models.user import UserRole
@@ -73,13 +74,12 @@ async def get_course_documents(
 
 
 @router.post("/{course_id}/documents/upload", response_model=CourseDocumentResponse)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def upload_course_document(
     course_id: int,
     file: UploadFile = File(...),
     document_name: Optional[str] = Form(None),
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR))
 ):
     """
     Upload a document for a course.
@@ -136,12 +136,11 @@ async def upload_course_document(
 
 
 @router.post("/{course_id}/documents/preview")
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def upload_course_preview(
     course_id: int,
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR))
 ):
     """
     Upload a preview picture for a course.
@@ -192,13 +191,12 @@ async def upload_course_preview(
 
 
 @router.patch("/{course_id}/documents/{document_id}", response_model=CourseDocumentResponse)
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def update_course_document(
     course_id: int,
     document_id: int,
     update_data: CourseDocumentUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR))
 ):
     """Update course document metadata."""
     # Check instructor permission if instructor role
@@ -211,13 +209,12 @@ async def update_course_document(
 
 
 @router.delete("/{course_id}/documents/{document_id}")
-@authentication_required(allowed_role=UserRole.INSTRUCTOR)
 async def delete_course_document(
     course_id: int,
     document_id: int,
     permanent: bool = Query(False, description="Permanently delete the document"),
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user: User = Depends(require_role(UserRole.INSTRUCTOR))
 ):
     """
     Delete or deactivate a course document.

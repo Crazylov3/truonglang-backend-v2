@@ -14,19 +14,19 @@ from app.schemas.payments import (
 )
 from app.core.operations import payment as payment_ops
 from app.core.deps import get_current_user
-from app.core.decorators import csrf_protect, authentication_required
+from app.core.decorators import csrf_protect
+from app.core.deps import require_role
 from app.models.user import User, UserRole
 from .payments import router
 
 
 # Student Invoice Endpoints
 @router.get("/students/me/invoices", response_model=StudentInvoicesResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_my_invoices(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=50, description="Items per page"),
     status: Optional[str] = Query(None, description="Filter by invoice status"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get invoices for the current student."""
@@ -44,11 +44,10 @@ async def get_my_invoices(
 
 
 @router.get("/students/me/invoices/{course_id}", response_model=StudentCourseInvoicesResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 async def get_my_course_invoices(
     course_id: int = Path(..., description="Course ID"),
     status: Optional[str] = Query(None, description="Filter by invoice status"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Get all invoices for the current student for a specific course."""
@@ -92,12 +91,11 @@ async def get_my_course_invoices(
 
 # Payment Endpoints
 @router.post("/invoices/{invoice_id}/payments", response_model=PaymentCreateResponse)
-@authentication_required(allowed_role=UserRole.STUDENT)
 @csrf_protect
 async def create_payment(
     payment_create: PaymentCreate,
     invoice_id: int = Path(..., description="Invoice ID"),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.STUDENT)),
     db: AsyncSession = Depends(get_db)
 ):
     """Create a payment for an invoice (Students only)."""

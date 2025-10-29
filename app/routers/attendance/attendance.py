@@ -10,26 +10,144 @@ import io
 from app.core.deps import get_db, get_current_user, require_role
 from app.core.operations.attendance import (
     create_attendance_card, get_attendance_card, update_card_status,
+    update_attendance_card,
     assign_card_to_student, get_card_assignment, revoke_card_assignment,
+    update_card_assignment, delete_card_assignment, delete_attendance_card,
     create_attendance_record, get_student_attendance_records, get_student_attendance_summary,
     bulk_create_attendance_cards, bulk_assign_cards_for_class, bulk_revoke_card_assignments,
-    bulk_import_attendance_records
+    bulk_import_attendance_records,
+    get_card_assignee_public_id,
+    search_attendance_cards,
+    count_attendance_cards
 )
 from app.core.operations.audit import log_database_operation
 from app.models.user import User, UserRole
 from app.models.attendance import CardStatus, AttendanceType
 from app.models.audit import AuditAction
 from app.schemas.attendance.attendance_schemas import (
-    AttendanceCardCreate, AttendanceCardResponse, CardStatusUpdateRequest,
-    CardAssignmentCreate, CardAssignmentResponse,
+    AttendanceCardCreate, AttendanceCardResponse, CardStatusUpdateRequest, AttendanceCardUpdate,
+    CardAssignmentCreate, CardAssignmentUpdate, CardAssignmentResponse,
     AttendanceRecordCreate, AttendanceRecordResponse, AttendanceSummaryResponse,
-    AttendanceRecordsResponse, AttendanceCardsResponse, CardAssignmentsResponse,
+    AttendanceRecordsResponse, AttendanceCardsResponse, AttendanceCardsListResponse, CardAssignmentsResponse,
     BulkCardCreateRequest, BulkCardCreateResponse,
     BulkCardAssignmentRequest, BulkCardAssignmentResponse,
     BulkAttendanceRecordRequest, BulkAttendanceRecordResponse
 )
+from app.schemas.common import PaginatedResponse
+from uuid import UUID as _UUID
 
 router = APIRouter(prefix="/attendance", tags=["attendance"])
+@router.get("/cards", response_model=AttendanceCardsListResponse)
+async def search_attendance_cards_endpoint(
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=1000, description="Items per page"),
+    uid: Optional[str] = Query(None, description="Filter by card UID (substring match)"),
+    branch_id: Optional[str] = Query(None, description="Filter by branch UUID"),
+    status: Optional[CardStatus] = Query(None, description="Filter by card status"),
+    current_user: User = Depends(require_role(UserRole.STAFF)),
+    db: AsyncSession = Depends(get_db)
+):
+    """Search attendance cards by uid, branch_id, and/or status with pagination."""
+    # Convert branch_id to UUID if provided
+    branch_uuid = None
+    if branch_id:
+        try:
+            branch_uuid = _UUID(branch_id)
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid branch_id")
+
+    # Compute paging
+    offset = (page - 1) * per_page
+
+    rows = await search_attendance_cards(
+        db,
+        uid=uid,
+        branch_id=branch_uuid,
+        status=status,
+        limit=per_page,
+        offset=offset,
+    )
+
+    total = await count_attendance_cards(
+        db,
+        uid=uid,
+        branch_id=branch_uuid,
+        status=status,
+    )
+
+    cards = [
+        AttendanceCardResponse(
+            card_uid=card.card_uid,
+            branch_id=card.branch_id,
+            card_uuid=getattr(card, 'card_uuid', None),
+            status=card.status,
+            notes=card.notes,
+            issued_at=card.issued_at,
+            assigned_to_public_id=assignee_public_id,
+        )
+        for (card, assignee_public_id) in rows
+    ]
+    return PaginatedResponse.create(
+        items=cards,
+        total=total,
+        page=page,
+        per_page=per_page,
+    )
+
+# Single Card Assignment CRUD
+@router.get("/assignments/{assignment_id}", response_model=CardAssignmentResponse)
+async def get_card_assignment_endpoint(
+    assignment_id: str,
+    current_user: User = Depends(require_role(UserRole.STAFF)),
+    db: AsyncSession = Depends(get_db)
+):
+    assignment = await get_card_assignment(db, assignment_id)
+    if not assignment:
+        raise HTTPException(status_code=404, detail="Assignment not found")
+    return assignment
+
+
+@router.post("/assignments", response_model=CardAssignmentResponse, status_code=status.HTTP_201_CREATED)
+async def create_card_assignment_endpoint(
+    payload: CardAssignmentCreate,
+    current_user: User = Depends(require_role(UserRole.STAFF)),
+    db: AsyncSession = Depends(get_db)
+):
+    assignment = await assign_card_to_student(db, student_id=payload.student_id, card_uid=payload.card_uid)
+    if not assignment:
+        raise HTTPException(status_code=400, detail="Could not create assignment")
+    return assignment
+
+
+@router.patch("/assignments/{assignment_id}", response_model=CardAssignmentResponse)
+async def update_card_assignment_endpoint(
+    assignment_id: str,
+    payload: CardAssignmentUpdate,
+    current_user: User = Depends(require_role(UserRole.STAFF)),
+    db: AsyncSession = Depends(get_db)
+):
+    assignment = await update_card_assignment(
+        db,
+        assignment_id,
+        card_uid=payload.card_uid,
+        revoked=payload.revoked,
+    )
+    if not assignment:
+        raise HTTPException(status_code=404, detail="Assignment not found")
+    return assignment
+
+
+@router.delete("/assignments/{assignment_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_card_assignment_endpoint(
+    assignment_id: str,
+    current_user: User = Depends(require_role(UserRole.STAFF)),
+    db: AsyncSession = Depends(get_db)
+):
+    ok = await delete_card_assignment(db, assignment_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Assignment not found")
+    return {"message": "Deleted"}
+
 
 
 @router.post("/cards/bulk", response_model=BulkCardCreateResponse)
@@ -41,25 +159,45 @@ async def bulk_create_attendance_cards_endpoint(
     """Bulk create attendance cards (Staff/Admin only)."""
     try:
         result = await bulk_create_attendance_cards(db, request.cards)
+        cards_created = result.get('successful', [])
+        failed = result.get('failed', [])
         
         # Audit log the bulk operation
         await log_database_operation(
             db=db,
             action=AuditAction.CREATE,
             table_name="attendance_cards",
-            operation_summary=f"Bulk created {len(result.successful)} attendance cards",
+            operation_summary=f"Bulk created {len(cards_created)} attendance cards",
             operation_details={
                 "total_requested": len(request.cards),
-                "successful_count": len(result.successful),
-                "failed_count": len(result.failed),
-                "failed_reasons": [f.card_uid for f in result.failed]
+                "successful_count": len(cards_created),
+                "failed_count": len(failed),
+                "failed_reasons": [getattr(f, 'card_uid', getattr(f, 'card_uid', None)) for f in failed]
             },
             user_id=current_user.id,
             user_email=current_user.email,
             user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
-        return result
+        cards_schema = [
+            AttendanceCardResponse(
+                card_uid=c.card_uid,
+                branch_id=c.branch_id,
+                card_uuid=getattr(c, 'card_uuid', None),
+                status=c.status,
+                notes=c.notes,
+                issued_at=c.issued_at,
+                assigned_to_public_id=None,
+            )
+            for c in cards_created
+        ]
+        return BulkCardCreateResponse(
+            cards=cards_schema,
+            failed=failed,
+            total_requested=len(request.cards),
+            total_successful=len(cards_schema),
+            total_failed=len(failed)
+        )
         
     except Exception as e:
         # Audit log the failed operation
@@ -95,32 +233,55 @@ async def bulk_create_attendance_cards_from_csv(
         for row in csv_reader:
             cards.append(AttendanceCardCreate(
                 card_uid=row['card_uid'],
-                notes=row.get('notes', '')
+                branch_id=row['branch_id'],
+                card_uuid=row.get('card_uuid'),
+                status=CardStatus[row.get('status', 'INACTIVE')] if row.get('status') else CardStatus.INACTIVE,
+                notes=row.get('notes')
             ))
         
         # Create cards
         request = BulkCardCreateRequest(cards=cards)
-        result = await bulk_create_attendance_cards(db, request)
+        result = await bulk_create_attendance_cards(db, request.cards)
+        cards_created = result.get('successful', [])
+        failed = result.get('failed', [])
         
         # Audit log the CSV import operation
         await log_database_operation(
             db=db,
             action=AuditAction.CREATE,
             table_name="attendance_cards",
-            operation_summary=f"CSV import: Created {len(result.successful)} attendance cards",
+            operation_summary=f"CSV import: Created {len(cards_created)} attendance cards",
             operation_details={
                 "file_name": file.filename,
                 "file_size": len(content),
                 "total_requested": len(cards),
-                "successful_count": len(result.successful),
-                "failed_count": len(result.failed)
+                "successful_count": len(cards_created),
+                "failed_count": len(failed)
             },
             user_id=current_user.id,
             user_email=current_user.email,
             user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
-        return result
+        cards_schema = [
+            AttendanceCardResponse(
+                card_uid=c.card_uid,
+                branch_id=c.branch_id,
+                card_uuid=getattr(c, 'card_uuid', None),
+                status=c.status,
+                notes=c.notes,
+                issued_at=c.issued_at,
+                assigned_to_public_id=None,
+            )
+            for c in cards_created
+        ]
+        return BulkCardCreateResponse(
+            cards=cards_schema,
+            failed=failed,
+            total_requested=len(cards),
+            total_successful=len(cards_schema),
+            total_failed=len(failed)
+        )
         
     except Exception as e:
         # Audit log the failed CSV import
@@ -148,6 +309,8 @@ async def get_attendance_card_endpoint(
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
     
+    assignee_public_id = await get_card_assignee_public_id(db, card_uid)
+    
     # Audit log the read operation
     await log_database_operation(
         db=db,
@@ -160,27 +323,58 @@ async def get_attendance_card_endpoint(
         user_role=current_user.role
     )
     
-    return card
+    return AttendanceCardResponse(
+        card_uid=card.card_uid,
+        branch_id=card.branch_id,
+        card_uuid=getattr(card, 'card_uuid', None),
+        status=card.status,
+        notes=card.notes,
+        issued_at=card.issued_at,
+        assigned_to_public_id=assignee_public_id
+    )
 
 
-@router.patch("/cards/{card_uid}/status", response_model=AttendanceCardResponse)
-async def update_attendance_card_status_endpoint(
+@router.patch("/cards/{card_uid}", response_model=AttendanceCardResponse)
+async def update_attendance_card_endpoint(
     card_uid: str,
-    status_update: CardStatusUpdateRequest,
+    update: AttendanceCardUpdate,
     current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
-    """Update attendance card status (Staff/Admin only)."""
+    """Update attendance card fields (Staff/Admin only)."""
     try:
         # Get old values for audit
         old_card = await get_attendance_card(db, card_uid)
         if not old_card:
             raise HTTPException(status_code=404, detail="Card not found")
         
-        old_status = old_card.status
+        # Prepare old and new values for auditing
+        old_values = {
+            "status": old_card.status,
+            "notes": old_card.notes,
+            "branch_id": getattr(old_card, 'branch_id', None),
+            "card_uuid": getattr(old_card, 'card_uuid', None),
+        }
         
-        # Update status
-        card = await update_card_status(db, card_uid, status_update.status)
+        # Apply update
+        card = await update_attendance_card(
+            db,
+            card_uid,
+            status=update.status,
+            notes=update.notes,
+            branch_id=update.branch_id,
+            card_uuid=update.card_uuid,
+        )
+        if not card:
+            raise HTTPException(status_code=404, detail="Card not found")
+        
+        new_values = {
+            "status": card.status,
+            "notes": card.notes,
+            "branch_id": getattr(card, 'branch_id', None),
+            "card_uuid": getattr(card, 'card_uuid', None),
+        }
+        changed_fields = [k for k, v in new_values.items() if v != old_values.get(k)]
         
         # Audit log the status update
         await log_database_operation(
@@ -188,16 +382,25 @@ async def update_attendance_card_status_endpoint(
             action=AuditAction.UPDATE,
             table_name="attendance_cards",
             record_id=card_uid,
-            old_values={"status": old_status},
-            new_values={"status": status_update.status},
-            changed_fields=["status"],
-            operation_summary=f"Updated card {card_uid} status from {old_status} to {status_update.status}",
+            old_values=old_values,
+            new_values=new_values,
+            changed_fields=changed_fields,
+            operation_summary=f"Updated card {card_uid} fields: {', '.join(changed_fields)}",
             user_id=current_user.id,
             user_email=current_user.email,
             user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         
-        return card
+        assignee_public_id = await get_card_assignee_public_id(db, card_uid)
+        return AttendanceCardResponse(
+            card_uid=card.card_uid,
+            branch_id=card.branch_id,
+            card_uuid=getattr(card, 'card_uuid', None),
+            status=card.status,
+            notes=card.notes,
+            issued_at=card.issued_at,
+            assigned_to_public_id=assignee_public_id
+        )
         
     except Exception as e:
         # Audit log the failed update
@@ -212,6 +415,35 @@ async def update_attendance_card_status_endpoint(
             user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
         )
         raise
+
+
+@router.delete("/cards/{card_uid}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_attendance_card_endpoint(
+    card_uid: str,
+    current_user: User = Depends(require_role(UserRole.STAFF)),
+    db: AsyncSession = Depends(get_db)
+):
+    # Fetch card for audit and existence check
+    card = await get_attendance_card(db, card_uid)
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    ok = await delete_attendance_card(db, card_uid)
+    if not ok:
+        raise HTTPException(status_code=400, detail="Could not delete card")
+
+    # Audit log deletion
+    await log_database_operation(
+        db=db,
+        action=AuditAction.DELETE,
+        table_name="attendance_cards",
+        record_id=card_uid,
+        operation_summary=f"Deleted attendance card: {card_uid}",
+        user_id=current_user.id,
+        user_email=current_user.email,
+        user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
+    )
+    return {"message": "Deleted"}
 
 
 @router.post("/assignments/bulk", response_model=BulkCardAssignmentResponse)
