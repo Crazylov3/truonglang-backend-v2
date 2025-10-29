@@ -65,7 +65,7 @@ def authentication_required(allowed_role: UserRole = UserRole.STUDENT):
                 if USER_ROLE_MAP[user_role] < USER_ROLE_MAP[allowed_role]:
                     raise HTTPException(
                         status_code=status.HTTP_403_FORBIDDEN,
-                        detail=f"Access denied. Minimum required role: {allowed_role.name.lower()} (level {allowed_role.value}). Your role: {user_role.name.lower()} (level {user_role.value})"
+                        detail=f"Access denied. Minimum required role: {allowed_role.name.lower()} (level {USER_ROLE_MAP[allowed_role]}). Your role: {user_role.name.lower()} (level {USER_ROLE_MAP[user_role]})"
                     )
                 
                 # Filter arguments to only include what the original function expects

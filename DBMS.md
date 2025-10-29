@@ -68,6 +68,7 @@ Table user_profiles {
   user_id uuid [pk, ref: - users.id]
   first_name string [not null]
   last_name string [not null]
+  phone_number string 
   date_of_birth timestamp
   avatar string
   current_school string [note: 'Trường học sinh đang theo học']

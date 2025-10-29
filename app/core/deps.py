@@ -73,12 +73,13 @@ async def get_current_user_optional(
 def require_role(required_role: UserRole):
     """Dependency factory for role-based authorization."""
     async def role_checker(current_user: User = Depends(get_current_user)) -> User:
-        # Ensure role is UserRole enum for comparison
-        user_role = current_user.role
-        if isinstance(user_role, int):
-            user_role = UserRole(user_role)
+        from app.models.user import UserRoleValue
         
-        if user_role.value < required_role.value:
+        # Get user role value for comparison
+        user_role_value = UserRoleValue.get(current_user.role, 0)
+        required_role_value = UserRoleValue.get(required_role, 0)
+        
+        if user_role_value < required_role_value:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Access denied. Required role: {required_role.name} or higher."

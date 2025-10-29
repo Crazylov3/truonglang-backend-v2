@@ -15,7 +15,8 @@ async def create_user_profile(
     first_name: str,
     last_name: str,
     date_of_birth: Optional[date] = None,
-    avatar: Optional[str] = None
+    avatar: Optional[str] = None,
+    phone_number: Optional[str] = None
 ) -> Optional[UserProfile]:
     """Create a new user profile."""
     try:
@@ -24,7 +25,8 @@ async def create_user_profile(
             first_name=first_name,
             last_name=last_name,
             date_of_birth=date_of_birth,
-            avatar=avatar
+            avatar=avatar,
+            phone_number=phone_number
         )
         
         db.add(profile)
@@ -55,7 +57,8 @@ async def update_user_profile(
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
     date_of_birth: Optional[date] = None,
-    avatar: Optional[str] = None
+    avatar: Optional[str] = None,
+    phone_number: Optional[str] = None
 ) -> bool:
     """Update user profile."""
     try:
@@ -74,6 +77,8 @@ async def update_user_profile(
             profile.last_name = last_name
         if date_of_birth is not None:
             profile.date_of_birth = date_of_birth
+        if phone_number is not None:
+            profile.phone_number = phone_number
         if avatar is not None:
             profile.avatar = avatar
         

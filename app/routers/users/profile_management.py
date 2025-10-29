@@ -57,6 +57,7 @@ async def get_current_user_profile(
             first_name=user.profile.first_name,
             last_name=user.profile.last_name,
             date_of_birth=user.profile.date_of_birth,
+            phone_number=user.profile.phone_number,
             avatar=avatar_base64  # Store URL instead of base64
         ) if user.profile else None
     )
@@ -113,6 +114,7 @@ async def update_current_user_profile(
         first_name=update_data.get("first_name"),
         last_name=update_data.get("last_name"),
         date_of_birth=update_data.get("date_of_birth"),
+        phone_number=update_data.get("phone_number"),
         avatar=avatar_path
     )
     
@@ -133,6 +135,7 @@ async def update_current_user_profile(
         first_name=updated_profile.first_name,
         last_name=updated_profile.last_name,
         date_of_birth=updated_profile.date_of_birth,
+        phone_number=updated_profile.phone_number,
         avatar=avatar_url
     )
 

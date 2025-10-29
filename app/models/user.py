@@ -10,6 +10,12 @@ class UserRole(str, Enum):
     STAFF = "STAFF"
     ADMIN = "ADMIN"
 
+UserRoleValue = {
+    UserRole.STUDENT: 1,
+    UserRole.INSTRUCTOR: 2,
+    UserRole.STAFF: 3,
+    UserRole.ADMIN: 4,
+}
 
 class User(BaseModel):
     __tablename__ = "users"

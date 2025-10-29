@@ -14,6 +14,7 @@ class UserProfile(BaseModel):
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     date_of_birth = Column(Date, nullable=True)
+    phone_number = Column(String(20), nullable=True, comment="Số điện thoại của người dùng")
     
     # Avatar
     avatar = Column(String(255), nullable=True)

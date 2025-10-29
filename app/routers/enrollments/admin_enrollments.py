@@ -108,6 +108,14 @@ async def _process_enrollments(course_uuid, identifiers, db):
     
     for identifier in identifiers:
         try:
+            # Skip empty or None identifiers
+            if not identifier or not str(identifier).strip():
+                failed.append({
+                    'identifier': identifier,
+                    'reason': 'Empty identifier'
+                })
+                continue
+            
             # Try to determine if it's a UUID, email, or public_id
             student = None
             
@@ -363,5 +371,213 @@ async def get_student_enrollments(
         total=total,
         page=page,
         per_page=per_page
+    )
+
+
+@router.delete("/admin/course/{course_id}/unenroll", response_model=EnrollmentResponse, status_code=status.HTTP_200_OK)
+@authentication_required(allowed_role=UserRole.ADMIN)
+@csrf_protect
+async def admin_unenroll_student(
+    course_id: str = Path(..., description="Course ID"),
+    student_id: Optional[str] = Query(None, description="Student UUID"),
+    email: Optional[str] = Query(None, description="Student email"),
+    public_id: Optional[int] = Query(None, description="Student public ID"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Admin endpoint to unenroll a student from a course by student ID, email, or public ID."""
+    
+    # Validate course
+    course_uuid = validate_uuid(course_id)
+    course = await course_ops.get_course_by_id(db, course_uuid)
+    if not course:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found"
+        )
+    
+    # Must provide exactly one identifier
+    if not student_id and not email and not public_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Must provide exactly one of: student_id, email, or public_id"
+        )
+    
+    if sum([bool(student_id), bool(email), bool(public_id)]) > 1:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Must provide exactly one of: student_id, email, or public_id"
+        )
+    
+    # Find student by identifier
+    student = None
+    if student_id:
+        student_uuid = validate_uuid(student_id)
+        student = await user_ops.get_user_by_id(db, student_uuid)
+    elif email:
+        student = await user_ops.get_user_by_email(db, email)
+    elif public_id:
+        student = await user_ops.get_user_by_public_id(db, public_id)
+    
+    if not student:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found"
+        )
+    
+    # Check if student is actually a student role
+    if student.role != UserRole.STUDENT:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User is not a student (role: {student.role})"
+        )
+    
+    # Check if enrolled
+    if not await enrollment_ops.check_enrollment_exists(db, student.id, course_uuid):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Student is not enrolled in this course"
+        )
+    
+    # Deactivate enrollment
+    success = await enrollment_ops.deactivate_enrollment(
+        db=db,
+        student_id=student.id,
+        course_id=course_uuid
+    )
+    
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to unenroll student"
+        )
+    
+    return EnrollmentResponse(
+        message=f"Student {student.full_name} ({student.email}) has been unenrolled from course {course.title}"
+    )
+
+
+async def _process_unenrollments(course_uuid, identifiers, db):
+    """Helper function to process unenrollments from a list of identifiers."""
+    successful = []
+    failed = []
+    
+    for identifier in identifiers:
+        try:
+            # Skip empty or None identifiers
+            if not identifier or not str(identifier).strip():
+                failed.append({
+                    'identifier': identifier,
+                    'reason': 'Empty identifier'
+                })
+                continue
+            
+            # Try to determine if it's a UUID, email, or public_id
+            student = None
+            
+            # Try UUID first
+            try:
+                student_uuid = UUID(identifier)
+                student = await user_ops.get_user_by_id(db, student_uuid)
+            except (ValueError, TypeError):
+                # Not a valid UUID, try public_id
+                try:
+                    public_id = int(identifier)
+                    student = await user_ops.get_user_by_public_id(db, public_id)
+                except (ValueError, TypeError):
+                    # Assume it's an email
+                    student = await user_ops.get_user_by_email(db, identifier)
+            
+            if not student:
+                failed.append({
+                    'identifier': identifier,
+                    'reason': 'Student not found'
+                })
+                continue
+            
+            # Check if student is actually a student role
+            if student.role != UserRole.STUDENT:
+                failed.append({
+                    'identifier': identifier,
+                    'reason': f'User is not a student (role: {student.role})',
+                    'user_email': student.email
+                })
+                continue
+            
+            # Check if enrolled
+            if not await enrollment_ops.check_enrollment_exists(db, student.id, course_uuid):
+                failed.append({
+                    'identifier': identifier,
+                    'reason': 'Not enrolled in this course',
+                    'user_email': student.email
+                })
+                continue
+            
+            # Deactivate enrollment
+            success = await enrollment_ops.deactivate_enrollment(
+                db=db,
+                student_id=student.id,
+                course_id=course_uuid
+            )
+            
+            if success:
+                successful.append({
+                    'identifier': identifier,
+                    'user_id': str(student.id),
+                    'email': student.email,
+                    'full_name': student.full_name
+                })
+            else:
+                failed.append({
+                    'identifier': identifier,
+                    'reason': 'Failed to unenroll',
+                    'user_email': student.email
+                })
+        
+        except Exception as e:
+            failed.append({
+                'identifier': identifier,
+                'reason': f'Error: {str(e)}'
+            })
+    
+    return successful, failed
+
+
+@router.post("/admin/course/{course_id}/bulk-unenroll", response_model=BulkEnrollmentResponse, status_code=status.HTTP_200_OK)
+@authentication_required(allowed_role=UserRole.ADMIN)
+@csrf_protect
+async def admin_bulk_unenroll_students(
+    course_id: str = Path(..., description="Course ID"),
+    bulk_request: BulkEnrollmentRequest = Body(...),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Admin endpoint to bulk unenroll multiple students from a course by student IDs, emails, or public IDs.
+    
+    Accepts JSON body with list of student identifiers.
+    """
+    
+    # Validate course
+    course_uuid = validate_uuid(course_id)
+    course = await course_ops.get_course_by_id(db, course_uuid)
+    if not course:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found"
+        )
+    
+    if not bulk_request.student_identifiers:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No student identifiers provided"
+        )
+    
+    successful, failed = await _process_unenrollments(course_uuid, bulk_request.student_identifiers, db)
+    
+    return BulkEnrollmentResponse(
+        success_count=len(successful),
+        failure_count=len(failed),
+        successful=successful,
+        failed=failed
     )
 

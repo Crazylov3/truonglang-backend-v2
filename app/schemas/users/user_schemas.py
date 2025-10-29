@@ -10,6 +10,7 @@ class UserProfile(BaseModel):
     first_name: Optional[str] = Field(None, max_length=100)
     last_name: Optional[str] = Field(None, max_length=100)
     date_of_birth: Optional[date] = None
+    phone_number: Optional[str] = Field(None, max_length=20)
     avatar: Optional[str] = None
     current_school: Optional[str] = Field(None, max_length=255)
     current_grade: Optional[str] = Field(None, max_length=50)
@@ -104,6 +105,7 @@ class UserUpdate(BaseModel):
     first_name: Optional[str] = Field(None, max_length=100)
     last_name: Optional[str] = Field(None, max_length=100)
     date_of_birth: Optional[date] = None
+    phone_number: Optional[str] = Field(None, max_length=20)
     current_school: Optional[str] = Field(None, max_length=255)
     current_grade: Optional[str] = Field(None, max_length=50)
     default_discount_percentage: Optional[float] = Field(None, ge=0, le=100)
