@@ -31,6 +31,7 @@ async def search_attendance_cards(
     uid: Optional[str] = None,
     branch_id: Optional[UUID] = None,
     status: Optional[CardStatus] = None,
+    assigned_public_id: Optional[int] = None,
     limit: int = 100,
     offset: int = 0
 ) -> List[tuple[AttendanceCard, Optional[int]]]:
@@ -53,6 +54,9 @@ async def search_attendance_cards(
             query = query.where(AttendanceCard.branch_id == branch_id)
         if status:
             query = query.where(AttendanceCard.status == status)
+        if assigned_public_id is not None:
+            # Filter to only cards whose current active assignment belongs to this public_id
+            query = query.where(User.public_id == assigned_public_id)
 
         query = query.order_by(AttendanceCard.issued_at.desc()).limit(limit).offset(offset)
 
@@ -68,17 +72,25 @@ async def count_attendance_cards(
     uid: Optional[str] = None,
     branch_id: Optional[UUID] = None,
     status: Optional[CardStatus] = None,
+    assigned_public_id: Optional[int] = None,
 ) -> int:
     """Count total attendance cards matching the optional filters."""
     try:
         from sqlalchemy import func as _func
-        query = select(_func.count(AttendanceCard.card_uid))
+        query = (
+            select(_func.count(AttendanceCard.card_uid))
+            .select_from(AttendanceCard)
+            .join(CardAssignment, and_(CardAssignment.card_uid == AttendanceCard.card_uid, CardAssignment.revoked_at.is_(None)), isouter=True)
+            .join(User, User.id == CardAssignment.student_id, isouter=True)
+        )
         if uid:
             query = query.where(AttendanceCard.card_uid.ilike(f"%{uid}%"))
         if branch_id:
             query = query.where(AttendanceCard.branch_id == branch_id)
         if status:
             query = query.where(AttendanceCard.status == status)
+        if assigned_public_id is not None:
+            query = query.where(User.public_id == assigned_public_id)
         result = await db.execute(query)
         return int(result.scalar_one() or 0)
     except SQLAlchemyError:
@@ -487,23 +499,62 @@ async def bulk_assign_cards_for_class(
     assignments: List[dict]
 ) -> dict:
     """Bulk assign cards to students for a class."""
-    successful = []
-    failed = []
-    
+    # Helper to read fields from dicts or Pydantic models
+    def _get(obj: Any, field: str, default: Any = None):
+        if isinstance(obj, dict):
+            return obj.get(field, default)
+        return getattr(obj, field, default)
+
+    successful: list[dict] = []
+    failed: list[dict] = []
+
     for assignment_data in assignments:
         try:
+            # Accept either UUID student_id or integer public_id
+            student_id = _get(assignment_data, 'student_id')
+            student_public_id = _get(assignment_data, 'public_id') or _get(assignment_data, 'student_public_id')
+
+            # Resolve public_id -> internal UUID if provided
+            if student_id is None and student_public_id is not None:
+                try:
+                    result = await db.execute(
+                        select(User.id).where(User.public_id == int(student_public_id))
+                    )
+                    student_id = result.scalar_one_or_none()
+                    if student_id is None:
+                        failed.append({'public_id': student_public_id, 'card_uid': _get(assignment_data, 'card_uid'), 'error': 'USER_NOT_FOUND'})
+                        continue
+                except Exception:
+                    failed.append({'public_id': student_public_id, 'card_uid': _get(assignment_data, 'card_uid'), 'error': 'USER_LOOKUP_FAILED'})
+                    continue
+
+            card_uid = _get(assignment_data, 'card_uid')
+
             assignment = await assign_card_to_student(
                 db=db,
-                student_id=assignment_data['student_id'],
-                card_uid=assignment_data['card_uid']
+                student_id=student_id,
+                card_uid=card_uid
             )
-            if assignment:
-                successful.append(assignment)
-            else:
-                failed.append(assignment_data)
-        except Exception as e:
-            failed.append(assignment_data)
-    
+
+            if assignment is None:
+                failed.append({'student_id': student_id, 'card_uid': card_uid})
+                continue
+
+            # Build a plain dict to avoid ORM lazy-loads during response serialization
+            successful.append({
+                'id': assignment.id,
+                'student_id': assignment.student_id,
+                'card_uid': assignment.card_uid,
+                'assigned_at': assignment.assigned_at,
+                'revoked_at': assignment.revoked_at,
+            })
+        except Exception:
+            failed.append({
+                'student_id': _get(assignment_data, 'student_id'),
+                'public_id': _get(assignment_data, 'public_id') or _get(assignment_data, 'student_public_id'),
+                'card_uid': _get(assignment_data, 'card_uid')
+            })
+
     return {
         'successful': successful,
         'failed': failed

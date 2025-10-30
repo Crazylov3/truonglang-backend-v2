@@ -4,6 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import date, datetime
+from sqlalchemy import select
 import csv
 import io
 
@@ -14,7 +15,7 @@ from app.core.operations.attendance import (
     assign_card_to_student, get_card_assignment, revoke_card_assignment,
     update_card_assignment, delete_card_assignment, delete_attendance_card,
     create_attendance_record, get_student_attendance_records, get_student_attendance_summary,
-    bulk_create_attendance_cards, bulk_assign_cards_for_class, bulk_revoke_card_assignments,
+    bulk_create_attendance_cards, bulk_revoke_card_assignments,
     bulk_import_attendance_records,
     get_card_assignee_public_id,
     search_attendance_cards,
@@ -30,7 +31,6 @@ from app.schemas.attendance.attendance_schemas import (
     AttendanceRecordCreate, AttendanceRecordResponse, AttendanceSummaryResponse,
     AttendanceRecordsResponse, AttendanceCardsResponse, AttendanceCardsListResponse, CardAssignmentsResponse,
     BulkCardCreateRequest, BulkCardCreateResponse,
-    BulkCardAssignmentRequest, BulkCardAssignmentResponse,
     BulkAttendanceRecordRequest, BulkAttendanceRecordResponse
 )
 from app.schemas.common import PaginatedResponse
@@ -44,6 +44,7 @@ async def search_attendance_cards_endpoint(
     uid: Optional[str] = Query(None, description="Filter by card UID (substring match)"),
     branch_id: Optional[str] = Query(None, description="Filter by branch UUID"),
     status: Optional[CardStatus] = Query(None, description="Filter by card status"),
+    assigned_public_id: Optional[int] = Query(None, description="Filter by current assignee public_id"),
     current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
@@ -64,6 +65,7 @@ async def search_attendance_cards_endpoint(
         uid=uid,
         branch_id=branch_uuid,
         status=status,
+        assigned_public_id=assigned_public_id,
         limit=per_page,
         offset=offset,
     )
@@ -73,6 +75,7 @@ async def search_attendance_cards_endpoint(
         uid=uid,
         branch_id=branch_uuid,
         status=status,
+        assigned_public_id=assigned_public_id,
     )
 
     cards = [
@@ -113,9 +116,44 @@ async def create_card_assignment_endpoint(
     current_user: User = Depends(require_role(UserRole.STAFF)),
     db: AsyncSession = Depends(get_db)
 ):
-    assignment = await assign_card_to_student(db, student_id=payload.student_id, card_uid=payload.card_uid)
+    # Resolve student by public_id, UUID, or email
+    resolved_student_id = None
+    if payload.public_id is not None:
+        result = await db.execute(select(User.id).where(User.public_id == payload.public_id))
+        resolved_student_id = result.scalar_one_or_none()
+        if resolved_student_id is None:
+            raise HTTPException(status_code=404, detail="User with public_id not found")
+    elif payload.student_id is not None:
+        resolved_student_id = payload.student_id
+    elif payload.email is not None:
+        result = await db.execute(select(User.id).where(User.email == payload.email))
+        resolved_student_id = result.scalar_one_or_none()
+        if resolved_student_id is None:
+            raise HTTPException(status_code=404, detail="User with email not found")
+    else:
+        raise HTTPException(status_code=400, detail="Provide one of public_id, student_id, or email")
+
+    assignment = await assign_card_to_student(db, student_id=resolved_student_id, card_uid=payload.card_uid)
     if not assignment:
         raise HTTPException(status_code=400, detail="Could not create assignment")
+
+    # Audit log
+    await log_database_operation(
+        db=db,
+        action=AuditAction.CREATE,
+        table_name="card_assignments",
+        record_id=str(assignment.id),
+        new_values={
+            "student_id": str(assignment.student_id),
+            "card_uid": assignment.card_uid,
+            "assigned_at": assignment.assigned_at.isoformat() if getattr(assignment, 'assigned_at', None) else None,
+        },
+        operation_summary=f"Assigned card {assignment.card_uid} to student",
+        user_id=current_user.id,
+        user_email=current_user.email,
+        user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
+    )
+
     return assignment
 
 
@@ -446,164 +484,10 @@ async def delete_attendance_card_endpoint(
     return {"message": "Deleted"}
 
 
-@router.post("/assignments/bulk", response_model=BulkCardAssignmentResponse)
-async def bulk_assign_cards_for_class_endpoint(
-    request: BulkCardAssignmentRequest,
-    current_user: User = Depends(require_role(UserRole.STAFF)),
-    db: AsyncSession = Depends(get_db)
-):
-    """Bulk assign cards to students for a class (Staff/Admin only)."""
-    try:
-        result = await bulk_assign_cards_for_class(db, request.assignments)
-        
-        # Audit log the bulk assignment operation
-        await log_database_operation(
-            db=db,
-            action=AuditAction.CREATE,
-            table_name="card_assignments",
-            operation_summary=f"Bulk assigned {len(result.successful)} cards to students",
-            operation_details={
-                "total_requested": len(request.assignments),
-                "successful_count": len(result.successful),
-                "failed_count": len(result.failed),
-                "course_id": request.assignments[0].course_id if request.assignments else None
-            },
-            user_id=current_user.id,
-            user_email=current_user.email,
-            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-        )
-        
-        return result
-        
-    except Exception as e:
-        # Audit log the failed operation
-        await log_database_operation(
-            db=db,
-            action=AuditAction.CREATE,
-            table_name="card_assignments",
-            operation_summary="Bulk card assignment failed",
-            operation_details={"error": str(e)},
-            user_id=current_user.id,
-            user_email=current_user.email,
-            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-        )
-        raise
+## Bulk assignment endpoints removed per request
 
 
-@router.post("/assignments/bulk-csv", response_model=BulkCardAssignmentResponse)
-async def bulk_assign_cards_from_csv(
-    file: UploadFile = File(...),
-    current_user: User = Depends(require_role(UserRole.STAFF)),
-    db: AsyncSession = Depends(get_db)
-):
-    """Bulk assign cards from CSV file (Staff/Admin only)."""
-    try:
-        # Read CSV content
-        content = await file.read()
-        csv_text = content.decode('utf-8')
-        
-        # Parse CSV
-        csv_reader = csv.DictReader(io.StringIO(csv_text))
-        assignments = []
-        
-        for row in csv_reader:
-            assignments.append(CardAssignmentCreate(
-                student_id=int(row['student_id']),
-                card_uid=row['card_uid'],
-                course_id=int(row.get('course_id', 0)) if row.get('course_id') else None
-            ))
-        
-        # Create assignments
-        request = BulkCardAssignmentRequest(assignments=assignments)
-        result = await bulk_assign_cards_for_class(db, request)
-        
-        # Audit log the CSV import operation
-        await log_database_operation(
-            db=db,
-            action=AuditAction.CREATE,
-            table_name="card_assignments",
-            operation_summary=f"CSV import: Assigned {len(result.successful)} cards to students",
-            operation_details={
-                "file_name": file.filename,
-                "file_size": len(content),
-                "total_requested": len(assignments),
-                "successful_count": len(result.successful),
-                "failed_count": len(result.failed)
-            },
-            user_id=current_user.id,
-            user_email=current_user.email,
-            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-        )
-        
-        return result
-        
-    except Exception as e:
-        # Audit log the failed CSV import
-        await log_database_operation(
-            db=db,
-            action=AuditAction.CREATE,
-            table_name="card_assignments",
-            operation_summary="CSV import of card assignments failed",
-            operation_details={"error": str(e), "file_name": file.filename},
-            user_id=current_user.id,
-            user_email=current_user.email,
-            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-        )
-        raise
-
-
-@router.delete("/assignments/bulk-revoke")
-async def bulk_revoke_card_assignments_endpoint(
-    student_ids: List[int],
-    current_user: User = Depends(require_role(UserRole.STAFF)),
-    db: AsyncSession = Depends(get_db)
-):
-    """Bulk revoke card assignments (Staff/Admin only)."""
-    try:
-        # Get old assignments for audit
-        old_assignments = []
-        for student_id in student_ids:
-            assignment = await get_card_assignment(db, student_id)
-            if assignment:
-                old_assignments.append(assignment)
-        
-        # Revoke assignments
-        revoked_count = await bulk_revoke_card_assignments(db, student_ids)
-        
-        # Audit log the bulk revocation
-        await log_database_operation(
-            db=db,
-            action=AuditAction.DELETE,
-            table_name="card_assignments",
-            operation_summary=f"Bulk revoked {revoked_count} card assignments",
-            operation_details={
-                "student_ids": student_ids,
-                "revoked_count": revoked_count,
-                "old_assignments": [
-                    {"student_id": a.student_id, "card_uid": a.card_uid, "assigned_at": a.assigned_at.isoformat()}
-                    for a in old_assignments
-                ]
-            },
-            user_id=current_user.id,
-            user_email=current_user.email,
-            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-        )
-        
-        return {"message": f"Revoked {revoked_count} card assignments", "revoked_count": revoked_count}
-        
-    except Exception as e:
-        # Audit log the failed operation
-        await log_database_operation(
-            db=db,
-            action=AuditAction.DELETE,
-            table_name="card_assignments",
-            operation_summary="Bulk card assignment revocation failed",
-            operation_details={"error": str(e), "student_ids": student_ids},
-            user_id=current_user.id,
-            user_email=current_user.email,
-            user_role=current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-        )
-        raise
+# Removed bulk revoke endpoint per request
 
 
 @router.post("/records/bulk-import", response_model=BulkAttendanceRecordResponse)

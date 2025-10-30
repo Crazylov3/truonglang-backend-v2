@@ -56,7 +56,10 @@ class BulkCardCreateResponse(BaseModel):
 
 
 class CardAssignmentBase(BaseModel):
-    student_id: UUID = Field(..., description="ID of the student")
+    # Prefer public_id for external APIs; student_id remains supported for internal calls
+    student_id: Optional[UUID] = Field(None, description="Internal UUID of the student")
+    public_id: Optional[int] = Field(None, description="Public ID of the student")
+    email: Optional[str] = Field(None, description="Email of the student")
     card_uid: str = Field(..., description="UID of the card to assign")
 
 
@@ -127,7 +130,12 @@ class AttendanceSummaryResponse(BaseModel):
 
 
 class BulkCardAssignmentRequest(BaseModel):
-    assignments: List[CardAssignmentCreate]
+    assignments: List["CardAssignmentBulkItem"]
+
+
+class CardAssignmentBulkItem(BaseModel):
+    public_id: int = Field(..., description="Student public ID")
+    card_uid: str = Field(..., description="UID of the card to assign")
 
 
 class BulkCardAssignmentResponse(BaseModel):

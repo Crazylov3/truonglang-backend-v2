@@ -7,6 +7,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime, date, timedelta
 import json
 import uuid
+from datetime import datetime, date
+from enum import Enum
 
 from app.models.audit import (
     AuditLog, AuditAction, AuditResource, AuditSeverity
@@ -51,6 +53,38 @@ async def create_audit_log(
 ) -> Optional[AuditLog]:
     """Create a comprehensive audit log entry."""
     try:
+        def _json_safe(value: Any) -> Any:
+            """Recursively convert objects to JSON-serializable primitives."""
+            if value is None:
+                return None
+            if isinstance(value, (str, int, float, bool)):
+                return value
+            if isinstance(value, (uuid.UUID,)):
+                return str(value)
+            if isinstance(value, (datetime, date)):
+                return value.isoformat()
+            if isinstance(value, Enum):
+                # Prefer enum value if simple, else name
+                return getattr(value, "value", value.name)
+            if isinstance(value, dict):
+                return {str(_json_safe(k)): _json_safe(v) for k, v in value.items()}
+            if isinstance(value, (list, tuple, set)):
+                return [_json_safe(v) for v in value]
+            try:
+                json.dumps(value)
+                return value
+            except Exception:
+                return str(value)
+
+        # Ensure JSON fields are serializable
+        operation_details = _json_safe(operation_details) if operation_details is not None else None
+        old_values = _json_safe(old_values) if old_values is not None else None
+        new_values = _json_safe(new_values) if new_values is not None else None
+        changed_fields = _json_safe(changed_fields) if changed_fields is not None else None
+        # Ensure resource_id is a string (it may be a UUID)
+        resource_id = str(resource_id) if isinstance(resource_id, (uuid.UUID,)) else resource_id
+        record_id = str(record_id) if isinstance(record_id, (uuid.UUID,)) else record_id
+
         audit_log = AuditLog(
             user_id=user_id,
             user_email=user_email,
